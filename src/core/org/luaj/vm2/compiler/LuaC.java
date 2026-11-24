@@ -148,6 +148,8 @@ public class LuaC extends Constants implements Globals.Compiler, Globals.Loader 
 			LuaString c = (LuaString) strings.get(s);
 			if (c != null) 
 				return c;
+			// Share constants across chunks and with table keys.
+			s = s.intern();
 			strings.put(s, s);
 			return s;
 		}

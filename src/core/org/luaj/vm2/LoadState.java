@@ -222,7 +222,8 @@ public class LoadState {
 			return null;
 		byte[] bytes = new byte[size];
 		is.readFully( bytes, 0, size );
-		return LuaString.valueUsing( bytes, 0, bytes.length - 1 );
+		// Precompiled constants share instances with source-compiled constants and table keys.
+		return LuaString.valueUsing( bytes, 0, bytes.length - 1 ).intern();
 	}
 	
 	/**

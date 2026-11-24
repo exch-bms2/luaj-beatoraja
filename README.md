@@ -4,7 +4,7 @@ LuaJ互換性を維持しながら、beatorajaの短い関数呼び出しとメ�
 Javaパッケージは `org.luaj.vm2` を維持し、JDK 17でビルドします。
 
 ```sh
-mvn -Dtest=StackLifetimeTest,StackPoolTest,WeakIntegerKeyTest,FmodRegressionTest,ModfRegressionTest,MinMaxRegressionTest,LuaDoubleFormattingTest,LoadReaderRegressionTest,PcallScopeRegressionTest,DebugLocalRegressionTest,DebugJavaFrameRegressionTest,DebugFunctionLocalRegressionTest,DebugSetLocalValueRegressionTest,DebugVarargsRegressionTest,DebugStackLevelRegressionTest,SingleCallPoolRegressionTest,MultiReturnOwnershipTest test
+mvn -Dtest=StackLifetimeTest,StackPoolTest,WeakIntegerKeyTest,FmodRegressionTest,ModfRegressionTest,MinMaxRegressionTest,LuaDoubleFormattingTest,LoadReaderRegressionTest,PcallScopeRegressionTest,DebugLocalRegressionTest,DebugJavaFrameRegressionTest,DebugFunctionLocalRegressionTest,DebugSetLocalValueRegressionTest,DebugVarargsRegressionTest,DebugStackLevelRegressionTest,SingleCallPoolRegressionTest,MultiReturnOwnershipTest,StringInternRegressionTest test
 mvn -DskipTests package
 ```
 
@@ -28,6 +28,8 @@ getlocalの関数形式とsetlocalの値引数検証は [debug APIの修正](doc
 単値呼び出しのJMH基準と最適化は [単値呼び出しの性能検証](documentation/SINGLE-CALL-PERFORMANCE.md) を参照してください。
 
 多値返却の最適化と最新の性能比較手順は [多値返却の性能検証](documentation/MULTI-RETURN-PERFORMANCE.md) を参照してください。
+
+実スキン計測に基づく文字列キーのintern化は [文字列キーのintern化](documentation/STRING-INTERNING.md) を参照してください。
 
 以下は上流の説明・変更履歴です。
 
