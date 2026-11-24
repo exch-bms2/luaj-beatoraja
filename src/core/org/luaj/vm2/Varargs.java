@@ -695,6 +695,70 @@ public abstract class Varargs {
 		}
 	}
 
+	/** Detach a fixed result directly, without a borrowed array view. */
+	static Varargs copyOf(LuaValue[] stack, int offset, int length) {
+		switch (length) {
+		case 0: return LuaValue.NONE;
+		case 1: return stack[offset];
+		case 2: return new PairVarargs(stack[offset], stack[offset+1]);
+		default:
+			LuaValue[] values = new LuaValue[length];
+			System.arraycopy(stack, offset, values, 0, length);
+			return new OwnedArrayVarargs(values);
+		}
+	}
+
+	static boolean isOwnedArray(Varargs args) { return args instanceof OwnedArrayVarargs; }
+
+	/** Caller has checked that tail is an immutable owned snapshot. */
+	static Varargs prependCopy(LuaValue[] stack, int offset, int length, Varargs tail) {
+		OwnedArrayVarargs owned = (OwnedArrayVarargs) tail;
+		LuaValue[] values = new LuaValue[length + owned.values.length];
+		System.arraycopy(stack, offset, values, 0, length);
+		System.arraycopy(owned.values, 0, values, length, owned.values.length);
+		return new OwnedArrayVarargs(values);
+	}
+
+	/** Do not expose a snapshot's destination to an overridable copyto method. */
+	private static void snapshotTo(Varargs source, LuaValue[] dest, int offset, int length) {
+		if (length == 0) return;
+		if (source instanceof ArrayVarargs) {
+			ArrayVarargs array = (ArrayVarargs) source;
+			int n = Math.min(length, array.v.length);
+			System.arraycopy(array.v, 0, dest, offset, n);
+			if (n < length) snapshotTo(array.r, dest, offset+n, length-n);
+		} else if (source instanceof ArrayPartVarargs) {
+			ArrayPartVarargs array = (ArrayPartVarargs) source;
+			int n = Math.min(length, array.length);
+			System.arraycopy(array.v, array.offset, dest, offset, n);
+			if (n < length) snapshotTo(array.more, dest, offset+n, length-n);
+		} else {
+			for (int i = 0; i < length; ++i) dest[offset+i] = source.arg(i+1);
+		}
+	}
+
+	/** An immutable snapshot whose backing array never leaves this class. */
+	private static final class OwnedArrayVarargs extends Varargs {
+		private final LuaValue[] values;
+		private OwnedArrayVarargs(LuaValue[] values) { this.values = values; }
+		public LuaValue arg(int i) { return i > 0 && i <= values.length? values[i-1]: LuaValue.NIL; }
+		public LuaValue arg1() { return values[0]; }
+		public int narg() { return values.length; }
+		public Varargs dealias() { return this; }
+		public Varargs subargs(int start) {
+			if (start <= 0) return LuaValue.argerror(1, "start must be > 0");
+			if (start == 1) return this;
+			if (start > values.length) return LuaValue.NONE;
+			// Slices use the ordinary representation and detach when requested.
+			return LuaValue.varargsOf(values, start-1, values.length-start+1);
+		}
+		void copyto(LuaValue[] dest, int offset, int length) {
+			int n = Math.min(values.length, length);
+			System.arraycopy(values, 0, dest, offset, n);
+			for (int i = n; i < length; ++i) dest[offset+i] = LuaValue.NIL;
+		}
+	}
+
 	/** Copy values in a varargs into a destination array.
 	 * Internal utility method not intended to be called directly from user code.
 	 * @return Varargs containing same values, but flattened.
@@ -718,8 +782,8 @@ public abstract class Varargs {
 		case 2: return new PairVarargs(arg1(), arg(2));
 		default:
 			LuaValue[] v = new LuaValue[n];
-			copyto(v, 0, n);
-			return new ArrayVarargs(v, LuaValue.NONE);
+			snapshotTo(this, v, 0, n);
+			return new OwnedArrayVarargs(v);
 		}
 	}
 }

@@ -1,0 +1,12 @@
+--- a/src/core/org/luaj/vm2/LuaTable.java
++++ b/src/core/org/luaj/vm2/LuaTable.java
+@@ -472,8 +472,7 @@
+ 				}
+ 			}
+ 			if ( checkLoadFactor() ) {
+-				if ( (m_metatable == null || !m_metatable.useWeakValues())
+-					&& key.isinttype() && key.toint() > 0 ) {
++				if ( key.isinttype() && key.toint() > 0 ) {
+ 					// a rehash might make room in the array portion for this key.
+ 					rehash( key.toint() );
+ 					if ( arrayset(key.toint(), value) )

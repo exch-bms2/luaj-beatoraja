@@ -1184,7 +1184,10 @@ public class LuaValue extends Varargs {
 	 * @throws LuaError if {@code this} is not a table,
 	 * or there is no {@link #NEWINDEX} metatag
 	 */
-	public void set( String key, LuaValue value ) { set(valueOf(key), value ); }
+	/** Keys stored from Java share the canonical instance used by compiled constants. */
+	private static LuaString internedKey( String key ) { return LuaString.valueOf(key).intern(); }
+
+	public void set( String key, LuaValue value ) { set(internedKey(key), value ); }
 	
 	/** Set a value in a table without metatag processing using {@link #NEWINDEX}.
 	 * @param key the key to use, must not be null
@@ -1192,7 +1195,7 @@ public class LuaValue extends Varargs {
 	 * @throws LuaError if {@code this} is not a table,
 	 * or there is no {@link #NEWINDEX} metatag
 	 */
-	public void set( String key, double value ) { set(valueOf(key), valueOf(value) ); }
+	public void set( String key, double value ) { set(internedKey(key), valueOf(value) ); }
 	
 	/** Set a value in a table without metatag processing using {@link #NEWINDEX}.
 	 * @param key the key to use, must not be null
@@ -1200,7 +1203,7 @@ public class LuaValue extends Varargs {
 	 * @throws LuaError if {@code this} is not a table,
 	 * or there is no {@link #NEWINDEX} metatag
 	 */
-	public void set( String key, int value ) { set(valueOf(key), valueOf(value) ); }
+	public void set( String key, int value ) { set(internedKey(key), valueOf(value) ); }
 	
 	/** Set a value in a table without metatag processing using {@link #NEWINDEX}.
 	 * @param key the key to use, must not be null
@@ -1208,7 +1211,7 @@ public class LuaValue extends Varargs {
 	 * @throws LuaError if {@code this} is not a table,
 	 * or there is no {@link #NEWINDEX} metatag
 	 */
-	public void set( String key, String value ) { set(valueOf(key), valueOf(value) ); }
+	public void set( String key, String value ) { set(internedKey(key), valueOf(value) ); }
 
 	/** Get a value in a table without metatag processing.
 	 * @param key the key to look up, must not be {@link #NIL} or null
@@ -1257,28 +1260,28 @@ public class LuaValue extends Varargs {
 	 * @param value the value to use, can be {@link #NIL}, must not be null
 	 * @throws LuaError if {@code this} is not a table
 	 */
-	public void rawset( String key, LuaValue value ) { rawset(valueOf(key),value); }
+	public void rawset( String key, LuaValue value ) { rawset(internedKey(key),value); }
 	
 	/** Set a value in a table without metatag processing.
 	 * @param key the key to use, must not be null
 	 * @param value the value to use
 	 * @throws LuaError if {@code this} is not a table
 	 */
-	public void rawset( String key, double value ) { rawset(valueOf(key),valueOf(value)); }
+	public void rawset( String key, double value ) { rawset(internedKey(key),valueOf(value)); }
 	
 	/** Set a value in a table without metatag processing.
 	 * @param key the key to use, must not be null
 	 * @param value the value to use
 	 * @throws LuaError if {@code this} is not a table
 	 */
-	public void rawset( String key, int value ) { rawset(valueOf(key),valueOf(value)); }
+	public void rawset( String key, int value ) { rawset(internedKey(key),valueOf(value)); }
 	
 	/** Set a value in a table without metatag processing.
 	 * @param key the key to use, must not be null
 	 * @param value the value to use, must not be null
 	 * @throws LuaError if {@code this} is not a table
 	 */
-	public void rawset( String key, String value ) { rawset(valueOf(key),valueOf(value)); }
+	public void rawset( String key, String value ) { rawset(internedKey(key),valueOf(value)); }
 
 	/** Set list values in a table without invoking metatag processing
 	 * <p>

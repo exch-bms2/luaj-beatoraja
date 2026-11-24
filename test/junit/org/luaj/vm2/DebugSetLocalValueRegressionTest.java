@@ -1,0 +1,71 @@
+package org.luaj.vm2;
+
+import junit.framework.TestCase;
+import org.luaj.vm2.lib.VarArgFunction;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
+public class DebugSetLocalValueRegressionTest extends TestCase {
+    private Globals globals;
+    protected void setUp() { globals=JsePlatform.debugGlobals(); }
+    private void missing(Varargs args,int argument) {
+        try { globals.get("debug").get("setlocal").invoke(args); fail("value required"); }
+        catch(LuaError e) { assertTrue(e.getMessage().contains("bad argument #"+argument+": value expected")); }
+    }
+    public void testMissingValueWithoutThread() {
+        missing(LuaValue.varargsOf(LuaValue.ONE,LuaValue.ONE),3);
+        assertNull(globals.debuglib.getCallFrame(1));
+    }
+    public void testMissingValueWithExplicitThread() {
+        LuaValue co=globals.load("return coroutine.create(function() end)").call();
+        missing(LuaValue.varargsOf(new LuaValue[] {co,LuaValue.ONE,LuaValue.ONE}),4);
+        assertEquals("suspended",globals.get("coroutine").get("status").call(co).tojstring());
+    }
+    public void testMissingValueCannotOverwriteLuaLocal() {
+        globals.set("probe",new VarArgFunction() {
+            public Varargs invoke(Varargs args) {
+                missing(LuaValue.varargsOf(LuaValue.ONE,LuaValue.ONE),3);
+                Varargs local=globals.get("debug").get("getlocal").invoke(LuaValue.varargsOf(LuaValue.ONE,LuaValue.ONE));
+                assertEquals("a",local.arg1().tojstring()); assertEquals(11,local.arg(2).toint());
+                return LuaValue.NONE;
+            }
+        });
+        assertEquals(11,globals.load("local function f(a) probe(); return a end; return f(11)").call().toint());
+    }
+    public void testExplicitNilStillWritesLuaLocal() {
+        Varargs r=globals.load("local function f(a) local n=debug.setlocal(1,1,nil); "
+                + "assert(type(n)=='string' and n=='a'); assert(select('#',debug.setlocal(1,1,nil))==1); return a end; return f(11)").invoke();
+        assertEquals(1,r.narg()); assertTrue(r.arg1().isnil());
+    }
+    public void testExplicitNilForJavaFrameStillReturnsOneNil() {
+        Varargs r=globals.load("local ok,n,count=pcall(function() local n=debug.setlocal(2,1,nil); "
+                + "return n,select('#',debug.setlocal(2,1,nil)) end); assert(ok,n); return n,count").invoke();
+        assertTrue(r.arg1().isnil()); assertEquals(1,r.arg(2).toint());
+    }
+    public void testMissingValueEvenForInvalidLocalOrAbsentFrame() {
+        for(int level:new int[] {1,Integer.MAX_VALUE}) for(int index:new int[] {0,-1,Integer.MAX_VALUE})
+            missing(LuaValue.varargsOf(LuaValue.valueOf(level),LuaValue.valueOf(index)),3);
+    }
+    public void testSuspendedCoroutineLocalSurvivesMissingValue() {
+        LuaValue co=globals.load("local co=coroutine.create(function(a) coroutine.yield('paused'); return a end); assert(coroutine.resume(co,11)); return co").call();
+        try { missing(LuaValue.varargsOf(new LuaValue[] {co,LuaValue.ONE,LuaValue.ONE}),4); }
+        finally {
+            Varargs r=globals.get("coroutine").get("resume").invoke(co);
+            assertTrue(r.arg1().toboolean()); assertEquals(11,r.arg(2).toint());
+        }
+    }
+    public void testProtectedErrorsAndHandlerState() {
+        Varargs r=globals.load("local hits=0; local ok,e=pcall(debug.setlocal,1,1); "
+                + "assert(not ok and e:find('value expected')); "
+                + "local ok,v=xpcall(function() debug.setlocal(1,1) end,function(e) "
+                + "assert(type(e)=='string' and e:find('value expected')); hits=hits+1; return 'handled' end); "
+                + "return ok,v,hits", "setlocal-missing-value").invoke();
+        assertFalse(r.arg1().toboolean()); assertEquals("handled",r.arg(2).tojstring()); assertEquals(1,r.arg(3).toint());
+        assertNull(globals.running.errorfunc); assertNull(globals.debuglib.getCallFrame(1));
+    }
+    public void testLevelAndIndexValidationStillPrecedeValueCheck() {
+        for(Varargs args:new Varargs[] {LuaValue.varargsOf(LuaValue.TRUE,LuaValue.ONE),LuaValue.varargsOf(LuaValue.ONE,LuaValue.TRUE)}) {
+            try { globals.get("debug").get("setlocal").invoke(args); fail("integer required"); }
+            catch(LuaError e) { assertTrue(e.getMessage().contains("int expected, got boolean")); }
+        }
+    }
+}

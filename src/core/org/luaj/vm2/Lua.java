@@ -30,7 +30,9 @@ package org.luaj.vm2;
  */
 public class Lua {
 	/** version is supplied by ant build task */
-	public static final String _VERSION = "Luaj 0.0";
+	// Preserve the runtime identity of the existing JSE jar. The fork artifact
+	// version is tracked independently in pom.xml.
+	public static final String _VERSION = "Luaj-jse 3.0.2";
 	
 	/** use return values from previous op */
 	public static final int LUA_MULTRET = -1;

@@ -27,6 +27,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 
 import org.luaj.vm2.lib.MathLib;
 
@@ -238,6 +240,42 @@ public class LuaString extends LuaValue {
 		this.m_offset = offset;
 		this.m_length = length;
 		this.m_hashcode = hashCode(bytes, offset, length);
+	}
+
+	/** Canonical instances of strings used as constants and table keys, held weakly. */
+	private static final WeakHashMap<LuaString, WeakReference<LuaString>> INTERNED =
+			new WeakHashMap<LuaString, WeakReference<LuaString>>();
+
+	/** Set only on the canonical instance in {@link #INTERNED}. A stale false only costs a lookup. */
+	private boolean m_interned;
+
+	/**
+	 * Return the canonical instance with the same bytes.
+	 * <p>
+	 * Compiled constants and table keys are interned so that key lookups usually
+	 * succeed on reference equality instead of comparing bytes. Lua semantics are
+	 * unchanged: strings remain equal by content, and an instance is kept only while
+	 * it is strongly reachable elsewhere.
+	 */
+	public LuaString intern() {
+		if (m_interned)
+			return this;
+		synchronized (INTERNED) {
+			WeakReference<LuaString> ref = INTERNED.get(this);
+			LuaString canonical = ref != null ? ref.get() : null;
+			if (canonical == null) {
+				// Key and value refer to the same object, so both weak references clear together.
+				INTERNED.put(this, new WeakReference<LuaString>(this));
+				m_interned = true;
+				canonical = this;
+			}
+			return canonical;
+		}
+	}
+
+	/** Exposed to package for testing. */
+	boolean isInterned() {
+		return m_interned;
 	}
 
 	public boolean isstring() {
@@ -479,6 +517,9 @@ public class LuaString extends LuaValue {
 	public boolean raweq( LuaString s ) {
 		if ( this == s )
 			return true;
+		// Two distinct canonical instances never have the same bytes.
+		if ( m_interned && s.m_interned )
+			return false;
 		if ( s.m_length != m_length )
 			return false;
 		if ( s.m_bytes == m_bytes && s.m_offset == m_offset )

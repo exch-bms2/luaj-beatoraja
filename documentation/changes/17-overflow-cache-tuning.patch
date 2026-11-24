@@ -1,0 +1,49 @@
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -146,11 +146,15 @@
+ 		private static final AtomicReferenceFieldUpdater<StackCache, LuaValue[]> PRIMARY =
+ 				AtomicReferenceFieldUpdater.newUpdater(StackCache.class, LuaValue[].class, "primary");
+ 		private final int reservedPrimarySlots;
++		private final int overflowSlotBudget;
+ 		private volatile LuaValue[] primary;
+ 		private ArrayDeque<LuaValue[]> overflow;
+ 		private int overflowSlots;
+ 
+-		StackCache(int stackSize) { reservedPrimarySlots = Math.min(stackSize, MAX_CACHED_SLOTS); }
++		StackCache(int stackSize) {
++			reservedPrimarySlots = Math.min(stackSize, MAX_CACHED_SLOTS);
++			overflowSlotBudget = MAX_CACHED_SLOTS - reservedPrimarySlots;
++		}
+ 
+ 		LuaValue[] take(int size) {
+ 			LuaValue[] stack = primary != null? PRIMARY.getAndSet(this, null): null;
+@@ -159,8 +163,9 @@
+ 		}
+ 
+ 		private synchronized LuaValue[] takeOverflow(int size) {
+-			while (overflow != null && !overflow.isEmpty()) {
+-				LuaValue[] stack = overflow.pop();
++			if (overflow == null) return null;
++			LuaValue[] stack;
++			while ((stack = overflow.pollFirst()) != null) {
+ 				overflowSlots -= stack.length;
+ 				if (stack.length == size) return stack;
+ 			}
+@@ -168,7 +173,7 @@
+ 		}
+ 
+ 		void put(LuaValue[] stack) {
+-			if (stack.length <= reservedPrimarySlots && primary == null) {
++			if (primary == null && stack.length <= reservedPrimarySlots) {
+ 				// A racing release can discard an idle array, never lend one twice.
+ 				// Release publication makes the preceding reference clearing visible.
+ 				PRIMARY.lazySet(this, stack);
+@@ -178,7 +183,7 @@
+ 		}
+ 
+ 		private synchronized void putOverflow(LuaValue[] stack) {
+-			if (stack.length > MAX_CACHED_SLOTS - reservedPrimarySlots - overflowSlots) return;
++			if (stack.length > overflowSlotBudget - overflowSlots) return;
+ 			if (overflow == null) overflow = new ArrayDeque<LuaValue[]>();
+ 			if (overflow.size() < MAX_CACHED_STACKS - 1) {
+ 				overflow.push(stack);

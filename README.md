@@ -1,3 +1,38 @@
+# luaj-beatoraja
+
+LuaJ互換性を維持しながら、beatorajaの短い関数呼び出しとメモリ確保を改善するforkです。
+Javaパッケージは `org.luaj.vm2` を維持し、JDK 17でビルドします。
+
+```sh
+mvn -Dtest=StackLifetimeTest,StackPoolTest,WeakIntegerKeyTest,FmodRegressionTest,ModfRegressionTest,MinMaxRegressionTest,LuaDoubleFormattingTest,LoadReaderRegressionTest,PcallScopeRegressionTest,DebugLocalRegressionTest,DebugJavaFrameRegressionTest,DebugFunctionLocalRegressionTest,DebugSetLocalValueRegressionTest,DebugVarargsRegressionTest,DebugStackLevelRegressionTest,SingleCallPoolRegressionTest,MultiReturnOwnershipTest,StringInternRegressionTest test
+mvn -DskipTests package
+```
+
+成果物: `target/luaj-beatoraja-0.1.0-SNAPSHOT.jar`。
+既存のLuaJ jarと同時にクラスパスへ追加せず、置き換えて使用します。
+IntelliJではルートの `pom.xml` をMavenプロジェクトとして読み込み、Project SDKとMaven実行JDKに17を指定してください。
+
+基点・現行jarとの対応状況・既存テストの失敗・JMH比較手順・残作業は
+[開発と検証](documentation/DEVELOPMENT.md) を参照してください。現段階は実スキン検証前の開発版です。
+350クラスの差分分類と既存51件の失敗原因は [互換性監査](documentation/COMPATIBILITY-AUDIT.md) にまとめています。
+弱テーブル・fmod・modfの個別修正と、固定649件の比較結果は [正当性修正](documentation/CORRECTNESS-FIXES.md) を参照してください。
+続くmin/maxと有限数値の文字列化の修正は [数値の正当性修正](documentation/NUMERIC-FIXES.md) に記録しています。
+load readerとpcall/xpcallの修正は [保護呼び出しとEOFの修正](documentation/PROTECTED-CALL-FIXES.md) を参照してください。
+
+debug.getlocal/setlocalの無効な参照・Javaフレームの修正は [ローカル参照の修正](documentation/DEBUG-LOCAL-FIXES.md) を参照してください。
+
+getlocalの関数形式とsetlocalの値引数検証は [debug APIの修正](documentation/DEBUG-API-FIXES.md) を参照してください。
+
+負の添字による可変長引数アクセスとレベル検証は [debug可変長引数の修正](documentation/DEBUG-VARARG-FIXES.md) を参照してください。
+
+単値呼び出しのJMH基準と最適化は [単値呼び出しの性能検証](documentation/SINGLE-CALL-PERFORMANCE.md) を参照してください。
+
+多値返却の最適化と最新の性能比較手順は [多値返却の性能検証](documentation/MULTI-RETURN-PERFORMANCE.md) を参照してください。
+
+実スキン計測に基づく文字列キーのintern化は [文字列キーのintern化](documentation/STRING-INTERNING.md) を参照してください。
+
+以下は上流の説明・変更履歴です。
+
 # This is a fork!
 <div style="border: 1px dotted red; margin: 1.em 0.5em; font-weight: bold; color: red;">
 This repository has been forked from the original CVS sources of Luaj.

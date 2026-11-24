@@ -1,0 +1,128 @@
+--- /dev/null
++++ b/test/junit/org/luaj/vm2/MultiReturnOwnershipTest.java
+@@ -0,0 +1,125 @@
++package org.luaj.vm2;
++
++import java.util.Arrays;
++import junit.framework.TestCase;
++import org.luaj.vm2.lib.DebugLib;
++import org.luaj.vm2.lib.VarArgFunction;
++import org.luaj.vm2.lib.jse.JsePlatform;
++
++public class MultiReturnOwnershipTest extends TestCase {
++    private Globals g;
++    protected void setUp() { g=JsePlatform.standardGlobals(); }
++    private LuaClosure function(String code) { return g.load(code,"multi-return-test").call().checkclosure(); }
++    private void values(Varargs v,LuaValue... expected) {
++        assertEquals(expected.length,v.narg());
++        for(int i=0;i<expected.length;i++) assertSame(expected[i],v.arg(i+1));
++    }
++    private int resultRegister(Prototype p) {
++        for(int instruction:p.code) if((instruction&63)==Lua.OP_RETURN && (instruction>>>23)>=4) return (instruction>>>6)&255;
++        throw new AssertionError("missing fixed multi-return");
++    }
++    public void testFixedResultsSurviveReuseWithNilAndTypes() {
++        LuaClosure f=function("return function(a,b,c,d) return a,b,c,d end");
++        LuaTable table=new LuaTable(); LuaValue text=LuaValue.valueOf("日本語");
++        Varargs result=f.invoke(LuaValue.varargsOf(new LuaValue[] {table,LuaValue.NIL,text,LuaValue.NIL}));
++        for(int i=0;i<20;i++) f.invoke(LuaValue.NONE);
++        values(result,table,LuaValue.NIL,text,LuaValue.NIL);
++    }
++    public void testPrefixedOpenResultsStayIndependent() {
++        LuaClosure f=function("local function inner(x) return x,nil,x+2,nil end; return function(x) return x-1,inner(x) end");
++        Varargs first=f.invoke(LuaValue.ONE); f.invoke(LuaValue.valueOf(20));
++        values(first,LuaValue.ZERO,LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++    }
++    public void testBorrowedInputAndJavaResultsAreCopied() {
++        final LuaValue[] shared={LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL};
++        g.set("borrowed",new VarArgFunction() { public Varargs invoke(Varargs args) { return LuaValue.varargsOf(shared); } });
++        LuaClosure f=function("return function(...) return ... end");
++        Varargs direct=f.invoke(LuaValue.varargsOf(shared));
++        Varargs nested=g.load("return 7,borrowed()").invoke();
++        Arrays.fill(shared,LuaValue.valueOf(99));
++        values(direct,LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++        values(nested,LuaValue.valueOf(7),LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++    }
++    public void testUnknownVarargsCannotClaimOwnedStorage() {
++        final LuaValue[] array={LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL};
++        final LuaValue[][] exposed=new LuaValue[1][];
++        Varargs unknown=new Varargs() {
++            public int narg() { return array.length; }
++            public LuaValue arg1() { return array[0]; }
++            public LuaValue arg(int i) { return i>0 && i<=array.length?array[i-1]:LuaValue.NIL; }
++            public Varargs subargs(int start) { return LuaValue.varargsOf(array).subargs(start); }
++            void copyto(LuaValue[] dest,int offset,int length) {
++                exposed[0]=dest; for(int i=0;i<length;i++) dest[offset+i]=arg(i+1);
++            }
++        };
++        Varargs copy=unknown.dealias(); Varargs second=copy.dealias(); Arrays.fill(array,LuaValue.ZERO);
++        if(exposed[0]!=null) Arrays.fill(exposed[0],LuaValue.ZERO);
++        values(second,LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++    }
++    public void testSlicesBoundsAndPaddingAfterDetachment() {
++        LuaValue[] array={LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.valueOf(4),LuaValue.NIL};
++        Varargs owned=LuaValue.varargsOf(array).dealias(); Arrays.fill(array,LuaValue.ZERO);
++        values(owned.subargs(3).dealias(),LuaValue.valueOf(3),LuaValue.valueOf(4),LuaValue.NIL);
++        assertEquals(0,owned.subargs(Integer.MAX_VALUE).narg());
++        assertTrue(owned.arg(0).isnil()); assertTrue(owned.arg(6).isnil());
++        try { owned.subargs(0); fail("positive start required"); } catch(LuaError expected) { }
++        LuaValue[] dest=new LuaValue[9]; Arrays.fill(dest,LuaValue.TRUE); owned.copyto(dest,1,7);
++        assertSame(LuaValue.TRUE,dest[0]); assertSame(LuaValue.TRUE,dest[8]);
++        assertSame(LuaValue.ONE,dest[1]); assertTrue(dest[5].isnil()); assertTrue(dest[6].isnil()); assertTrue(dest[7].isnil());
++    }
++    public void testExecuteOverrideFinallyStillChangesReturnRegisters() {
++        LuaClosure original=function("return function(x) return x,x+1,x+2,x+3 end"); final int a=resultRegister(original.p);
++        LuaClosure custom=new LuaClosure(original.p,g) {
++            protected Varargs execute(LuaValue[] stack,Varargs args) {
++                try { return super.execute(stack,args); } finally { stack[a]=LuaValue.valueOf(99); }
++            }
++        };
++        assertEquals(99,custom.invoke(LuaValue.ONE).arg1().toint()); assertEquals(99,custom.call(LuaValue.ONE).toint());
++    }
++    public void testCustomExecuteReturningBorrowedValuesStillDetaches() {
++        final LuaValue[] array={LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL};
++        LuaClosure original=function("return function() return 7 end");
++        LuaClosure custom=new LuaClosure(original.p,g) {
++            protected Varargs execute(LuaValue[] stack,Varargs args) { return LuaValue.varargsOf(array); }
++        };
++        Varargs result=custom.invoke(); Arrays.fill(array,LuaValue.ZERO);
++        values(result,LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++    }
++    public void testDebugReturnObserverRunsBeforeDetachment() {
++        final LuaClosure[] selected=new LuaClosure[1]; final LuaValue[][] active=new LuaValue[1][];
++        g.load(new DebugLib() {
++            public void onCall(LuaClosure c,Varargs args,LuaValue[] stack) {
++                super.onCall(c,args,stack); if(c==selected[0]) active[0]=stack;
++            }
++            public void onReturn() {
++                if(active[0]!=null) { active[0][resultRegister(selected[0].p)]=LuaValue.valueOf(99); active[0]=null; }
++                super.onReturn();
++            }
++        });
++        selected[0]=function("return function(x) return x,x+1,x+2,x+3 end");
++        assertEquals(99,selected[0].invoke(LuaValue.ONE).arg1().toint()); assertNull(g.debuglib.getCallFrame(1));
++    }
++    public void testDiscardedResultsKeepOnlyFirstValue() {
++        LuaClosure f=function("return function(x) return x,nil,x+2,nil end");
++        assertSame(LuaValue.ONE,f.call(LuaValue.ONE));
++        assertSame(LuaValue.NIL,function("return function() return nil,1,2,3 end").call());
++    }
++    public void testStateAndTableIdentityAreNotCached() {
++        LuaClosure f=function("local n=0; return function(t) n=n+1; return n,t,t,nil end");
++        LuaTable a=new LuaTable(),b=new LuaTable(); Varargs first=f.invoke(a),second=f.invoke(b);
++        values(first,LuaValue.ONE,a,a,LuaValue.NIL); values(second,LuaValue.valueOf(2),b,b,LuaValue.NIL);
++    }
++    public void testProtectedErrorsAndYieldResultsRemainStable() {
++        Varargs r=g.load("local co=coroutine.create(function() local a,b,c,d=coroutine.yield(1,nil,3,nil); return a,b,c,d end); "
++                + "local first=table.pack(coroutine.resume(co)); local second=table.pack(coroutine.resume(co,5,nil,7,nil)); "
++                + "assert(first.n==5 and second.n==5 and first[2]==1 and second[2]==5); "
++                + "local ok,a,b,c,d=pcall(function() return 1,nil,3,nil end); assert(ok); return a,b,c,d").invoke();
++        values(r,LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++    }
++    public void testRetainedResultsAfterExceptionAndTailcall() {
++        LuaClosure f=function("local function inner(x) return x,nil,x+2,nil end; return function(x) if x==nil then error('expected') end; return inner(x) end");
++        Varargs saved=f.invoke(LuaValue.ONE);
++        try { f.invoke(); fail("expected error"); } catch(LuaError expected) { }
++        f.invoke(LuaValue.valueOf(20)); values(saved,LuaValue.ONE,LuaValue.NIL,LuaValue.valueOf(3),LuaValue.NIL);
++    }
++}

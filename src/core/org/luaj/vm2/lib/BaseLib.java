@@ -23,6 +23,7 @@ package org.luaj.vm2.lib;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.Lua;
@@ -221,9 +222,14 @@ public class BaseLib extends TwoArgFunction implements ResourceFinder {
 	final class pcall extends VarArgFunction {
 		public Varargs invoke(Varargs args) {
 			LuaValue func = args.checkvalue(1);
-			if (globals != null && globals.debuglib != null)
-				globals.debuglib.onCall(this);
+			final WeakReference<LuaThread> thread = new WeakReference<LuaThread>(globals.running);
+			final LuaValue previous = globals.running.errorfunc;
+			// This protected boundary catches its own errors. An enclosing xpcall
+			// handler applies only after an error escapes this boundary.
+			globals.running.errorfunc = null;
 			try {
+				if (globals.debuglib != null)
+					globals.debuglib.onCall(this);
 				return varargsOf(TRUE, func.invoke(args.subargs(2)));
 			} catch ( LuaError le ) {
 				final LuaValue m = le.getMessageObject();
@@ -232,8 +238,14 @@ public class BaseLib extends TwoArgFunction implements ResourceFinder {
 				final String m = e.getMessage();
 				return varargsOf(FALSE, valueOf(m!=null? m: e.toString()));
 			} finally {
-				if (globals != null && globals.debuglib != null)
-					globals.debuglib.onReturn();
+				try {
+					if (globals.debuglib != null)
+						globals.debuglib.onReturn();
+				} finally {
+					// Do not keep an abandoned, suspended coroutine alive just to restore it.
+					LuaThread owner = thread.get();
+					if (owner != null) owner.errorfunc = previous;
+				}
 			}
 		}
 	}
@@ -476,7 +488,7 @@ public class BaseLib extends TwoArgFunction implements ResourceFinder {
 				offset = ls.m_offset;
 				remaining = ls.m_length;
 				if (remaining <= 0)
-					return -1;
+					return remaining = -1;
 			}
 			--remaining;
 			return 0xFF&bytes[offset++];

@@ -1,0 +1,45 @@
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -138,25 +138,31 @@
+ 		return "function: " + p.toString();
+ 	}
+ 	
+-	private synchronized LuaValue[] getNewStack() {
++	private LuaValue[] getNewStack() {
+ 		int max = p.maxstacksize;
+-		LuaValue[] stack = null;
+-		while (freeStacks != null && !freeStacks.isEmpty()) {
+-			LuaValue[] candidate = freeStacks.pop();
+-			cachedSlots -= candidate.length;
+-			if (candidate.length == max) {
+-				stack = candidate;
+-				break;
+-			}
+-		}
++		LuaValue[] stack = takeCachedStack(max);
+ 		if (stack == null)
+ 			stack = new LuaValue[max];
+ 		System.arraycopy(NILS, 0, stack, 0, max);
+ 		return stack;
+ 	}
+ 
+-	private synchronized void releaseStack(LuaValue[] stack) {
++	private synchronized LuaValue[] takeCachedStack(int max) {
++		while (freeStacks != null && !freeStacks.isEmpty()) {
++			LuaValue[] candidate = freeStacks.pop();
++			cachedSlots -= candidate.length;
++			if (candidate.length == max)
++				return candidate;
++		}
++		return null;
++	}
++
++	private void releaseStack(LuaValue[] stack) {
+ 		Arrays.fill(stack, null);
++		cacheStack(stack);
++	}
++
++	private synchronized void cacheStack(LuaValue[] stack) {
+ 		if (stack.length > MAX_CACHED_SLOTS - cachedSlots)
+ 			return;
+ 		if (freeStacks == null)

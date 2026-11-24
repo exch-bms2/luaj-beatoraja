@@ -1,0 +1,1968 @@
+{
+  "attribute_kinds": [
+    "Code",
+    "ConstantValue",
+    "Deprecated",
+    "EnclosingMethod",
+    "Exceptions",
+    "InnerClasses",
+    "LineNumberTable",
+    "LocalVariableTable",
+    "LocalVariableTypeTable",
+    "Signature",
+    "SourceFile",
+    "StackMapTable"
+  ],
+  "baseline_sha256": "c19a2072287bcc696af7b4bdc322f5dc3f3035725999b5034b14129ce51da0be",
+  "binary_api_differences": [],
+  "class_categories": {
+    "compiler_or_declaration_only": 308,
+    "distribution_version_branding": 6,
+    "javap_equal": 29,
+    "redundant_checkcast_only": 6,
+    "unsafe_stack_cache_customization": 1
+  },
+  "class_count": 350,
+  "classes": {
+    "lua": {
+      "category": "distribution_version_branding",
+      "changed_members": [
+        "main:([Ljava/lang/String;)V",
+        "version:Ljava/lang/String;"
+      ],
+      "generic_signature_changes": []
+    },
+    "luac": {
+      "category": "distribution_version_branding",
+      "changed_members": [
+        "luac:([Ljava/lang/String;)V",
+        "version:Ljava/lang/String;"
+      ],
+      "generic_signature_changes": []
+    },
+    "luajc": {
+      "category": "distribution_version_branding",
+      "changed_members": [
+        "luajc:([Ljava/lang/String;)V",
+        "processFile:(Lluajc$InputFile;)V",
+        "version:Ljava/lang/String;"
+      ],
+      "generic_signature_changes": []
+    },
+    "luajc$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "luajc$InputFile": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "luajc$LocalClassLoader": {
+      "category": "redundant_checkcast_only",
+      "changed_members": [
+        "findClass:(Ljava/lang/String;)Ljava/lang/Class;"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Buffer": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$AbstractBufferedStream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$BufferedStream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$Compiler": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$Loader": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$StrReader": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$UTF8Stream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Globals$Undumper": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LoadState": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LoadState$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LoadState$GlobalsUndumper": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LocVars": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Lua": {
+      "category": "distribution_version_branding",
+      "changed_members": [
+        "_VERSION:Ljava/lang/String;"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaBoolean": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaClosure": {
+      "category": "unsafe_stack_cache_customization",
+      "changed_members": [
+        "MAX_STACK_CACHE_SIZE:I",
+        "call:()Lorg/luaj/vm2/LuaValue;",
+        "call:(Lorg/luaj/vm2/LuaValue;)Lorg/luaj/vm2/LuaValue;",
+        "call:(Lorg/luaj/vm2/LuaValue;Lorg/luaj/vm2/LuaValue;)Lorg/luaj/vm2/LuaValue;",
+        "call:(Lorg/luaj/vm2/LuaValue;Lorg/luaj/vm2/LuaValue;Lorg/luaj/vm2/LuaValue;)Lorg/luaj/vm2/LuaValue;",
+        "freeStacks:Ljava/util/Stack;",
+        "getNewStack:()[Lorg/luaj/vm2/LuaValue;",
+        "onInvoke:(Lorg/luaj/vm2/Varargs;)Lorg/luaj/vm2/Varargs;",
+        "org.luaj.vm2.LuaClosure:(Lorg/luaj/vm2/Prototype;Lorg/luaj/vm2/LuaValue;)V",
+        "releaseStack:([Lorg/luaj/vm2/LuaValue;)V"
+      ],
+      "generic_signature_changes": [
+        "fields:freeStacks:Ljava/util/Stack;"
+      ]
+    },
+    "org.luaj.vm2.LuaDouble": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaError": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaInteger": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaNil": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaNumber": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaString": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaString$RecentShortStrings": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$DeadSlot": {
+      "category": "redundant_checkcast_only",
+      "changed_members": [
+        "key:()Lorg/luaj/vm2/LuaValue;"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$Entry": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$IntKeyEntry": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$LinkSlot": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$NormalEntry": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$NumberValueEntry": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$Slot": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaTable$StrongSlot": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaThread": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaThread$State": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaUserdata": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaValue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.LuaValue$None": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Metatable": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.NonTableMetatable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.OrphanedThread": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Print": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Prototype": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.TailcallVarargs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.UpValue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Upvaldesc": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Varargs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Varargs$ArrayPartVarargs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Varargs$ArrayVarargs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Varargs$PairVarargs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.Varargs$SubVarargs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$WeakKeyAndValueSlot": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$WeakKeySlot": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$WeakSlot": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$WeakUserdata": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$WeakValue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.WeakTable$WeakValueSlot": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Block": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:stats:Ljava/util/List;"
+      ]
+    },
+    "org.luaj.vm2.ast.Chunk": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$AnonFuncDef": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$BinopExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$Constant": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$FieldExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$FuncCall": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$IndexExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$MethodCall": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$NameExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$ParensExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$PrimaryExp": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$UnopExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$VarExp": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Exp$VarargsExp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.FuncArgs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:exps:Ljava/util/List;",
+        "methods:<init>:(Ljava/util/List;)V",
+        "methods:explist:(Ljava/util/List;)Lorg/luaj/vm2/ast/FuncArgs;"
+      ]
+    },
+    "org.luaj.vm2.ast.FuncBody": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.FuncName": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:dots:Ljava/util/List;"
+      ]
+    },
+    "org.luaj.vm2.ast.Name": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.NameResolver": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "methods:defineLocalVars:(Ljava/util/List;)V"
+      ]
+    },
+    "org.luaj.vm2.ast.NameScope": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:LUA_KEYWORDS:Ljava/util/Set;",
+        "fields:namedVariables:Ljava/util/Map;"
+      ]
+    },
+    "org.luaj.vm2.ast.ParList": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:EMPTY_NAMELIST:Ljava/util/List;",
+        "fields:names:Ljava/util/List;",
+        "methods:<init>:(Ljava/util/List;Z)V"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "methods:assignment:(Ljava/util/List;Ljava/util/List;)Lorg/luaj/vm2/ast/Stat;",
+        "methods:forgeneric:(Ljava/util/List;Ljava/util/List;Lorg/luaj/vm2/ast/Block;)Lorg/luaj/vm2/ast/Stat;",
+        "methods:ifthenelse:(Lorg/luaj/vm2/ast/Exp;Lorg/luaj/vm2/ast/Block;Ljava/util/List;Ljava/util/List;Lorg/luaj/vm2/ast/Block;)Lorg/luaj/vm2/ast/Stat;",
+        "methods:localassignment:(Ljava/util/List;Ljava/util/List;)Lorg/luaj/vm2/ast/Stat;",
+        "methods:returnstat:(Ljava/util/List;)Lorg/luaj/vm2/ast/Stat;"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat$Assign": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:exps:Ljava/util/List;",
+        "fields:vars:Ljava/util/List;",
+        "methods:<init>:(Ljava/util/List;Ljava/util/List;)V"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat$Break": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$FuncCallStat": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$FuncDef": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$GenericFor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:exps:Ljava/util/List;",
+        "fields:names:Ljava/util/List;",
+        "methods:<init>:(Ljava/util/List;Ljava/util/List;Lorg/luaj/vm2/ast/Block;)V"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat$Goto": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$IfThenElse": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:elseifblocks:Ljava/util/List;",
+        "fields:elseifexps:Ljava/util/List;",
+        "methods:<init>:(Lorg/luaj/vm2/ast/Exp;Lorg/luaj/vm2/ast/Block;Ljava/util/List;Ljava/util/List;Lorg/luaj/vm2/ast/Block;)V"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat$Label": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$LocalAssign": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:names:Ljava/util/List;",
+        "fields:values:Ljava/util/List;",
+        "methods:<init>:(Ljava/util/List;Ljava/util/List;)V"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat$LocalFuncDef": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$NumericFor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$RepeatUntil": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Stat$Return": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:values:Ljava/util/List;",
+        "methods:<init>:(Ljava/util/List;)V"
+      ]
+    },
+    "org.luaj.vm2.ast.Stat$WhileDo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Str": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.SyntaxElement": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.TableConstructor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:fields:Ljava/util/List;"
+      ]
+    },
+    "org.luaj.vm2.ast.TableField": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Variable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.ast.Visitor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "methods:visitExps:(Ljava/util/List;)V",
+        "methods:visitNames:(Ljava/util/List;)V",
+        "methods:visitVars:(Ljava/util/List;)V"
+      ]
+    },
+    "org.luaj.vm2.compiler.Constants": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.DumpState": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.FuncState": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.FuncState$BlockCnt": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.InstructionPtr": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.IntPtr": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$ConsControl": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$Dyndata": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$LHS_assign": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$Labeldesc": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$Priority": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$SemInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$Token": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$Vardesc": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$expdesc": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LexState$expdesc$U": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LuaC": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.compiler.LuaC$CompileState": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib": {
+      "category": "distribution_version_branding",
+      "changed_members": [
+        "call:(Lorg/luaj/vm2/LuaValue;Lorg/luaj/vm2/LuaValue;)Lorg/luaj/vm2/LuaValue;"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$StringInputStream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$_assert": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$collectgarbage": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$dofile": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$error": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$getmetatable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$inext": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$ipairs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$load": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$loadfile": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$next": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$pairs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$pcall": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$print": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$rawequal": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$rawget": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$rawlen": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$rawset": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$select": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$setmetatable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$tonumber": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$tostring": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$type": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.BaseLib$xpcall": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.Bit32Lib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.Bit32Lib$Bit32Lib2": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.Bit32Lib$Bit32LibV": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$create": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$resume": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$running": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$status": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$wrap": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$wrapper": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.CoroutineLib$yield": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$CallFrame": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$CallStack": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$DebugInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$NameWhat": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$debug": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$gethook": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$getinfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$getlocal": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$getmetatable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$getregistry": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$getupvalue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$getuservalue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$sethook": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$setlocal": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$setmetatable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$setupvalue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$setuservalue": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$traceback": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$upvalueid": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.DebugLib$upvaluejoin": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.IoLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.IoLib$File": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.IoLib$IoLibV": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.LibFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$BinaryOp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$UnaryOp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$abs": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$ceil": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$cos": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$deg": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$exp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$floor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$fmod": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$frexp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$ldexp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$max": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$min": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$modf": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$pow": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$rad": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$random": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$randomseed": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$sin": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$sqrt": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.MathLib$tan": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.OneArgFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.OsLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.OsLib$OsLibFunc": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib$java_searcher": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib$loadlib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib$lua_searcher": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib$preload_searcher": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib$require": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.PackageLib$searchpath": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.ResourceFinder": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$FormatDesc": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$GMatchAux": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$MatchState": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$_byte": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$_char": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$dump": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$find": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$format": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$gmatch": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$gsub": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$len": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$lower": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$match": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$rep": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$reverse": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$sub": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.StringLib$upper": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib$concat": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib$insert": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib$pack": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib$remove": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib$sort": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLib$unpack": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TableLibFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.ThreeArgFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.TwoArgFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.VarArgFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.ZeroArgFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$ArrayCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$BoolCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$BytesCoercion": {
+      "category": "redundant_checkcast_only",
+      "changed_members": [
+        "coerce:(Ljava/lang/Object;)Lorg/luaj/vm2/LuaValue;"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$CharCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$ClassCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$Coercion": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$DoubleCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$InstanceCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$IntCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$LuaCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceJavaToLua$StringCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava$ArrayCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava$BoolCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava$Coercion": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava$NumericCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava$ObjectCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.CoerceLuaToJava$StringCoercion": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaArray": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaArray$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaArray$LenFunction": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaClass": {
+      "category": "redundant_checkcast_only",
+      "changed_members": [
+        "getMethod:(Lorg/luaj/vm2/LuaValue;)Lorg/luaj/vm2/LuaValue;"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaConstructor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaConstructor$Overload": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaInstance": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaMember": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaMethod": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JavaMethod$Overload": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseBaseLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseIoLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseIoLib$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseIoLib$FileImpl": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseIoLib$StdinFile": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseIoLib$StdoutFile": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$acos": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$asin": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$atan2": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$cosh": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$exp": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$log": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$pow": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$sinh": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseMathLib$tanh": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseOsLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JsePlatform": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseProcess": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseProcess$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseProcess$CopyThread": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.JseStringLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.LuajavaLib": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.LuajavaLib$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.lib.jse.LuajavaLib$ProxyInvocationHandler": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.BasicBlock": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.BasicBlock$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.BasicBlock$AllocAndXRefVisitor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.BasicBlock$BranchVisitor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.BasicBlock$CountPrevNextVistor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.BasicBlock$MarkAndMergeVisitor": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.JavaBuilder": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:constants:Ljava/util/Map;",
+        "fields:localVarGenBySlot:Ljava/util/Map;",
+        "fields:plainSlotVars:Ljava/util/Map;",
+        "fields:upvalueSlotVars:Ljava/util/Map;",
+        "methods:findSlot:(ILjava/util/Map;Ljava/lang/String;Lorg/apache/bcel/generic/Type;)I"
+      ]
+    },
+    "org.luaj.vm2.luajc.JavaGen": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.JavaLoader": {
+      "category": "redundant_checkcast_only",
+      "changed_members": [
+        "findClass:(Ljava/lang/String;)Ljava/lang/Class;"
+      ],
+      "generic_signature_changes": [
+        "fields:unloaded:Ljava/util/Map;"
+      ]
+    },
+    "org.luaj.vm2.luajc.LuaJC": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.ProtoInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.UpvalInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.VarInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.VarInfo$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.VarInfo$NilVarInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.VarInfo$ParamVarInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.luajc.VarInfo$PhiVarInfo": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.LuaParser": {
+      "category": "redundant_checkcast_only",
+      "changed_members": [
+        "generateParseException:()Lorg/luaj/vm2/parser/ParseException;",
+        "jj_add_error_token:(II)V"
+      ],
+      "generic_signature_changes": [
+        "methods:ExpList:()Ljava/util/List;",
+        "methods:FieldList:()Ljava/util/List;",
+        "methods:NameList:()Ljava/util/List;"
+      ]
+    },
+    "org.luaj.vm2.parser.LuaParser$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.LuaParser$JJCalls": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.LuaParser$LookaheadSuccess": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.LuaParserConstants": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.LuaParserTokenManager": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.ParseException": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.SimpleCharStream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.Token": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.parser.TokenMgrError": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine": {
+      "category": "distribution_version_branding",
+      "changed_members": [
+        "__ENGINE_VERSION__:Ljava/lang/String;",
+        "org.luaj.vm2.script.LuaScriptEngine:()V"
+      ],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine$1": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine$BindingsMetatable": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine$BindingsMetatable$1": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine$BindingsMetatable$2": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine$LuajCompiledScript": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngine$Utf8Encoder": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuaScriptEngineFactory": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": [
+        "fields:extensions:Ljava/util/List;",
+        "fields:mimeTypes:Ljava/util/List;",
+        "fields:names:Ljava/util/List;",
+        "methods:getExtensions:()Ljava/util/List;",
+        "methods:getMimeTypes:()Ljava/util/List;",
+        "methods:getNames:()Ljava/util/List;"
+      ]
+    },
+    "org.luaj.vm2.script.LuajContext": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuajContext$ReaderInputStream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.script.LuajContext$WriterOutputStream": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.server.DefaultLauncher": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.server.Launcher": {
+      "category": "javap_equal",
+      "changed_members": [],
+      "generic_signature_changes": []
+    },
+    "org.luaj.vm2.server.LuajClassLoader": {
+      "category": "compiler_or_declaration_only",
+      "changed_members": [],
+      "generic_signature_changes": []
+    }
+  },
+  "classfile_versions": [
+    52
+  ],
+  "comparison_sources_sha256": {
+    "documentation/legacy-reconstruction.patch": "d2d5717a5d2869b877de11a3f562896048fe3d9dedd13a927797337b03422be5",
+    "tools/build-baseline.sh": "772618ef7114f27be19f80122656a7080fc7fd0d0fa47ab576275c2c0f3b2e3c",
+    "tools/classfile_metadata.py": "8085be2f7684e5463c3e885605b4cebe50cea166d5dffbe591d46d7e34fab780",
+    "tools/classify-bytecode.py": "052deccff1dbe88c2b8de5b9fea257d719037911c14fdd49a02be4004a3cf71a",
+    "tools/compare-jars.py": "af588820975e72a1e571e592a8d3f4ffe93cf06e96752c1366be53335e39b65d",
+    "tools/summarize-bytecode-audit.py": "24906496c1ab2cdc9685f99ffc7edf94d7d3d8181dd0eabc29f926f1719f6088"
+  },
+  "generic_public_api_display_differences": [
+    "org.luaj.vm2.ast.Block",
+    "org.luaj.vm2.ast.FuncArgs",
+    "org.luaj.vm2.ast.FuncName",
+    "org.luaj.vm2.ast.NameScope",
+    "org.luaj.vm2.ast.ParList",
+    "org.luaj.vm2.ast.Stat",
+    "org.luaj.vm2.ast.Stat$Assign",
+    "org.luaj.vm2.ast.Stat$GenericFor",
+    "org.luaj.vm2.ast.Stat$IfThenElse",
+    "org.luaj.vm2.ast.Stat$LocalAssign",
+    "org.luaj.vm2.ast.Stat$Return",
+    "org.luaj.vm2.ast.TableConstructor",
+    "org.luaj.vm2.ast.Visitor",
+    "org.luaj.vm2.parser.LuaParser",
+    "org.luaj.vm2.script.LuaScriptEngineFactory"
+  ],
+  "legacy_sha256": "15bcbdd85ddf6f1e189093b28850c086e5bf13085cbc29595f3523444fb5fd8a",
+  "reconstructed_code_header_differences": [],
+  "reconstructed_inner_reference_changes": {
+    "org.luaj.vm2.ast.Stat": {
+      "candidate_only": [
+        [
+          "org/luaj/vm2/ast/Exp$VarExp",
+          "org/luaj/vm2/ast/Exp",
+          "VarExp",
+          1033
+        ]
+      ],
+      "legacy_only": []
+    },
+    "org.luaj.vm2.ast.Stat$Assign": {
+      "candidate_only": [
+        [
+          "org/luaj/vm2/ast/Exp$VarExp",
+          "org/luaj/vm2/ast/Exp",
+          "VarExp",
+          1033
+        ]
+      ],
+      "legacy_only": []
+    }
+  },
+  "reconstructed_sha256": "fa4e2b0f7b821c2acacac4a58a96e9e727a32a2d55c1a0d83f2d34f3538c04cc",
+  "reconstruction_unexplained_code": [],
+  "reconstruction_unexplained_metadata": [],
+  "resources": {
+    "META-INF/LICENSE": {
+      "candidate_sha256": "74846ae7bff78398d5641fd658d53fcf26808e37bbe7bbb9dcf07b925d0fa6ac",
+      "legacy_sha256": null
+    },
+    "META-INF/MANIFEST.MF": {
+      "candidate_sha256": "a1aaf830b49c103971f417249e5cb218472cf3fa2465940f69594c0d4162a679",
+      "legacy_sha256": "abb5c341ff0faed79f000ba4e5570c90d9a0de68feccb18565df3b084333c60e"
+    },
+    "META-INF/maven/org.luaj/luaj-beatoraja/pom.properties": {
+      "candidate_sha256": "f569e829bb22abdd8db454a91c83a62ecb50e6e1fc56e58095bb4675b44c5ed3",
+      "legacy_sha256": null
+    },
+    "META-INF/maven/org.luaj/luaj-beatoraja/pom.xml": {
+      "candidate_sha256": "2c6e4260dd0a72a5373b2beb630d9ac67a2d1cd9bd2ab834361fdadd3fda9e0f",
+      "legacy_sha256": null
+    },
+    "META-INF/services/javax.script.ScriptEngineFactory": {
+      "candidate_sha256": "db11f4a3a2538fe56e809cb88be083aedcd3b3989a95284a8204932649d666e0",
+      "legacy_sha256": "db11f4a3a2538fe56e809cb88be083aedcd3b3989a95284a8204932649d666e0"
+    }
+  },
+  "source_commit": "daf3da94e3cdba0ac6a289148d7e38bd53d3fe64"
+}

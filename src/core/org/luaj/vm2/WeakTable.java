@@ -237,6 +237,14 @@ public class WeakTable implements Metatable {
 
 	static class WeakValueSlot extends WeakSlot {
 
+		public int arraykey(int max) {
+			LuaValue key = strongkey();
+			if (key == null || !key.isinttype() || strongvalue() == null)
+				return 0;
+			int index = key.toint();
+			return index >= 1 && index <= max ? index : 0;
+		}
+
 		protected WeakValueSlot( LuaValue key, LuaValue value, Slot next ) {
 			super( key, weaken(value), next);
 		}

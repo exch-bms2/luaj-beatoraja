@@ -1,0 +1,330 @@
+{
+  "cases": {
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testBaseLib": {
+      "group": "base_load_xpcall",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testCoroutineLib": {
+      "group": "coroutine_oracle",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testDebugLib": {
+      "group": "debug_runtime_model",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testIoLib": {
+      "group": "jme_api_stub",
+      "original_error_type": "java.lang.Error"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testManyUpvals": {
+      "group": "finite_number_format",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testMathLib": {
+      "group": "math_numeric_coercion",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testOsLib": {
+      "group": "jme_api_stub",
+      "original_error_type": "java.lang.Error"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testStringLib": {
+      "group": "string_boundary_dump",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest.testTableLib": {
+      "group": "table_insert_fixture",
+      "original_error_type": "org.luaj.vm2.LuaError"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testBaseLib": {
+      "group": "base_load_xpcall",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testCoroutineLib": {
+      "group": "coroutine_oracle",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testDebugLib": {
+      "group": "debug_runtime_model",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testManyUpvals": {
+      "group": "finite_number_format",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testMathLib": {
+      "group": "math_numeric_coercion",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testOsLib": {
+      "group": "timezone_fixture",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testStringLib": {
+      "group": "string_boundary_dump",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest.testTableLib": {
+      "group": "table_insert_fixture",
+      "original_error_type": "org.luaj.vm2.LuaError"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testBaseLib": {
+      "group": "base_load_xpcall",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testCoroutineLib": {
+      "group": "coroutine_oracle",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testManyUpvals": {
+      "group": "finite_number_format",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testMathLib": {
+      "group": "math_numeric_coercion",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testOsLib": {
+      "group": "timezone_fixture",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testStringLib": {
+      "group": "string_boundary_dump",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest.testTableLib": {
+      "group": "table_insert_fixture",
+      "original_error_type": "org.luaj.vm2.LuaError"
+    },
+    "org.luaj.vm2.ErrorsTest.testBaseLibArgs": {
+      "details": "Error wording/case (String vs string), load/reader argument errors and native diagnostic conventions differ. Full transcript comparison is unsuitable for deciding semantic equivalence.",
+      "group": "error_argument_transcripts",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.ErrorsTest.testDebugLibArgs": {
+      "details": "Function-form getlocal unsupported; Java frame with null stack can throw NPE; info/locals/hook API and messages differ from C; upvalue identities are process-specific.",
+      "group": "error_argument_transcripts",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.ErrorsTest.testIoLibArgs": {
+      "details": "io.lines(nil) prints function: lnext rather than a native function address. This case is diagnostic representation only in the captured full diff.",
+      "group": "error_argument_transcripts",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.ErrorsTest.testMathLibArgs": {
+      "details": "atan2 accepts a missing second argument (JSE default 1); min/max accept single non-number and fail mixed numeric strings; additional error wording differences.",
+      "group": "error_argument_transcripts",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.ErrorsTest.testStringLibArgs": {
+      "details": "Native string.dump header uses 8-byte size_t vs LuaJ 4-byte; compiler/upvalue metadata and binary rendering differ. %s coercion and negative gsub limit expectations also differ; LuaJC dump is covered separately.",
+      "group": "error_argument_transcripts",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.MathLibTest.testFmod": {
+      "group": "integer_fmod_zero",
+      "original_error_type": "java.lang.ArithmeticException"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testInOrderIntegerKeyInsertion": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testInOrderLuaLength": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testInsertBeginningOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testInsertEndOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testInsertMiddleOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testOutOfOrderIntegerKeyInsertion": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testOutOfOrderLuaLength": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testRemoveBeginningOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testRemoveEndOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest.testRemoveMiddleOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testInOrderIntegerKeyInsertion": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testInOrderLuaLength": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testInsertBeginningOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testInsertEndOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testInsertMiddleOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testOutOfOrderIntegerKeyInsertion": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.ComparisonFailure"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testOutOfOrderLuaLength": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testRemoveBeginningOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testRemoveEndOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testRemoveMiddleOfList": {
+      "group": "weak_integer_routing",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    },
+    "org.luaj.vm2.WeakTableTest$WeakValueTableTest.testWeakValuesTable": {
+      "group": "weak_storage_layout_assertion",
+      "original_error_type": "junit.framework.AssertionFailedError"
+    }
+  },
+  "groups": {
+    "base_load_xpcall": {
+      "action": "Keep in regression baseline; correct reader EOF and handler scope as separate semantic changes.",
+      "cause": "StringInputStream skips empty reader chunks; nested pcall invokes outer xpcall handler even when the inner error is caught. Both add lines absent from the fixture.",
+      "count": 3,
+      "evidence": [
+        "CompatibilityProbes.load_empty_reader",
+        "CompatibilityProbes.nested_pcall_handler"
+      ],
+      "kind": "inherited_defects"
+    },
+    "coroutine_oracle": {
+      "action": "Keep supported LuaJ coroutine behavior; replace C-runtime transcript with semantic assertions.",
+      "cause": "Fixture expects yield across metamethod/C-call boundary to fail; LuaJ supports yield through pcall and Java coroutine threads. Actual resume sequence succeeds.",
+      "count": 3,
+      "evidence": [
+        "CompatibilityProbes.yield_through_pcall"
+      ],
+      "kind": "oracle_vm_model_mismatch"
+    },
+    "debug_runtime_model": {
+      "action": "Add targeted assertions for invalid locals and hook balance; do not rewrite all C debug transcript as passing.",
+      "cause": "DebugLib.getLocal can return a live register value with nil local name; Java call frames/hooks differ from C stack frames, producing different hook order and line reports.",
+      "count": 2,
+      "evidence": [
+        "ScriptDrivenTest debuglib full output diff",
+        "DebugLib.CallFrame.getLocal"
+      ],
+      "kind": "mixed_debug_implementation_and_oracle"
+    },
+    "error_argument_transcripts": {
+      "action": "Split semantic argument-validation assertions from diagnostic-text/native-output comparisons.",
+      "cause": "Per-case details are recorded under details; these are not all harmless error-message differences.",
+      "count": 5,
+      "kind": "mixed_oracle_and_implementation"
+    },
+    "finite_number_format": {
+      "action": "Separate numeric formatting compatibility change; cover finite range, precision, NaN/infinities.",
+      "cause": "LuaDouble.tojstring narrows finite double to float. Fibonacci 199 is finite near 1.734e41 but printed as Infinity. This is a formatting failure, not failed upvalue arithmetic.",
+      "count": 3,
+      "evidence": [
+        "CompatibilityProbes.finite_number_display"
+      ],
+      "kind": "inherited_defect"
+    },
+    "integer_fmod_zero": {
+      "action": "Fix separately with integer/double/numeric-string/zero tests.",
+      "cause": "MathLib.fmod uses Java long remainder when both values are islong; divisor 0 throws ArithmeticException before floating-point fallback.",
+      "count": 1,
+      "evidence": [
+        "CompatibilityProbes.fmod_zero"
+      ],
+      "kind": "inherited_defect"
+    },
+    "jme_api_stub": {
+      "action": "Keep in historical JME audit; require emulator for actual JME IO validation, separate from JSE release gate.",
+      "cause": "CLDC API dependency is a compile-time stub. javax.microedition.io.Connector.open throws java.lang.Error in JmeIoLib.openFile; oslib test also opens files.",
+      "count": 2,
+      "kind": "environment_unsupported_target"
+    },
+    "math_numeric_coercion": {
+      "action": "Fix type/coercion independently; preserve diagnostic baseline until reviewed.",
+      "cause": "modf returns the original numeric LuaString in islong fast path; min/max compare LuaValues without numeric coercion. Also includes integer fmod zero errors.",
+      "count": 3,
+      "evidence": [
+        "CompatibilityProbes.modf_numeric_string",
+        "CompatibilityProbes.max_numeric_strings"
+      ],
+      "kind": "inherited_defects"
+    },
+    "string_boundary_dump": {
+      "action": "Assert byte semantics separately from Java decoding; preserve LuaJC dump limitation and test it explicitly.",
+      "cause": "Invalid UTF-8 bytes pass through LuaString.tojstring/custom decoder, unlike native byte-output fixture. Numeric byte rows agree. LuaJC additionally cannot string.dump a Java-compiled function.",
+      "count": 3,
+      "evidence": [
+        "CompatibilityProbes.binary_quoted_bytes",
+        "full stringlib output diff"
+      ],
+      "kind": "mixed_java_boundary_and_unsupported_feature"
+    },
+    "table_insert_fixture": {
+      "action": "Make invalid insert a pcall/assertion and retain later concat/remove/unpack tests; do not weaken LuaTable.insert.",
+      "cause": "tablelib.lua line 22 inserts at position 10 when #t+1 is 8. LuaJ rejects it; Lua 5.2.4 official tinsert also checks bounds. Fixture expects older permissive behavior and aborts subsequent tests.",
+      "count": 3,
+      "evidence": [
+        "https://www.lua.org/source/5.2/ltablib.c.html#tinsert"
+      ],
+      "kind": "oracle_version_mismatch"
+    },
+    "timezone_fixture": {
+      "action": "Use explicit timezone or assertions independent of host timezone; production default timezone stays unchanged.",
+      "cause": "oslib.out hardcodes America/Los_Angeles local time/DST. Asia/Tokyo differs by 16 hours at fixture dates. Both tests pass with America/Los_Angeles.",
+      "count": 2,
+      "evidence": [
+        "tools/run-causal-checks.sh: 2 timezone cases pass"
+      ],
+      "kind": "environment_fixture"
+    },
+    "weak_integer_routing": {
+      "action": "Separate correctness fix with weak-value wrap/GC tests; do not ship the routing-only experiment.",
+      "cause": "LuaTable.hashset rehash(-1) can expand the array past a new integer key but still insert that key into hash; rawget reads the empty array slot. Key 3 disappears after the third insertion.",
+      "count": 20,
+      "evidence": [
+        "CompatibilityProbes.weak_integer_loss",
+        "tools/run-causal-checks.sh: 20/20 sequence tests pass in isolated overlay"
+      ],
+      "kind": "inherited_defect"
+    },
+    "weak_storage_layout_assertion": {
+      "action": "Replace physical-capacity assertion with lookup/count assertions and retain full weak GC tests.",
+      "cause": "WeakValueTableTest.testWeakValuesTable assumes array capacity >=1. Current weak-value policy can store key 1 in hash; Lua does not expose this capacity. Test aborts before subsequent semantic/GC assertions.",
+      "count": 1,
+      "kind": "test_internal_layout_assumption"
+    }
+  },
+  "source_commit": "daf3da94e3cdba0ac6a289148d7e38bd53d3fe64",
+  "total_original_failures": 51
+}
