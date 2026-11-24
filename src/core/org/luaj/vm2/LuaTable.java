@@ -472,8 +472,7 @@ public class LuaTable extends LuaValue implements Metatable {
 				}
 			}
 			if ( checkLoadFactor() ) {
-				if ( (m_metatable == null || !m_metatable.useWeakValues())
-					&& key.isinttype() && key.toint() > 0 ) {
+				if ( key.isinttype() && key.toint() > 0 ) {
 					// a rehash might make room in the array portion for this key.
 					rehash( key.toint() );
 					if ( arrayset(key.toint(), value) )
@@ -715,11 +714,15 @@ public class LuaTable extends LuaValue implements Metatable {
 		// Move hash buckets
 		for ( int i = 0; i < oldCapacity; ++i ) {
 			for ( Slot slot = oldHash[i]; slot != null; slot = slot.rest() ) {
+				// A collected weak slot may have neither key nor value left.
+				// Hold the live entry through migration and skip dead slots before hashing.
+				StrongSlot entry = slot.first();
+				if (entry == null)
+					continue;
 				int k;
 				if ( ( k = slot.arraykey( newArraySize ) ) > 0 ) {
-					StrongSlot entry = slot.first();
-					if (entry != null)
-						newArray[ k - 1 ] = entry.value();
+					LuaValue value = entry.value();
+					newArray[ k - 1 ] = m_metatable != null ? m_metatable.wrap(value) : value;
 				} else if ( !(slot instanceof DeadSlot) ) {
 					int j = slot.keyindex( newHashMask );
 					newHash[j] = slot.relink( newHash[j] );

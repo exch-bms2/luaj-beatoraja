@@ -90,6 +90,7 @@ public class DebugLib extends TwoArgFunction {
 	private static final LuaString LINE            = valueOf("line");
 	private static final LuaString COUNT           = valueOf("count");
 	private static final LuaString RETURN          = valueOf("return");
+	private static final LuaString VARARG_NAME     = valueOf("(*vararg)");
 	
 	static final LuaString FUNC            = valueOf("func");
 	static final LuaString ISTAILCALL      = valueOf("istailcall");
@@ -226,10 +227,22 @@ public class DebugLib extends TwoArgFunction {
 		public Varargs invoke(Varargs args) {
 			int a=1;
 			LuaThread thread = args.isthread(a)? args.checkthread(a++): globals.running;
+			LuaValue function = args.arg(a);
+			if ( function.isfunction() ) {
+				int local = args.checkint(a+1);
+				if ( function.isclosure() ) {
+					Prototype p = function.checkclosure().p;
+					LuaString name = local >= 1 && local <= p.numparams? p.getlocalname(local, 0): null;
+					return name != null? name: NIL;
+				}
+				return NIL;
+			}
+			int levelarg = a;
 			int level = args.checkint(a++);
 			int local = args.checkint(a++);
+			if (level == 0) return NIL; // This debug function is a Java frame.
 			CallFrame f = callstack(thread).getCallFrame(level);
-			return f != null? f.getLocal(local): NONE;
+			return f != null? f.getLocal(local): argerror(levelarg, "level out of range");
 		}
 	}
 
@@ -302,11 +315,13 @@ public class DebugLib extends TwoArgFunction {
 		public Varargs invoke(Varargs args) {
 			int a=1;
 			LuaThread thread = args.isthread(a)? args.checkthread(a++): globals.running;
+			int levelarg = a;
 			int level = args.checkint(a++);
 			int local = args.checkint(a++);
-			LuaValue value = args.arg(a++);
+			LuaValue value = args.checkvalue(a++);
+			if (level == 0) return NIL;
 			CallFrame f = callstack(thread).getCallFrame(level);
-			return f != null? f.setLocal(local, value): NONE;
+			return f != null? f.setLocal(local, value): argerror(levelarg, "level out of range");
 		}
 	}
 
@@ -649,16 +664,35 @@ public class DebugLib extends TwoArgFunction {
 
 	}
 
+	/** Internal VM/debug bridge. Writes replace the snapshot, never its storage. */
+	public static final class DebugVarargs extends Varargs {
+		private Varargs values;
+		public DebugVarargs(Varargs values) { this.values = values.dealias(); }
+		public LuaValue arg(int i) { return values.arg(i); }
+		public LuaValue arg1() { return values.arg1(); }
+		public int narg() { return values.narg(); }
+		public Varargs subargs(int start) { return values.subargs(start); }
+		public Varargs snapshot() { return values; }
+		private void set(int index, LuaValue value) {
+			LuaValue[] copy = new LuaValue[values.narg()];
+			for (int i = 0; i < copy.length; ++i) copy[i] = values.arg(i+1);
+			copy[index-1] = value;
+			values = varargsOf(copy);
+		}
+	}
+
 	public static class CallFrame {
 		LuaFunction f;
 		int pc;
 		int top;
 		Varargs v;
+		private DebugVarargs varargs;
 		LuaValue[] stack;
 		CallFrame previous;
 		void set(LuaClosure function, Varargs varargs, LuaValue[] stack) {
 			this.f = function;
 			this.v = varargs;
+			this.varargs = varargs instanceof DebugVarargs? (DebugVarargs) varargs: null;
 			this.stack = stack;
 		}
 		public String shortsource() {
@@ -670,6 +704,7 @@ public class DebugLib extends TwoArgFunction {
 		void reset() {
 			this.f = null;
 			this.v = null;
+			this.varargs = null;
 			this.stack = null;
 		}
 		void instr(int pc, Varargs v, int top) {
@@ -680,17 +715,27 @@ public class DebugLib extends TwoArgFunction {
 				Print.printState(f.checkclosure(), pc, stack, top, v);
 		}
 		Varargs getLocal(int i) {
+			if ( i < 0 )
+				return varargs != null && i >= -varargs.narg()? varargsOf(VARARG_NAME, varargs.arg(-i)): NIL;
+			// Java frames have no Lua register array.
+			if ( stack == null ) return NIL;
 			LuaString name = getlocalname(i);
-			if ( i >= 1 && i <= stack.length && stack[i-1] != null )
-				return varargsOf( name == null ? NIL : name, stack[i-1] );
+			if ( i >= 1 && i <= stack.length && stack[i-1] != null && name != null )
+				return varargsOf( name, stack[i-1] );
 			else
 				return NIL;
 		}
 		Varargs setLocal(int i, LuaValue value) {
+			if ( i < 0 ) {
+				if ( varargs == null || i < -varargs.narg() ) return NIL;
+				varargs.set(-i, value);
+				return VARARG_NAME;
+			}
+			if ( stack == null ) return NIL;
 			LuaString name = getlocalname(i);
-			if ( i >= 1 && i <= stack.length && stack[i-1] != null ) {
+			if ( i >= 1 && i <= stack.length && stack[i-1] != null && name != null ) {
 				stack[i-1] = value;
-				return name == null ? NIL : name;
+				return name;
 			} else {
 				return NIL;
 			}

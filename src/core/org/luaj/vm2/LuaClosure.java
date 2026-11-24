@@ -22,6 +22,13 @@
 package org.luaj.vm2;
 
 import org.luaj.vm2.lib.DebugLib.CallFrame;
+import org.luaj.vm2.lib.DebugLib.DebugVarargs;
+
+import java.util.AbstractCollection;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+import java.util.Arrays;
 
 /**
  * Extension of {@link LuaFunction} which executes lua bytecode.
@@ -85,6 +92,10 @@ import org.luaj.vm2.lib.DebugLib.CallFrame;
  */
 public class LuaClosure extends LuaFunction {
 	private static final UpValue[] NOUPVALUES = new UpValue[0];
+	private static final int MAX_CACHED_STACKS = 20;
+	private static final int MAX_CACHED_SLOTS = 1024;
+	// Only idle stacks are published here. Coroutine Java threads share closures.
+	private volatile StackCache freeStacks;
 	
 	public final Prototype p;
 
@@ -129,42 +140,137 @@ public class LuaClosure extends LuaFunction {
 		return "function: " + p.toString();
 	}
 	
+	/** One atomic idle slot for short calls; the bounded overflow handles nesting. */
+	private static final class StackCache extends AbstractCollection<LuaValue[]> {
+		private static final AtomicReferenceFieldUpdater<StackCache, LuaValue[]> PRIMARY =
+				AtomicReferenceFieldUpdater.newUpdater(StackCache.class, LuaValue[].class, "primary");
+		private final int reservedPrimarySlots;
+		private final int overflowSlotBudget;
+		private volatile LuaValue[] primary;
+		private LuaValue[][] overflow;
+		private int overflowCount;
+		private int overflowSlots;
+
+		StackCache(int stackSize) {
+			reservedPrimarySlots = Math.min(stackSize, MAX_CACHED_SLOTS);
+			overflowSlotBudget = MAX_CACHED_SLOTS - reservedPrimarySlots;
+		}
+
+		LuaValue[] take(int size) {
+			LuaValue[] stack = primary != null? PRIMARY.getAndSet(this, null): null;
+			if (stack != null && stack.length == size) return stack;
+			return takeOverflow(size);
+		}
+
+		private synchronized LuaValue[] takeOverflow(int size) {
+			while (overflowCount > 0) {
+				LuaValue[] stack = overflow[--overflowCount];
+				overflow[overflowCount] = null;
+				overflowSlots -= stack.length;
+				if (stack.length == size) return stack;
+			}
+			return null;
+		}
+
+		void put(LuaValue[] stack) {
+			if (primary == null && stack.length <= reservedPrimarySlots) {
+				// A racing release can discard an idle array, never lend one twice.
+				// Release publication makes the preceding reference clearing visible.
+				PRIMARY.lazySet(this, stack);
+				return;
+			}
+			putOverflow(stack);
+		}
+
+		private synchronized void putOverflow(LuaValue[] stack) {
+			if (stack.length > overflowSlotBudget - overflowSlots) return;
+			if (overflowCount < MAX_CACHED_STACKS - 1) {
+				if (overflow == null) overflow = new LuaValue[MAX_CACHED_STACKS - 1][];
+				overflow[overflowCount++] = stack;
+				overflowSlots += stack.length;
+			}
+		}
+
+		public synchronized int size() {
+			return (primary != null? 1: 0) + overflowCount;
+		}
+
+		public synchronized Iterator<LuaValue[]> iterator() {
+			ArrayList<LuaValue[]> snapshot = new ArrayList<LuaValue[]>();
+			LuaValue[] stack = primary;
+			if (stack != null) snapshot.add(stack);
+			for (int i = 0; i < overflowCount; ++i) snapshot.add(overflow[i]);
+			return snapshot.iterator();
+		}
+	}
+
 	private LuaValue[] getNewStack() {
 		int max = p.maxstacksize;
-		LuaValue[] stack = new LuaValue[max];
+		StackCache cache = freeStacks;
+		LuaValue[] stack = cache != null? cache.take(max): null;
+		if (stack == null) stack = new LuaValue[max];
 		System.arraycopy(NILS, 0, stack, 0, max);
 		return stack;
 	}
-	
+
+	private void releaseStack(LuaValue[] stack) {
+		Arrays.fill(stack, null);
+		if (stack.length > MAX_CACHED_SLOTS) return;
+		StackCache cache = freeStacks;
+		if (cache == null) cache = initializeStackCache(stack.length);
+		cache.put(stack);
+	}
+
+	private synchronized StackCache initializeStackCache(int stackSize) {
+		if (freeStacks == null) freeStacks = new StackCache(stackSize);
+		return freeStacks;
+	}
+
 	public final LuaValue call() {
 		LuaValue[] stack = getNewStack();
-		return execute(stack,NONE).arg1();
+		try {
+			return execute(stack,NONE).arg1();
+		} finally {
+			releaseStack(stack);
+		}
 	}
 
 	public final LuaValue call(LuaValue arg) {
 		LuaValue[] stack = getNewStack();
-		switch ( p.numparams ) {
-		default: stack[0]=arg; return execute(stack,NONE).arg1();
-		case 0: return execute(stack,arg).arg1();
+		try {
+			switch ( p.numparams ) {
+			default: stack[0]=arg; return execute(stack,NONE).arg1();
+			case 0: return execute(stack,arg).arg1();
+			}
+		} finally {
+			releaseStack(stack);
 		}
 	}
 	
 	public final LuaValue call(LuaValue arg1, LuaValue arg2) {
 		LuaValue[] stack = getNewStack();
-		switch ( p.numparams ) {
-		default: stack[0]=arg1; stack[1]=arg2; return execute(stack,NONE).arg1();
-		case 1: stack[0]=arg1; return execute(stack,arg2).arg1();
-		case 0: return execute(stack,p.is_vararg!=0? varargsOf(arg1,arg2): NONE).arg1();
+		try {
+			switch ( p.numparams ) {
+			default: stack[0]=arg1; stack[1]=arg2; return execute(stack,NONE).arg1();
+			case 1: stack[0]=arg1; return execute(stack,arg2).arg1();
+			case 0: return execute(stack,p.is_vararg!=0? varargsOf(arg1,arg2): NONE).arg1();
+			}
+		} finally {
+			releaseStack(stack);
 		}
 	}
 
 	public final LuaValue call(LuaValue arg1, LuaValue arg2, LuaValue arg3) {
 		LuaValue[] stack = getNewStack();
-		switch ( p.numparams ) {
-		default: stack[0]=arg1; stack[1]=arg2; stack[2]=arg3; return execute(stack,NONE).arg1();
-		case 2: stack[0]=arg1; stack[1]=arg2; return execute(stack,arg3).arg1();
-		case 1: stack[0]=arg1; return execute(stack,p.is_vararg!=0? varargsOf(arg2,arg3): NONE).arg1();
-		case 0: return execute(stack,p.is_vararg!=0? varargsOf(arg1,arg2,arg3): NONE).arg1();
+		try {
+			switch ( p.numparams ) {
+			default: stack[0]=arg1; stack[1]=arg2; stack[2]=arg3; return execute(stack,NONE).arg1();
+			case 2: stack[0]=arg1; stack[1]=arg2; return execute(stack,arg3).arg1();
+			case 1: stack[0]=arg1; return execute(stack,p.is_vararg!=0? varargsOf(arg2,arg3): NONE).arg1();
+			case 0: return execute(stack,p.is_vararg!=0? varargsOf(arg1,arg2,arg3): NONE).arg1();
+			}
+		} finally {
+			releaseStack(stack);
 		}
 	}
 
@@ -174,12 +280,27 @@ public class LuaClosure extends LuaFunction {
 	
 	public final Varargs onInvoke(Varargs varargs) {
 		LuaValue[] stack = getNewStack();
-		for ( int i=0; i<p.numparams; i++ )
-			stack[i] = varargs.arg(i+1);
-		return execute(stack,p.is_vararg!=0? varargs.subargs(p.numparams+1): NONE);
+		try {
+			for ( int i=0; i<p.numparams; i++ )
+				stack[i] = varargs.arg(i+1);
+			Varargs extras = p.is_vararg!=0? varargs.subargs(p.numparams+1): NONE;
+			// Preserve execute overrides and their finally/return-observer ordering.
+			Varargs result = getClass() == LuaClosure.class?
+					execute(stack, extras, true): execute(stack, extras);
+			// Tailcall arguments are detached at OP_TAILCALL without evaluating the call.
+			return result.isTailcall()? result: result.dealias();
+		} finally {
+			releaseStack(stack);
+		}
 	}
 	
 	protected Varargs execute( LuaValue[] stack, Varargs varargs ) {
+		return execute(stack, varargs, false);
+	}
+
+	private Varargs execute(LuaValue[] stack, Varargs varargs, boolean detachedReturns) {
+		if (globals != null && globals.debuglib != null && p.is_vararg != 0 && varargs.narg() > 0)
+			varargs = new DebugVarargs(varargs);
 		// loop through instructions
 		int i,a,b,c,pc=0,top=0;
 		LuaValue o;
@@ -191,12 +312,11 @@ public class LuaClosure extends LuaFunction {
 		// TODO: use linked list.
 		UpValue[] openups = p.p.length>0? new UpValue[stack.length]: null;
 		
-		// allow for debug hooks
-		if (globals != null && globals.debuglib != null)
-			globals.debuglib.onCall( this, varargs, stack );
-
 		// process instructions
 		try {
+			// onCall can itself throw from a user hook after pushing a frame.
+			if (globals != null && globals.debuglib != null)
+				globals.debuglib.onCall( this, varargs, stack );
 			for (; true; ++pc) {
 				if (globals != null && globals.debuglib != null)
 					globals.debuglib.onInstruction( pc, v, top );
@@ -400,16 +520,25 @@ public class LuaClosure extends LuaFunction {
 						v = b>0?
 							varargsOf(stack,a+1,b-1): // exact arg count
 							varargsOf(stack, a+1, top-v.narg()-(a+1), v); // from prev top
-						return new TailcallVarargs( stack[a], v );
+						return new TailcallVarargs( stack[a], v.dealias() );
 					}
 					
 				case Lua.OP_RETURN: /*	A B	return R(A), ... ,R(A+B-2)	(see note)	*/
 					b = i>>>23;
 					switch ( b ) {
-					case 0: return varargsOf(stack, a, top-v.narg()-a, v);
+					case 0:
+						int prefix = top-v.narg()-a;
+						if (prefix == 0) return v;
+						if (detachedReturns && (globals == null || globals.debuglib == null) && Varargs.isOwnedArray(v))
+							return Varargs.prependCopy(stack, a, prefix, v);
+						return varargsOf(stack, a, prefix, v);
 					case 1: return NONE;
 					case 2: return stack[a];
+					case 3: return varargsOf(stack, a, 2);
 					default:
+						// Debug return observers may still modify the live registers.
+						if (detachedReturns && (globals == null || globals.debuglib == null))
+							return Varargs.copyOf(stack, a, b-1);
 						return varargsOf(stack, a, b-1);
 					}
 					
@@ -494,7 +623,7 @@ public class LuaClosure extends LuaFunction {
 					b = i>>>23;
 					if ( b == 0 ) {
 						top = a + (b = varargs.narg());
-						v = varargs;
+						v = varargs instanceof DebugVarargs? ((DebugVarargs) varargs).snapshot(): varargs;
 					} else {
 						for ( int j=1; j<b; ++j )
 							stack[a+j-1] = varargs.arg(j);

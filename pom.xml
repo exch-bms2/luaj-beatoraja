@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.luaj</groupId>
+  <artifactId>luaj-beatoraja</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>LuaJ for beatoraja</name>
+  <licenses><license><name>MIT</name><url>https://opensource.org/license/mit</url></license></licenses>
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.outputTimestamp>2026-11-24T00:00:00Z</project.build.outputTimestamp>
+  </properties>
+  <dependencies>
+    <dependency><groupId>org.apache.bcel</groupId><artifactId>bcel</artifactId><version>5.2</version><optional>true</optional></dependency>
+    <dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
+    <dependency><groupId>org.microemu</groupId><artifactId>cldcapi11</artifactId><version>2.0.4</version><scope>test</scope></dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src/core</sourceDirectory>
+    <testSourceDirectory>test/junit</testSourceDirectory>
+    <resources>
+      <resource><directory>src/jse</directory><includes><include>META-INF/services/**</include></includes></resource>
+      <resource><directory>.</directory><includes><include>LICENSE</include></includes><targetPath>META-INF</targetPath></resource>
+    </resources>
+    <testResources>
+      <testResource><directory>test/lua</directory></testResource>
+      <testResource><directory>test/junit</directory><excludes><exclude>**/*.java</exclude></excludes></testResource>
+    </testResources>
+    <plugins>
+      <plugin><groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId><version>3.6.0</version><executions><execution><id>jse</id><phase>generate-sources</phase><goals><goal>add-source</goal></goals><configuration><sources><source>src/jse</source></sources></configuration></execution><execution><id>jme-test-support</id><phase>generate-test-sources</phase><goals><goal>add-test-source</goal></goals><configuration><sources><source>src/jme</source></sources></configuration></execution></executions></plugin>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version></plugin>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.2</version><configuration><excludes><exclude>**/AllTests.java</exclude><exclude>**/AbstractUnitTests.java</exclude></excludes><forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds></configuration></plugin>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId><version>3.4.2</version></plugin>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-source-plugin</artifactId><version>3.3.1</version><executions><execution><id>sources</id><goals><goal>jar-no-fork</goal></goals></execution></executions></plugin>
+    </plugins>
+  </build>
+</project>

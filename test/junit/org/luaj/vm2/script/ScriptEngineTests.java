@@ -76,7 +76,7 @@ public class ScriptEngineTests extends TestSuite  {
 	        ScriptEngine e = new ScriptEngineManager().getEngineByName("luaj");
 	        ScriptEngineFactory f = e.getFactory();
 	        assertEquals("Luaj", f.getEngineName());
-	        assertEquals("Luaj 0.0", f.getEngineVersion());
+	        assertEquals("Luaj-jse 3.0.2", f.getEngineVersion());
 	        assertEquals("lua", f.getLanguageName());
 	        assertEquals("5.2", f.getLanguageVersion());
 		}

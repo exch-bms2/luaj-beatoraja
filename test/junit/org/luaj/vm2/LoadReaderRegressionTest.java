@@ -1,0 +1,109 @@
+package org.luaj.vm2;
+
+import junit.framework.TestCase;
+import org.luaj.vm2.lib.ZeroArgFunction;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
+public class LoadReaderRegressionTest extends TestCase {
+    private Globals globals;
+
+    protected void setUp() { globals = JsePlatform.standardGlobals(); }
+
+    public void testEmptyFirstChunkIsPermanentEOF() {
+        Varargs result = globals.load("local n=0; local f=assert(load(function() n=n+1; "
+                + "if n==1 then return '' end; error('read after EOF') end)); "
+                + "return n,select('#',f())").invoke();
+        assertEquals(1, result.arg1().toint());
+        assertEquals(0, result.arg(2).toint());
+    }
+
+    public void testEmptyMiddleChunkDoesNotJoinLaterText() {
+        Varargs result = globals.load("local n=0; local chunks={'return 1','',' + 2'}; "
+                + "local f=assert(load(function() n=n+1; return chunks[n] end)); return n,f()").invoke();
+        assertEquals(2, result.arg1().toint());
+        assertEquals(1, result.arg(2).toint());
+    }
+
+    public void testNilAndNoValuesArePermanentEOF() {
+        for (String ending : new String[] {"return nil", "return"}) {
+            Varargs result = globals.load("local n=0; local f=assert(load(function() n=n+1; "
+                    + "if n==1 then " + ending + " end; error('read after EOF') end)); "
+                    + "return n,select('#',f())").invoke();
+            assertEquals(1, result.arg1().toint());
+            assertEquals(0, result.arg(2).toint());
+        }
+    }
+
+    public void testIncompleteTextStopsAtEmptyChunk() {
+        Varargs result = globals.load("local n=0; local chunks={'local x=','','42; return x'}; "
+                + "local f,err=load(function() n=n+1; return chunks[n] end); return n,f,err").invoke();
+        assertEquals(2, result.arg1().toint());
+        assertTrue(result.arg(2).isnil());
+        assertEquals(LuaValue.TSTRING, result.arg(3).type());
+    }
+
+    public void testLuaReaderExceptionReturnsNilAndMessage() {
+        Varargs result = globals.load("return load(function() error('reader failure') end)").invoke();
+        assertTrue(result.arg1().isnil());
+        assertEquals(LuaValue.TSTRING, result.arg(2).type());
+        assertTrue(result.arg(2).tojstring().contains("reader failure"));
+        assertEquals(7, globals.load("return 7").call().toint());
+    }
+
+    public void testJavaReaderExceptionReturnsNilAndMessage() {
+        Varargs result = globals.get("load").invoke(new ZeroArgFunction() {
+            public LuaValue call() { throw new IllegalStateException("Java reader failure"); }
+        });
+        assertTrue(result.arg1().isnil());
+        assertEquals(LuaValue.TSTRING, result.arg(2).type());
+        assertTrue(result.arg(2).tojstring().contains("Java reader failure"));
+    }
+
+    public void testJavaReaderExceptionWithoutMessageStillReturnsError() {
+        Varargs result = globals.get("load").invoke(new ZeroArgFunction() {
+            public LuaValue call() { throw new IllegalStateException(); }
+        });
+        assertTrue(result.arg1().isnil());
+        assertEquals(LuaValue.TSTRING, result.arg(2).type());
+        assertTrue(result.arg(2).tojstring().contains("IllegalStateException"));
+    }
+
+    public void testReaderYieldResumesBeforePermanentEOF() {
+        Varargs result = globals.load("local reads=0; local co=coroutine.create(function() "
+                + "local f=assert(load(function() reads=reads+1; if reads==1 then "
+                + "return coroutine.yield('source') elseif reads==2 then return '' "
+                + "else error('read after EOF') end end)); return f() end); "
+                + "local ok,tag=coroutine.resume(co); assert(ok and tag=='source'); "
+                + "local ok,value=coroutine.resume(co,'return 9'); assert(ok,value); return value,reads,coroutine.status(co)").invoke();
+        assertEquals(9, result.arg1().toint());
+        assertEquals(2, result.arg(2).toint());
+        assertEquals("dead", result.arg(3).tojstring());
+    }
+
+    public void testReaderErrorAfterYieldDoesNotLeakState() {
+        Varargs result = globals.load("local co=coroutine.create(function() return load(function() "
+                + "coroutine.yield('reading'); error('after yield') end) end); "
+                + "assert(coroutine.resume(co)); local ok,f,err=coroutine.resume(co); "
+                + "assert(ok); return f,err,assert(load('return 11'))()").invoke();
+        assertTrue(result.arg1().isnil());
+        assertTrue(result.arg(2).tojstring().contains("after yield"));
+        assertEquals(11, result.arg(3).toint());
+    }
+
+    public void testBinaryChunksAndTruncatedBinaryEOF() {
+        Varargs result = globals.load("local data=string.dump(function() return 7,nil,9 end); "
+                + "local n=0; local chunks={data,''}; local f=assert(load(function() "
+                + "n=n+1; return chunks[n] end,'binary','b')); "
+                + "local a,b,c=f(); return a,b,c").invoke();
+        assertEquals(3, result.narg());
+        assertEquals(7, result.arg1().toint());
+        assertTrue(result.arg(2).isnil());
+        assertEquals(9, result.arg(3).toint());
+        Varargs truncated = globals.load("local data=string.dump(function() return 7 end); "
+                + "local n=0; local parts={data:sub(1,#data-1),'',data:sub(#data)}; "
+                + "local f,err=load(function() n=n+1; return parts[n] end,'short','b'); return f,err,n").invoke();
+        assertTrue(truncated.arg1().isnil());
+        assertEquals(LuaValue.TSTRING, truncated.arg(2).type());
+        assertEquals(2, truncated.arg(3).toint());
+    }
+}

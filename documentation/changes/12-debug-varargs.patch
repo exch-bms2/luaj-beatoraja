@@ -1,0 +1,202 @@
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -22,6 +22,7 @@
+ package org.luaj.vm2;
+ 
+ import org.luaj.vm2.lib.DebugLib.CallFrame;
++import org.luaj.vm2.lib.DebugLib.DebugVarargs;
+ 
+ import java.util.ArrayDeque;
+ import java.util.Arrays;
+@@ -232,6 +233,8 @@
+ 	}
+ 	
+ 	protected Varargs execute( LuaValue[] stack, Varargs varargs ) {
++		if (globals != null && globals.debuglib != null && p.is_vararg != 0 && varargs.narg() > 0)
++			varargs = new DebugVarargs(varargs);
+ 		// loop through instructions
+ 		int i,a,b,c,pc=0,top=0;
+ 		LuaValue o;
+@@ -545,7 +548,7 @@
+ 					b = i>>>23;
+ 					if ( b == 0 ) {
+ 						top = a + (b = varargs.narg());
+-						v = varargs;
++						v = varargs instanceof DebugVarargs? ((DebugVarargs) varargs).snapshot(): varargs;
+ 					} else {
+ 						for ( int j=1; j<b; ++j )
+ 							stack[a+j-1] = varargs.arg(j);
+--- a/src/core/org/luaj/vm2/lib/DebugLib.java
++++ b/src/core/org/luaj/vm2/lib/DebugLib.java
+@@ -90,6 +90,7 @@
+ 	private static final LuaString LINE            = valueOf("line");
+ 	private static final LuaString COUNT           = valueOf("count");
+ 	private static final LuaString RETURN          = valueOf("return");
++	private static final LuaString VARARG_NAME     = valueOf("(*vararg)");
+ 	
+ 	static final LuaString FUNC            = valueOf("func");
+ 	static final LuaString ISTAILCALL      = valueOf("istailcall");
+@@ -659,16 +660,35 @@
+ 
+ 	}
+ 
++	/** Internal VM/debug bridge. Writes replace the snapshot, never its storage. */
++	public static final class DebugVarargs extends Varargs {
++		private Varargs values;
++		public DebugVarargs(Varargs values) { this.values = values.dealias(); }
++		public LuaValue arg(int i) { return values.arg(i); }
++		public LuaValue arg1() { return values.arg1(); }
++		public int narg() { return values.narg(); }
++		public Varargs subargs(int start) { return values.subargs(start); }
++		public Varargs snapshot() { return values; }
++		private void set(int index, LuaValue value) {
++			LuaValue[] copy = new LuaValue[values.narg()];
++			for (int i = 0; i < copy.length; ++i) copy[i] = values.arg(i+1);
++			copy[index-1] = value;
++			values = varargsOf(copy);
++		}
++	}
++
+ 	public static class CallFrame {
+ 		LuaFunction f;
+ 		int pc;
+ 		int top;
+ 		Varargs v;
++		private DebugVarargs varargs;
+ 		LuaValue[] stack;
+ 		CallFrame previous;
+ 		void set(LuaClosure function, Varargs varargs, LuaValue[] stack) {
+ 			this.f = function;
+ 			this.v = varargs;
++			this.varargs = varargs instanceof DebugVarargs? (DebugVarargs) varargs: null;
+ 			this.stack = stack;
+ 		}
+ 		public String shortsource() {
+@@ -680,6 +700,7 @@
+ 		void reset() {
+ 			this.f = null;
+ 			this.v = null;
++			this.varargs = null;
+ 			this.stack = null;
+ 		}
+ 		void instr(int pc, Varargs v, int top) {
+@@ -690,6 +711,8 @@
+ 				Print.printState(f.checkclosure(), pc, stack, top, v);
+ 		}
+ 		Varargs getLocal(int i) {
++			if ( i < 0 )
++				return varargs != null && i >= -varargs.narg()? varargsOf(VARARG_NAME, varargs.arg(-i)): NIL;
+ 			// Java frames have no Lua register array.
+ 			if ( stack == null ) return NIL;
+ 			LuaString name = getlocalname(i);
+@@ -699,6 +722,11 @@
+ 				return NIL;
+ 		}
+ 		Varargs setLocal(int i, LuaValue value) {
++			if ( i < 0 ) {
++				if ( varargs == null || i < -varargs.narg() ) return NIL;
++				varargs.set(-i, value);
++				return VARARG_NAME;
++			}
+ 			if ( stack == null ) return NIL;
+ 			LuaString name = getlocalname(i);
+ 			if ( i >= 1 && i <= stack.length && stack[i-1] != null && name != null ) {
+--- /dev/null
++++ b/test/junit/org/luaj/vm2/DebugVarargsRegressionTest.java
+@@ -0,0 +1,96 @@
++package org.luaj.vm2;
++
++import java.io.ByteArrayInputStream;
++import java.io.ByteArrayOutputStream;
++import junit.framework.TestCase;
++import org.luaj.vm2.compiler.DumpState;
++import org.luaj.vm2.lib.VarArgFunction;
++import org.luaj.vm2.lib.jse.JsePlatform;
++
++public class DebugVarargsRegressionTest extends TestCase {
++    private Globals globals;
++    protected void setUp() { globals=JsePlatform.debugGlobals(); }
++    private Varargs run(String source) { return globals.load(source,"debug-varargs").invoke(); }
++    public void testNamesValuesAndNilArity() {
++        Varargs r=run("local function f(a,...) local n,v=debug.getlocal(1,-1); assert(n=='(*vararg)' and v==11); "
++                + "assert(select('#',debug.getlocal(1,-2))==2); local n,v=debug.getlocal(1,-2); assert(n=='(*vararg)' and v==nil); "
++                + "local n,v=debug.getlocal(1,-3); assert(n=='(*vararg)' and v==33); return ... end; return f(7,11,nil,33,nil)");
++        assertEquals(4,r.narg()); assertEquals(11,r.arg1().toint()); assertTrue(r.arg(2).isnil()); assertEquals(33,r.arg(3).toint()); assertTrue(r.arg(4).isnil());
++    }
++    public void testWritesAreVisibleToLaterVarargInstructions() {
++        Varargs r=run("local function f(a,...) assert(debug.setlocal(1,-1,99)=='(*vararg)'); "
++                + "assert(debug.setlocal(1,-2,nil)=='(*vararg)'); assert(debug.setlocal(1,-3,77)=='(*vararg)'); "
++                + "assert(select('#',debug.setlocal(1,-1,99))==1); return a,... end; return f(7,11,22,33)");
++        assertEquals(4,r.narg()); assertEquals(7,r.arg1().toint()); assertEquals(99,r.arg(2).toint()); assertTrue(r.arg(3).isnil()); assertEquals(77,r.arg(4).toint());
++    }
++    public void testFixedCountVarargReadUsesChangedValue() {
++        assertEquals(99,run("local function f(...) debug.setlocal(1,-1,99); local a=...; return a end; return f(11)").arg1().toint());
++    }
++    public void testOutOfRangeAndIntegerMinimumDoNotWrite() {
++        Varargs r=run("local function f(...) for _,i in ipairs({-2,-2147483648}) do "
++                + "assert(select('#',debug.getlocal(1,i))==1 and debug.getlocal(1,i)==nil); "
++                + "assert(debug.setlocal(1,i,99)==nil) end; return ... end; return f(11)");
++        assertEquals(11,r.arg1().toint());
++    }
++    public void testNoVarargsOrNonVarargFunction() {
++        run("local function f(...) assert(debug.getlocal(1,-1)==nil); assert(debug.setlocal(1,-1,99)==nil) end; f(); "
++                + "local function g(a) assert(debug.getlocal(1,-1)==nil); assert(debug.setlocal(1,-1,99)==nil); return a end; assert(g(7,11)==7); "
++                + "assert(debug.getlocal(f,-1)==nil); assert(pcall(function() assert(debug.getlocal(2,-1)==nil); assert(debug.setlocal(2,-1,99)==nil) end))");
++    }
++    public void testJavaFixedArityCallEntrypoints() {
++        LuaValue f=globals.load("return function(...) local n,v=debug.getlocal(1,-1); assert(n=='(*vararg)'); debug.setlocal(1,-1,99); return ... end").call();
++        assertEquals(99,f.call(LuaValue.ONE).toint()); assertEquals(99,f.call(LuaValue.ONE,LuaValue.ONE).toint());
++        assertEquals(99,f.call(LuaValue.ONE,LuaValue.ONE,LuaValue.ONE).toint());
++    }
++    public void testCallerOwnedArrayAndPreviouslyReadValueAreNotMutated() {
++        LuaValue[] input={LuaValue.valueOf(11),LuaValue.valueOf(22),LuaValue.valueOf(33),LuaValue.valueOf(44)};
++        LuaValue f=globals.load("return function(...) local old=...; debug.setlocal(1,-1,99); return old,... end").call();
++        Varargs r=f.invoke(LuaValue.varargsOf(input));
++        assertEquals(11,input[0].toint()); assertEquals(11,r.arg1().toint()); assertEquals(99,r.arg(2).toint());
++    }
++    public void testPendingCallArgumentsRemainSnapshot() {
++        globals.set("probe",new VarArgFunction() {
++            public Varargs invoke(Varargs args) {
++                LuaValue name=globals.get("debug").get("setlocal").call(LuaValue.ONE,LuaValue.valueOf(-1),LuaValue.valueOf(99));
++                assertEquals("(*vararg)",name.tojstring()); assertEquals(11,args.arg1().toint()); return LuaValue.valueOf(7);
++            }
++        });
++        Varargs r=run("local function f(...) local r=probe(...); return r,... end; return f(11,22,33,44)");
++        assertEquals(7,r.arg1().toint()); assertEquals(99,r.arg(2).toint());
++    }
++    public void testSuspendedCoroutineAfterTemporaryMultivalues() {
++        Varargs r=run("local co=coroutine.create(function(a,...) local x,y=string.find('abc','b'); coroutine.yield(x,y); return a,... end); "
++                + "assert(coroutine.resume(co,7,11,nil,33)); local n,v=debug.getlocal(co,1,-3); assert(n=='(*vararg)' and v==33); "
++                + "assert(debug.setlocal(co,1,-2,22)=='(*vararg)'); assert(debug.setlocal(co,1,-1,nil)=='(*vararg)'); "
++                + "local ok,a,b,c,d=coroutine.resume(co); assert(ok); return a,b,c,d,coroutine.status(co)");
++        assertEquals(7,r.arg1().toint()); assertTrue(r.arg(2).isnil()); assertEquals(22,r.arg(3).toint()); assertEquals(33,r.arg(4).toint()); assertEquals("dead",r.arg(5).tojstring());
++    }
++    public void testRecursiveFramesHaveSeparateVarargs() {
++        run("local function f(n,...) if n>0 then f(n-1,22); local name,v=debug.getlocal(1,-1); assert(v==11) "
++                + "else assert(debug.setlocal(1,-1,99)=='(*vararg)'); local name,v=debug.getlocal(2,-1); assert(v==11) end end; f(1,11)");
++    }
++    public void testCallHookCanChangeInitialVarargs() {
++        Varargs r=run("local f=function(...) return ... end; debug.sethook(function(event) "
++                + "if event=='call' and debug.getinfo(1,'f').func==f then "
++                + "local name,v=debug.getlocal(1,-1); assert(name=='(*vararg)' and v==11); assert(debug.setlocal(1,-1,99)=='(*vararg)') end end,'c'); "
++                + "local v=f(11); debug.sethook(); return v");
++        assertEquals(99,r.arg1().toint());
++    }
++    public void testExceptionAndFrameReuseClearVarargs() {
++        run("local function f(...) debug.setlocal(1,-1,99); error('wanted') end; assert(not pcall(f,11)); "
++                + "local function g() assert(debug.getlocal(1,-1)==nil); assert(debug.setlocal(1,-1,99)==nil) end; g()");
++        assertNull(globals.debuglib.getCallFrame(1));
++    }
++    public void testRetainedResultsSurviveLaterCallAndDebugWrite() {
++        LuaValue f=globals.load("return function(...) debug.setlocal(1,-1,99); return ... end").call();
++        Varargs first=f.invoke(LuaValue.varargsOf(new LuaValue[] {LuaValue.ONE,LuaValue.valueOf(2),LuaValue.valueOf(3),LuaValue.valueOf(4)}));
++        f.invoke(LuaValue.varargsOf(new LuaValue[] {LuaValue.valueOf(5),LuaValue.valueOf(6),LuaValue.valueOf(7),LuaValue.valueOf(8)}));
++        assertEquals(99,first.arg1().toint()); assertEquals(2,first.arg(2).toint()); assertEquals(4,first.arg(4).toint());
++    }
++    public void testStrippedChunkStillHasVarargValues() throws Exception {
++        LuaClosure f=globals.load("return function(...) debug.setlocal(1,-1,99); return ... end").call().checkclosure();
++        ByteArrayOutputStream out=new ByteArrayOutputStream(); DumpState.dump(f.p,out,true);
++        LuaValue stripped=globals.load(new ByteArrayInputStream(out.toByteArray()),"stripped","b",globals);
++        assertEquals(99,stripped.call(LuaValue.ONE).toint());
++    }
++}

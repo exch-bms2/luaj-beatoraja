@@ -1,0 +1,36 @@
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -526,7 +526,12 @@
+ 				case Lua.OP_RETURN: /*	A B	return R(A), ... ,R(A+B-2)	(see note)	*/
+ 					b = i>>>23;
+ 					switch ( b ) {
+-					case 0: return varargsOf(stack, a, top-v.narg()-a, v);
++					case 0:
++						int prefix = top-v.narg()-a;
++						if (prefix == 0) return v;
++						if (detachedReturns && (globals == null || globals.debuglib == null) && Varargs.isOwnedArray(v))
++							return Varargs.prependCopy(stack, a, prefix, v);
++						return varargsOf(stack, a, prefix, v);
+ 					case 1: return NONE;
+ 					case 2: return stack[a];
+ 					case 3: return varargsOf(stack, a, 2);
+--- a/src/core/org/luaj/vm2/Varargs.java
++++ b/src/core/org/luaj/vm2/Varargs.java
+@@ -708,6 +708,17 @@
+ 		}
+ 	}
+ 
++	static boolean isOwnedArray(Varargs args) { return args instanceof OwnedArrayVarargs; }
++
++	/** Caller has checked that tail is an immutable owned snapshot. */
++	static Varargs prependCopy(LuaValue[] stack, int offset, int length, Varargs tail) {
++		OwnedArrayVarargs owned = (OwnedArrayVarargs) tail;
++		LuaValue[] values = new LuaValue[length + owned.values.length];
++		System.arraycopy(stack, offset, values, 0, length);
++		System.arraycopy(owned.values, 0, values, length, owned.values.length);
++		return new OwnedArrayVarargs(values);
++	}
++
+ 	/** Do not expose a snapshot's destination to an overridable copyto method. */
+ 	private static void snapshotTo(Varargs source, LuaValue[] dest, int offset, int length) {
+ 		if (length == 0) return;

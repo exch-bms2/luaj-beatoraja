@@ -1,0 +1,88 @@
+package org.luaj.vm2;
+
+import junit.framework.TestCase;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
+public class MinMaxRegressionTest extends TestCase {
+    private LuaValue min, max;
+
+    protected void setUp() {
+        LuaValue math = JsePlatform.standardGlobals().get("math");
+        min = math.get("min");
+        max = math.get("max");
+    }
+
+    private void result(LuaValue function, double expected, LuaValue... arguments) {
+        Varargs values = function.invoke(LuaValue.varargsOf(arguments));
+        assertEquals(1, values.narg());
+        assertEquals(LuaValue.TNUMBER, values.arg1().type());
+        if (Double.isNaN(expected)) assertTrue(Double.isNaN(values.arg1().todouble()));
+        else assertEquals(expected, values.arg1().todouble(), 0.0);
+    }
+
+    public void testSingleNumericStringReturnsNumber() {
+        for (LuaValue function : new LuaValue[] {min, max}) {
+            result(function, 2, LuaValue.valueOf("2"));
+            result(function, -0.25, LuaValue.valueOf(" -0.25 "));
+            result(function, 0, LuaValue.valueOf("0"));
+        }
+    }
+
+    public void testMixedArgumentsAndNumericOrder() {
+        result(max, 10, LuaValue.valueOf("2"), LuaValue.valueOf("10"));
+        result(min, 2, LuaValue.valueOf("2"), LuaValue.valueOf("10"));
+        result(max, 8, LuaValue.valueOf(4), LuaValue.valueOf("8"), LuaValue.valueOf(-4.5));
+        result(min, -8, LuaValue.valueOf(4), LuaValue.valueOf("-8"), LuaValue.valueOf(-4.5));
+    }
+
+    public void testFractionalAndExponentialStrings() {
+        result(max, 2000, LuaValue.valueOf("2e3"), LuaValue.valueOf(1999.5));
+        result(min, -0.125, LuaValue.valueOf("-1.25e-1"), LuaValue.valueOf(0.125));
+        result(max, 1.0000000000000002, LuaValue.valueOf("1.0000000000000002"), LuaValue.ONE);
+    }
+
+    public void testIntegerAndDoubleBoundaries() {
+        result(max, 0x1p63, LuaValue.valueOf(0x1p63), LuaValue.valueOf(Math.nextDown(0x1p63)));
+        result(min, -0x1p63, LuaValue.valueOf(-0x1p63), LuaValue.valueOf(Integer.MIN_VALUE));
+        result(max, Double.MAX_VALUE, LuaValue.valueOf("1.7976931348623157e308"), LuaValue.ONE);
+        result(min, Double.MIN_VALUE, LuaValue.valueOf(Double.MIN_VALUE), LuaValue.valueOf(Double.MIN_NORMAL));
+    }
+
+    public void testNaNAndInfinityOrder() {
+        for (LuaValue function : new LuaValue[] {min, max}) {
+            result(function, Double.NaN, LuaValue.valueOf(Double.NaN), LuaValue.ONE);
+            result(function, 1, LuaValue.ONE, LuaValue.valueOf(Double.NaN));
+        }
+        result(max, Double.POSITIVE_INFINITY, LuaValue.valueOf(Double.POSITIVE_INFINITY), LuaValue.ONE);
+        result(min, Double.NEGATIVE_INFINITY, LuaValue.valueOf(Double.NEGATIVE_INFINITY), LuaValue.ONE);
+    }
+
+    public void testInvalidArgumentsAtEveryPosition() {
+        for (LuaValue function : new LuaValue[] {min, max}) {
+            try { function.invoke(); fail("missing number accepted"); } catch (LuaError expected) { }
+            for (LuaValue bad : new LuaValue[] {LuaValue.NIL, LuaValue.TRUE, LuaValue.valueOf("abc"), new LuaTable()}) {
+                for (LuaValue[] args : new LuaValue[][] {{bad}, {LuaValue.ONE, bad}, {bad, LuaValue.ONE}, {LuaValue.ONE, bad, LuaValue.ZERO}}) {
+                    try { function.invoke(LuaValue.varargsOf(args)); fail("non-number accepted"); } catch (LuaError expected) { }
+                }
+            }
+        }
+    }
+
+    public void testInvalidTypesDoNotInvokeComparisonMetamethod() {
+        Varargs values = JsePlatform.standardGlobals().load(
+                "local called=false; local t=setmetatable({}, {__lt=function() called=true; return false end}); "
+                + "local ok=pcall(math.max,1,t); return ok,called").invoke();
+        assertFalse(values.arg1().toboolean());
+        assertFalse(values.arg(2).toboolean());
+    }
+
+    public void testLuaTypesAndRetainedResult() {
+        Varargs first = max.invoke(LuaValue.varargsOf(LuaValue.valueOf("2"), LuaValue.valueOf("10")));
+        min.invoke(LuaValue.valueOf("-5"));
+        assertEquals(LuaValue.TNUMBER, first.arg1().type());
+        assertEquals(10, first.arg1().toint());
+        Varargs types = JsePlatform.standardGlobals().load("return type(math.min('2')),type(math.max('3'))").invoke();
+        assertEquals("number", types.arg1().tojstring());
+        assertEquals("number", types.arg(2).tojstring());
+    }
+}

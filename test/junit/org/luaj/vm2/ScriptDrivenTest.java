@@ -31,6 +31,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 
 import junit.framework.TestCase;
 
@@ -169,6 +173,15 @@ public class ScriptDrivenTest extends TestCase implements ResourceFinder {
 			} finally {
 				globals.STDOUT = oldps;
 				ps.close();
+				String auditDirectory = System.getProperty("luaj.audit.output");
+				if (auditDirectory != null) {
+					Path directory = Paths.get(auditDirectory);
+					Files.createDirectories(directory);
+					String prefix = getClass().getName() + "." + testName;
+					Files.write(directory.resolve(prefix + ".actual"), output.toByteArray());
+					Files.write(directory.resolve(prefix + ".expected"),
+							getExpectedOutput(testName).getBytes(StandardCharsets.UTF_8));
+				}
 			}
 		} catch ( IOException ioe ) {
 			throw new RuntimeException(ioe.toString());

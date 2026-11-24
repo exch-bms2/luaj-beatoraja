@@ -1,0 +1,61 @@
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -24,7 +24,6 @@
+ import org.luaj.vm2.lib.DebugLib.CallFrame;
+ import org.luaj.vm2.lib.DebugLib.DebugVarargs;
+ 
+-import java.util.ArrayDeque;
+ import java.util.AbstractCollection;
+ import java.util.ArrayList;
+ import java.util.Iterator;
+@@ -148,7 +147,8 @@
+ 		private final int reservedPrimarySlots;
+ 		private final int overflowSlotBudget;
+ 		private volatile LuaValue[] primary;
+-		private ArrayDeque<LuaValue[]> overflow;
++		private LuaValue[][] overflow;
++		private int overflowCount;
+ 		private int overflowSlots;
+ 
+ 		StackCache(int stackSize) {
+@@ -163,9 +163,9 @@
+ 		}
+ 
+ 		private synchronized LuaValue[] takeOverflow(int size) {
+-			if (overflow == null) return null;
+-			LuaValue[] stack;
+-			while ((stack = overflow.pollFirst()) != null) {
++			while (overflowCount > 0) {
++				LuaValue[] stack = overflow[--overflowCount];
++				overflow[overflowCount] = null;
+ 				overflowSlots -= stack.length;
+ 				if (stack.length == size) return stack;
+ 			}
+@@ -184,22 +184,22 @@
+ 
+ 		private synchronized void putOverflow(LuaValue[] stack) {
+ 			if (stack.length > overflowSlotBudget - overflowSlots) return;
+-			if (overflow == null) overflow = new ArrayDeque<LuaValue[]>();
+-			if (overflow.size() < MAX_CACHED_STACKS - 1) {
+-				overflow.push(stack);
++			if (overflowCount < MAX_CACHED_STACKS - 1) {
++				if (overflow == null) overflow = new LuaValue[MAX_CACHED_STACKS - 1][];
++				overflow[overflowCount++] = stack;
+ 				overflowSlots += stack.length;
+ 			}
+ 		}
+ 
+ 		public synchronized int size() {
+-			return (primary != null? 1: 0) + (overflow != null? overflow.size(): 0);
++			return (primary != null? 1: 0) + overflowCount;
+ 		}
+ 
+ 		public synchronized Iterator<LuaValue[]> iterator() {
+ 			ArrayList<LuaValue[]> snapshot = new ArrayList<LuaValue[]>();
+ 			LuaValue[] stack = primary;
+ 			if (stack != null) snapshot.add(stack);
+-			if (overflow != null) snapshot.addAll(overflow);
++			for (int i = 0; i < overflowCount; ++i) snapshot.add(overflow[i]);
+ 			return snapshot.iterator();
+ 		}
+ 	}

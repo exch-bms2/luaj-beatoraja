@@ -235,20 +235,20 @@ public class LuaDouble extends LuaNumber {
 	public int strcmp( LuaString rhs )      { typerror("attempt to compare number with string"); return 0; }
 			
 	public String tojstring() {
-		/*
-		if ( v == 0.0 ) { // never occurs in J2me
-			long bits = Double.doubleToLongBits( v );
-			return ( bits >> 63 == 0 ) ? "0" : "-0";
-		}
-		*/
-		long l = (long) v;
-		if ( l == v )
-			return Long.toString(l);
 		if ( Double.isNaN(v) )
 			return JSTR_NAN;
 		if ( Double.isInfinite(v) )
 			return (v<0? JSTR_NEGINF: JSTR_POSINF);
-		return Float.toString((float)v);
+		// Outside this half-open range, casting to long saturates. In particular,
+		// comparing (double) Long.MAX_VALUE with 2^63 cannot detect that overflow.
+		if (v < -0x1p63 || v >= 0x1p63)
+			return Double.toString(v);
+		long l = (long) v;
+		if ( l == v )
+			return Long.toString(l);
+		float f = (float) v;
+		// Preserve ordinary LuaJ formatting, but do not erase a nonzero double.
+		return f == 0.0f ? Double.toString(v) : Float.toString(f);
 	}
 	
 	public LuaString strvalue() {
