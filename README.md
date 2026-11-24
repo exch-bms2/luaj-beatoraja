@@ -31,6 +31,9 @@ getlocalの関数形式とsetlocalの値引数検証は [debug APIの修正](doc
 
 実スキン計測に基づく文字列キーのintern化は [文字列キーのintern化](documentation/STRING-INTERNING.md) を参照してください。
 
+インタプリタ本体（`LuaClosure.execute`）の縮小は [execute の縮小](documentation/EXECUTE-SIZE.md) を参照してください。
+不採用にした試行（[Javaの関数への末尾呼び出し](documentation/TAILCALL-JAVA-FUNCTIONS.md)、[テーブルの数値をboxしたまま保持](documentation/TABLE-NUMBER-VALUES.md)）も記録しています。
+
 以下は上流の説明・変更履歴です。
 
 # This is a fork!

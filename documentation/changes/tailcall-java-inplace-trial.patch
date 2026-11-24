@@ -1,0 +1,151 @@
+diff --git a/src/core/org/luaj/vm2/LuaClosure.java b/src/core/org/luaj/vm2/LuaClosure.java
+index aa84b64..6eca9da 100644
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -510,6 +510,24 @@ public class LuaClosure extends LuaFunction {
+ 					}
+ 					
+ 				case Lua.OP_TAILCALL: /*	A B C	return R(A)(R(A+1), ... ,R(A+B-1))		*/
++					o = stack[a];
++					if ( o instanceof LuaFunction && !(o instanceof LuaClosure)
++							&& (globals == null || globals.debuglib == null) ) {
++						// Like lvm.c, a tail call to a Java function runs in place: there is no
++						// Lua frame to replace, so skip the TailcallVarargs round trip.
++						// onInvoke keeps tail calls returned by compiled (LuaJC) functions lazy;
++						// such a call may hold its arguments past this frame, so detach them.
++						switch ( i & Lua.MASK_B ) {
++						case (1<<Lua.POS_B): return o.onInvoke(NONE);
++						case (2<<Lua.POS_B): return o.onInvoke(stack[a+1]);
++						default:
++							b = i>>>23;
++							v = b>0?
++								varargsOf(stack,a+1,b-1): // exact arg count
++								varargsOf(stack, a+1, top-v.narg()-(a+1), v); // from prev top
++							return o.onInvoke(v.dealias());
++						}
++					}
+ 					switch ( i & Lua.MASK_B ) {
+ 					case (1<<Lua.POS_B): return new TailcallVarargs(stack[a], NONE);
+ 					case (2<<Lua.POS_B): return new TailcallVarargs(stack[a], stack[a+1]);
+diff --git a/test/junit/org/luaj/vm2/TailcallJavaFunctionRegressionTest.java b/test/junit/org/luaj/vm2/TailcallJavaFunctionRegressionTest.java
+new file mode 100644
+index 0000000..a511497
+--- /dev/null
++++ b/test/junit/org/luaj/vm2/TailcallJavaFunctionRegressionTest.java
+@@ -0,0 +1,116 @@
++package org.luaj.vm2;
++
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertFalse;
++import static org.junit.Assert.assertTrue;
++
++import org.junit.Test;
++import org.luaj.vm2.lib.OneArgFunction;
++import org.luaj.vm2.lib.VarArgFunction;
++import org.luaj.vm2.lib.jse.JsePlatform;
++
++/**
++ * Tail calls to Java functions run in place (as in lvm.c) instead of through TailcallVarargs.
++ * Results, multiple returns, Lua tail recursion, re-entry, yields and errors must stay correct.
++ */
++public class TailcallJavaFunctionRegressionTest {
++
++	private static Globals globals() {
++		Globals g = JsePlatform.standardGlobals();
++		g.set("twice", new OneArgFunction() {
++			@Override public LuaValue call(LuaValue v) { return valueOf(v.toint() * 2); }
++		});
++		// Returns its arguments as-is, like select(1, ...): the result aliases the caller's arguments.
++		g.set("same", new VarArgFunction() {
++			@Override public Varargs invoke(Varargs args) { return args; }
++		});
++		return g;
++	}
++
++	@Test
++	public void singleAndMultipleResults() {
++		Globals g = globals();
++		assertEquals(14, g.load("local function f(x) return twice(x) end return f(7)").call().toint());
++		Varargs v = g.load("local function f(s) return string.byte(s, 1, 3) end return f('abc')").invoke();
++		assertEquals(3, v.narg());
++		assertEquals(97, v.arg(1).toint());
++		assertEquals(99, v.arg(3).toint());
++		assertEquals(0, g.load("local function f() return select('#') end return f()").call().toint());
++		assertEquals(5, g.load("local function f(...) return select('#', ...) end return f(1, nil, 3, nil, nil)").call().toint());
++	}
++
++	@Test
++	public void resultsAliasingArgumentsSurviveStackReuse() {
++		Globals g = globals();
++		LuaValue f = g.load("return function(...) return same(...) end").call();
++		Varargs first = f.invoke(LuaValue.varargsOf(new LuaValue[] {
++				LuaValue.valueOf(1), LuaValue.valueOf(2), LuaValue.valueOf(3), LuaValue.valueOf(4), LuaValue.valueOf(5)}));
++		Varargs second = f.invoke(LuaValue.varargsOf(new LuaValue[] {
++				LuaValue.valueOf(10), LuaValue.valueOf(20), LuaValue.valueOf(30), LuaValue.valueOf(40), LuaValue.valueOf(50)}));
++		for (int i = 1; i <= 5; i++) {
++			assertEquals(i, first.arg(i).toint());
++			assertEquals(i * 10, second.arg(i).toint());
++		}
++		// Fixed register arguments (not varargs) are detached from the frame as well.
++		LuaValue h = g.load("return function(a, b, c, d) return same(a, b, c, d) end").call();
++		Varargs r1 = h.invoke(LuaValue.varargsOf(LuaValue.valueOf(1), LuaValue.valueOf(2), LuaValue.valueOf(3)));
++		Varargs r2 = h.invoke(LuaValue.varargsOf(LuaValue.valueOf(7), LuaValue.valueOf(8), LuaValue.valueOf(9)));
++		assertEquals(4, r1.narg());
++		assertEquals(3, r1.arg(3).toint());
++		assertTrue(r1.arg(4).isnil());
++		assertEquals(9, r2.arg(3).toint());
++		assertEquals(6, g.load("local f = ... local a, b, c = f(1, 2, 3) local x = f(4, 5, 6) return a + b + c",
++				"chunk").call(h).toint());
++	}
++
++	@Test
++	public void luaTailRecursionStillDoesNotGrowTheStack() {
++		Globals g = globals();
++		assertEquals("done", g.load(
++				"local function loop(n) if n == 0 then return 'done' end return loop(n - 1) end\n" +
++				"return loop(200000)").call().tojstring());
++		// Mixed: Lua -> Java -> Lua tail calls.
++		assertEquals(42, g.load(
++				"local function inner() return 21 end\n" +
++				"local function outer() return twice(inner()) end\n" +
++				"return outer()").call().toint());
++	}
++
++	@Test
++	public void reentryThroughPcallAndYield() {
++		Globals g = globals();
++		Varargs v = g.load("local function f() return pcall(function() return 1, 2 end) end return f()").invoke();
++		assertTrue(v.arg(1).toboolean());
++		assertEquals(2, v.arg(3).toint());
++		Varargs y = g.load(
++				"local co = coroutine.wrap(function(x) return coroutine.yield(x + 1) end)\n" +
++				"local a = co(1)\n" +
++				"local b = co(5)\n" +
++				"return a, b").invoke();
++		assertEquals(2, y.arg(1).toint());
++		assertEquals(5, y.arg(2).toint());
++	}
++
++	@Test
++	public void errorFromTailCalledJavaFunctionReportsTheCallingLine() {
++		Globals g = globals();
++		Varargs v = g.load(
++				"local function f()\n" +
++				"  return error('boom')\n" +
++				"end\n" +
++				"return pcall(f)", "chunk").invoke();
++		assertFalse(v.arg(1).toboolean());
++		// As in C Lua 5.2, error level 1 is the function containing the tail call (line 2).
++		// Previously the position was lost ("boom"). LuaJ formats it without a colon.
++		assertEquals("chunk:2 boom", v.arg(2).tojstring());
++	}
++
++	@Test
++	public void callableTablesKeepTheGenericPath() {
++		Globals g = globals();
++		assertEquals(9, g.load(
++				"local t = setmetatable({}, { __call = function(self, x) return x * 3 end })\n" +
++				"local function f(x) return t(x) end\n" +
++				"return f(3)").call().toint());
++	}
++}

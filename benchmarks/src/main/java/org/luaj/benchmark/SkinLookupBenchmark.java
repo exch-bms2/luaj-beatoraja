@@ -18,7 +18,7 @@ import org.openjdk.jmh.annotations.*;
 @Measurement(iterations = 5, time = 1)
 @Fork(value = 3, jvmArgsAppend = {"-Xms512m", "-Xmx512m"})
 public class SkinLookupBenchmark {
-    private LuaValue fieldLookup, drawCondition, dynamicKeys;
+    private LuaValue fieldLookup, drawCondition, dynamicKeys, javaTailCall, luaTailCall, numberReads;
     private int counter;
 
     @Setup
@@ -34,7 +34,8 @@ public class SkinLookupBenchmark {
         g.set("main_state", mainState);
         g.load("MAIN = { OP = { ONLINE = 50, SONGBAR = 2 }, NUM = { TOTALNOTES = 74, IR_RANK = 179 } }\n"
                 + "CUSTOM = { NUM = {}, OP = {} }\n"
-                + "CUSTOM.NUM.maxExscore = function() return main_state.number(MAIN.NUM.TOTALNOTES) * 2 end\n",
+                + "CUSTOM.NUM.maxExscore = function() return main_state.number(MAIN.NUM.TOTALNOTES) * 2 end\n"
+                + "CUSTOM.OP.isMyFrame = function(i) return main_state.number(389 + i) == main_state.number(MAIN.NUM.IR_RANK) end\n",
                 "root").call();
         for (int i = 0; i < 20000; i++) LuaString.valueOf("skin-file-string-" + i);
         fieldLookup = g.load("return function() return MAIN.OP.ONLINE + MAIN.NUM.TOTALNOTES + MAIN.OP.SONGBAR end",
@@ -47,12 +48,23 @@ public class SkinLookupBenchmark {
                 + "  return main_state.option(MAIN.OP.SONGBAR) and main_state.option(MAIN.OP.ONLINE)"
                 + " and rankRate <= refRate[j] and rankRate > refRate[j + 1]\n"
                 + "end", "select2").call();
+        // `return f(x)`: a Java function (in-place call) and a Lua function (TailcallVarargs, control).
+        javaTailCall = g.load("return function() return main_state.option(MAIN.OP.ONLINE) end", "tail1").call();
+        luaTailCall = g.load("return function() return CUSTOM.OP.isMyFrame(3) end", "tail2").call();
+        // Like WMII getScoreInfo: fractional and large numbers read from a constant table.
+        numberReads = g.load("local rankBorders = {}\n"
+                + "for i, v in ipairs({0, 2/9, 3/9, 4/9, 5/9, 6/9, 7/9, 8/9, 1}) do rankBorders[i] = { value = v, ex = 1000 + i } end\n"
+                + "return function() local s = 0 for i = 1, #rankBorders do s = s + rankBorders[i].value + rankBorders[i].ex end return s end",
+                "numbers").call();
         // Worst case for interning: every insert is a new, never-seen string key.
         dynamicKeys = g.load("return function(n) local t = {} t['key' .. n] = n return t end", "dynamic").call();
     }
 
     @Benchmark public LuaValue crossChunkFieldLookup() { return fieldLookup.call(); }
     @Benchmark public LuaValue skinDrawCondition() { return drawCondition.call(); }
+    @Benchmark public LuaValue javaFunctionTailCall() { return javaTailCall.call(); }
+    @Benchmark public LuaValue luaFunctionTailCall() { return luaTailCall.call(); }
+    @Benchmark public LuaValue tableNumberReads() { return numberReads.call(); }
 
     /** Like beatoraja's main_state.offset: a fresh table with Java-created string keys. */
     @Benchmark public LuaTable javaKeyTable() {
