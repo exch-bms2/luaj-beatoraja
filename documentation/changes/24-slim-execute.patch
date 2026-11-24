@@ -1,0 +1,302 @@
+diff --git a/src/core/org/luaj/vm2/LuaClosure.java b/src/core/org/luaj/vm2/LuaClosure.java
+index aa84b64..d8879a3 100644
+--- a/src/core/org/luaj/vm2/LuaClosure.java
++++ b/src/core/org/luaj/vm2/LuaClosure.java
+@@ -317,6 +317,10 @@ public class LuaClosure extends LuaFunction {
+ 			// onCall can itself throw from a user hook after pushing a frame.
+ 			if (globals != null && globals.debuglib != null)
+ 				globals.debuglib.onCall( this, varargs, stack );
++			// Every exit goes through `result`: a return inside try/finally would make javac
++			// copy the finally block at each site, bloating this method for the JIT.
++			Varargs result;
++			loop:
+ 			for (; true; ++pc) {
+ 				if (globals != null && globals.debuglib != null)
+ 					globals.debuglib.onInstruction( pc, v, top );
+@@ -339,12 +343,7 @@ public class LuaClosure extends LuaFunction {
+ 				case Lua.OP_LOADKX:/*	A 	R(A) := Kst(extra arg)					*/
+ 					++pc;
+ 					i = code[pc];
+-					if ((i & 0x3f) != Lua.OP_EXTRAARG) {
+-						int op = i & 0x3f;
+-						throw new LuaError("OP_EXTRAARG expected after OP_LOADKX, got " +
+-							(op < Print.OPNAMES.length - 1 ? Print.OPNAMES[op] : "UNKNOWN_OP_" + op));
+-					}
+-					stack[a] = k[i>>>6];
++					stack[a] = k[extraArg(i)>>>6];
+ 					continue;
+ 					
+ 				case Lua.OP_LOADBOOL:/*	A B C	R(A):= (Bool)B: if (C) pc++			*/
+@@ -428,29 +427,13 @@ public class LuaClosure extends LuaFunction {
+ 					continue;
+ 					
+ 				case Lua.OP_CONCAT: /*	A B C	R(A):= R(B).. ... ..R(C)			*/
+-					b = i>>>23;
+-					c = (i>>14)&0x1ff;
+-					{
+-						if ( c > b+1 ) {
+-							Buffer sb = stack[c].buffer();
+-							while ( --c>=b )
+-								sb.concatTo(stack[c]);
+-							stack[a] = sb.value();
+-						} else {
+-							stack[a] = stack[c-1].concat(stack[c]);
+-						}
+-					}
++					stack[a] = concat(stack, i>>>23, (i>>14)&0x1ff);
+ 					continue;
+ 					
+ 				case Lua.OP_JMP: /*	A sBx	pc+=sBx; if (A) close all upvalues >= R(A - 1)	*/
+ 					pc  += (i>>>14)-0x1ffff;
+-					if (a > 0) {
+-						for (--a, b = openups.length; --b>=0; )
+-							if (openups[b] != null && openups[b].index >= a) {
+-								openups[b].close();
+-								openups[b] = null;
+-							}
+-					}
++					if (a > 0)
++						closeUpvalues(openups, a - 1);
+ 					continue;
+ 					
+ 				case Lua.OP_EQ: /*	A B C	if ((RK(B) == RK(C)) ~= A) then pc++		*/
+@@ -511,35 +494,27 @@ public class LuaClosure extends LuaFunction {
+ 					
+ 				case Lua.OP_TAILCALL: /*	A B C	return R(A)(R(A+1), ... ,R(A+B-1))		*/
+ 					switch ( i & Lua.MASK_B ) {
+-					case (1<<Lua.POS_B): return new TailcallVarargs(stack[a], NONE);
+-					case (2<<Lua.POS_B): return new TailcallVarargs(stack[a], stack[a+1]);
+-					case (3<<Lua.POS_B): return new TailcallVarargs(stack[a], varargsOf(stack[a+1],stack[a+2]));
+-					case (4<<Lua.POS_B): return new TailcallVarargs(stack[a], varargsOf(stack[a+1],stack[a+2],stack[a+3]));
++					case (1<<Lua.POS_B): result = new TailcallVarargs(stack[a], NONE); break loop;
++					case (2<<Lua.POS_B): result = new TailcallVarargs(stack[a], stack[a+1]); break loop;
++					case (3<<Lua.POS_B): result = new TailcallVarargs(stack[a], varargsOf(stack[a+1],stack[a+2])); break loop;
++					case (4<<Lua.POS_B): result = new TailcallVarargs(stack[a], varargsOf(stack[a+1],stack[a+2],stack[a+3])); break loop;
+ 					default:
+ 						b = i>>>23;
+ 						v = b>0?
+ 							varargsOf(stack,a+1,b-1): // exact arg count
+ 							varargsOf(stack, a+1, top-v.narg()-(a+1), v); // from prev top
+-						return new TailcallVarargs( stack[a], v.dealias() );
++						result = new TailcallVarargs( stack[a], v.dealias() );
++						break loop;
+ 					}
+ 					
+ 				case Lua.OP_RETURN: /*	A B	return R(A), ... ,R(A+B-2)	(see note)	*/
+ 					b = i>>>23;
+ 					switch ( b ) {
+-					case 0:
+-						int prefix = top-v.narg()-a;
+-						if (prefix == 0) return v;
+-						if (detachedReturns && (globals == null || globals.debuglib == null) && Varargs.isOwnedArray(v))
+-							return Varargs.prependCopy(stack, a, prefix, v);
+-						return varargsOf(stack, a, prefix, v);
+-					case 1: return NONE;
+-					case 2: return stack[a];
+-					case 3: return varargsOf(stack, a, 2);
+-					default:
+-						// Debug return observers may still modify the live registers.
+-						if (detachedReturns && (globals == null || globals.debuglib == null))
+-							return Varargs.copyOf(stack, a, b-1);
+-						return varargsOf(stack, a, b-1);
++					case 0: result = returnToTop(stack, a, top-v.narg()-a, v, detachedReturns); break loop;
++					case 1: result = NONE; break loop;
++					case 2: result = stack[a]; break loop;
++					case 3: result = varargsOf(stack, a, 2); break loop;
++					default: result = returnFixed(stack, a, b-1, detachedReturns); break loop;
+ 					}
+ 					
+ 				case Lua.OP_FORLOOP: /*	A sBx	R(A)+=R(A+2): if R(A) <?= R(A+1) then { pc+=sBx: R(A+3)=R(A) }*/
+@@ -556,22 +531,12 @@ public class LuaClosure extends LuaFunction {
+ 					continue;
+ 					
+ 				case Lua.OP_FORPREP: /*	A sBx	R(A)-=R(A+2): pc+=sBx				*/
+-					{
+-						LuaValue init  = stack[a].checknumber("'for' initial value must be a number");
+-						LuaValue limit = stack[a + 1].checknumber("'for' limit must be a number");
+-						LuaValue step  = stack[a + 2].checknumber("'for' step must be a number");
+-						stack[a] = init.sub(step);
+-						stack[a + 1] = limit;
+-						stack[a + 2] = step;
+-						pc += (i>>>14)-0x1ffff;
+-					}
++					forprep(stack, a);
++					pc += (i>>>14)-0x1ffff;
+ 					continue;
+ 
+ 				case Lua.OP_TFORCALL: /* A C	R(A+3), ... ,R(A+2+C) := R(A)(R(A+1), R(A+2));	*/
+-					v = stack[a].invoke(varargsOf(stack[a+1],stack[a+2]));
+-					c = (i>>14) & 0x1ff;
+-					while (--c >= 0)
+-						stack[a+3+c] = v.arg(c+1);
++					tforcall(stack, a, (i>>14) & 0x1ff);
+ 					v = NONE;
+ 					continue;
+ 
+@@ -583,40 +548,13 @@ public class LuaClosure extends LuaFunction {
+ 					continue;
+ 					
+ 				case Lua.OP_SETLIST: /*	A B C	R(A)[(C-1)*FPF+i]:= R(A+i), 1 <= i <= B	*/
+-					{
+-		                if ( (c=(i>>14)&0x1ff) == 0 )
+-		                    c = code[++pc];
+-		                int offset = (c-1) * Lua.LFIELDS_PER_FLUSH;
+-		                o = stack[a];
+-		                if ( (b=i>>>23) == 0 ) {
+-		                    b = top - a - 1;
+-		                    int m = b - v.narg();
+-		                	int j=1;
+-		                	for ( ;j<=m; j++ )
+-		                    	o.set(offset+j, stack[a + j]);
+-		                	for ( ;j<=b; j++ )
+-		                    	o.set(offset+j, v.arg(j-m));
+-		                } else {
+-		                    o.presize( offset + b );
+-		                    for (int j=1; j<=b; j++)
+-		                    	o.set(offset+j, stack[a + j]);
+-		                }
+-					}
++	                if ( (c=(i>>14)&0x1ff) == 0 )
++	                    c = code[++pc];
++					setlist(stack, a, i>>>23, c, top, v);
+ 					continue;
+ 					
+ 				case Lua.OP_CLOSURE: /*	A Bx	R(A):= closure(KPROTO[Bx])	*/
+-					{
+-						Prototype newp = p.p[i>>>14];
+-						LuaClosure ncl = new LuaClosure(newp, globals);
+-						Upvaldesc[] uv = newp.upvalues;
+-						for ( int j=0, nup=uv.length; j<nup; ++j ) {
+-							if (uv[j].instack)  /* upvalue refes to local variable? */
+-								ncl.upValues[j] = findupval(stack, uv[j].idx, openups);
+-							else  /* get upvalue from enclosing function */
+-								ncl.upValues[j] = upValues[uv[j].idx];
+-						}
+-						stack[a] = ncl;
+-					}
++					stack[a] = newClosure(p.p[i>>>14], stack, openups);
+ 					continue;
+ 					
+ 				case Lua.OP_VARARG: /*	A B	R(A), R(A+1), ..., R(A+B-1) = vararg		*/
+@@ -637,6 +575,7 @@ public class LuaClosure extends LuaFunction {
+ 					throw new java.lang.IllegalArgumentException("Illegal opcode: " + (i & 0x3f));
+ 				}
+ 			}
++			return result;
+ 		} catch ( LuaError le ) {
+ 			if (le.traceback == null)
+ 				processErrorHooks(le, p, pc);
+@@ -646,13 +585,107 @@ public class LuaClosure extends LuaFunction {
+ 			processErrorHooks(le, p, pc);
+ 			throw le;
+ 		} finally {
+-			if ( openups != null )
+-				for ( int u=openups.length; --u>=0; )
+-					if ( openups[u] != null )
+-						openups[u].close();
+-			if (globals != null && globals.debuglib != null)
+-				globals.debuglib.onReturn();
++			exitFrame(openups);
++		}
++	}
++
++	// Rarely executed parts of execute(), kept out of it so the hot loop stays small.
++
++	private void exitFrame(UpValue[] openups) {
++		if ( openups != null )
++			for ( int u=openups.length; --u>=0; )
++				if ( openups[u] != null )
++					openups[u].close();
++		if (globals != null && globals.debuglib != null)
++			globals.debuglib.onReturn();
++	}
++
++	/** Validates the OP_EXTRAARG that must follow OP_LOADKX and returns it. */
++	private static int extraArg(int i) {
++		if ((i & 0x3f) != Lua.OP_EXTRAARG) {
++			int op = i & 0x3f;
++			throw new LuaError("OP_EXTRAARG expected after OP_LOADKX, got " +
++				(op < Print.OPNAMES.length - 1 ? Print.OPNAMES[op] : "UNKNOWN_OP_" + op));
++		}
++		return i;
++	}
++
++	private static LuaValue concat(LuaValue[] stack, int b, int c) {
++		if ( c > b+1 ) {
++			Buffer sb = stack[c].buffer();
++			while ( --c>=b )
++				sb.concatTo(stack[c]);
++			return sb.value();
++		}
++		return stack[c-1].concat(stack[c]);
++	}
++
++	/** Closes open upvalues at or above register {@code level}. */
++	private static void closeUpvalues(UpValue[] openups, int level) {
++		for ( int b = openups.length; --b>=0; )
++			if (openups[b] != null && openups[b].index >= level) {
++				openups[b].close();
++				openups[b] = null;
++			}
++	}
++
++	private Varargs returnToTop(LuaValue[] stack, int a, int prefix, Varargs v, boolean detachedReturns) {
++		if (prefix == 0) return v;
++		if (detachedReturns && (globals == null || globals.debuglib == null) && Varargs.isOwnedArray(v))
++			return Varargs.prependCopy(stack, a, prefix, v);
++		return varargsOf(stack, a, prefix, v);
++	}
++
++	private Varargs returnFixed(LuaValue[] stack, int a, int n, boolean detachedReturns) {
++		// Debug return observers may still modify the live registers.
++		if (detachedReturns && (globals == null || globals.debuglib == null))
++			return Varargs.copyOf(stack, a, n);
++		return varargsOf(stack, a, n);
++	}
++
++	private static void forprep(LuaValue[] stack, int a) {
++		LuaValue init  = stack[a].checknumber("'for' initial value must be a number");
++		LuaValue limit = stack[a + 1].checknumber("'for' limit must be a number");
++		LuaValue step  = stack[a + 2].checknumber("'for' step must be a number");
++		stack[a] = init.sub(step);
++		stack[a + 1] = limit;
++		stack[a + 2] = step;
++	}
++
++	private static void tforcall(LuaValue[] stack, int a, int c) {
++		Varargs v = stack[a].invoke(varargsOf(stack[a+1],stack[a+2]));
++		while (--c >= 0)
++			stack[a+3+c] = v.arg(c+1);
++	}
++
++	private static void setlist(LuaValue[] stack, int a, int b, int c, int top, Varargs v) {
++		int offset = (c-1) * Lua.LFIELDS_PER_FLUSH;
++		LuaValue o = stack[a];
++		if ( b == 0 ) {
++			b = top - a - 1;
++			int m = b - v.narg();
++			int j=1;
++			for ( ;j<=m; j++ )
++				o.set(offset+j, stack[a + j]);
++			for ( ;j<=b; j++ )
++				o.set(offset+j, v.arg(j-m));
++		} else {
++			o.presize( offset + b );
++			for (int j=1; j<=b; j++)
++				o.set(offset+j, stack[a + j]);
++		}
++	}
++
++	private LuaClosure newClosure(Prototype newp, LuaValue[] stack, UpValue[] openups) {
++		LuaClosure ncl = new LuaClosure(newp, globals);
++		Upvaldesc[] uv = newp.upvalues;
++		for ( int j=0, nup=uv.length; j<nup; ++j ) {
++			if (uv[j].instack)  /* upvalue refes to local variable? */
++				ncl.upValues[j] = findupval(stack, uv[j].idx, openups);
++			else  /* get upvalue from enclosing function */
++				ncl.upValues[j] = upValues[uv[j].idx];
+ 		}
++		return ncl;
+ 	}
+ 
+ 	/**
