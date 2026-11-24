@@ -1,0 +1,1753 @@
+{
+  "baseline_sha256": "f67eceea5e36ad196db79727c3f5e5ac5455e0b0cce5f8cbf5a4fc6d67eef099",
+  "before_regressions": {
+    "cases": {
+      "org.luaj.vm2.FmodRegressionTest#testFiniteRemaindersTruncateTowardZero": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.FmodRegressionTest#testInfinitiesAndNaN": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.FmodRegressionTest#testIntegerAndNumericStringZeroDivisorsReturnNumberNaN": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.FmodRegressionTest#testIntegralDoubleOutsideSignedLongRange": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.FmodRegressionTest#testInvalidArgumentsStillFail": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.ModfRegressionTest#testExistingNumbersAndLargeIntegralDoubles": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.ModfRegressionTest#testFractionsTruncateTowardZero": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.ModfRegressionTest#testInfinitiesAndNaN": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.ModfRegressionTest#testIntegralNumericStringsReturnTwoNumbers": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.ModfRegressionTest#testInvalidArgumentsStillFail": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.ModfRegressionTest#testRetainedResultsAndLuaTypeChecks": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testArrayToHashKeepsValuesWeak": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testHashToArrayKeepsValuesWeak": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testHeldValuesSurviveRehashAndGC": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testIntegerStringsInBothInsertionOrders": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testNonIntegerKeysStillUseWeakSlots": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testNonIntegerValuesStillUseWeakSlots": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testRehashAfterHashKeyCollection": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testRehashAfterHashValueCollection": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testStringsAndNumbersStayStrongAcrossGC": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testTablesFunctionsAndUserdataAreCollected": {
+        "status": "pass"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testUserdataCanBeRecreatedWhileJavaOwnerIsHeld": {
+        "status": "fail"
+      },
+      "org.luaj.vm2.WeakIntegerKeyTest#testWeakKeysDoNotWeakenIntegerValues": {
+        "status": "pass"
+      }
+    },
+    "counts": {
+      "fail": 10,
+      "pass": 13
+    },
+    "per_case_heap": "128m",
+    "timeout_seconds": 5,
+    "vm_sha256": "bf50d93d0c4ac560d6cd21f7c982e7a32103e61da1233918b15f55a212650985"
+  },
+  "debug_api_regressions": {
+    "function": {
+      "after_counts": {
+        "pass": 10
+      },
+      "after_vm_sha256": "98957fcd2850094277cc123c8cf5709bed32254e7a691edfb3eb53d51dd236b8",
+      "before_cases": {
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testExecutingFunctionStillReturnsOnlyName": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testExplicitThreadDoesNotRequireAnActiveFrame": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testIndexBoundariesAndVarargs": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testJavaFunctionsHaveNoParameterMetadata": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testMissingAndInvalidIndicesAreLuaErrors": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testNoParameterFunctionAndMainChunk": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testNumericStringIndexAndExtraArguments": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testOnlyParametersNotBodyLocalsOrUpvalues": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testStrippedBinaryReturnsNil": "fail",
+        "org.luaj.vm2.DebugFunctionLocalRegressionTest#testUncalledFunctionParametersWithoutExecutingBody": "fail"
+      },
+      "before_counts": {
+        "fail": 10
+      },
+      "before_vm_sha256": "863f41f339373116275c4b1367b4f86cb65fe54cbffece002bf6b5772929ef84"
+    },
+    "value": {
+      "after_counts": {
+        "pass": 9
+      },
+      "after_vm_sha256": "991fbcc0f4a0218e765345abba242212e5d232abbe29201bb1bf420134d19b95",
+      "before_cases": {
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testExplicitNilForJavaFrameStillReturnsOneNil": "pass",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testExplicitNilStillWritesLuaLocal": "pass",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testLevelAndIndexValidationStillPrecedeValueCheck": "pass",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testMissingValueCannotOverwriteLuaLocal": "fail",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testMissingValueEvenForInvalidLocalOrAbsentFrame": "fail",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testMissingValueWithExplicitThread": "fail",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testMissingValueWithoutThread": "fail",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testProtectedErrorsAndHandlerState": "fail",
+        "org.luaj.vm2.DebugSetLocalValueRegressionTest#testSuspendedCoroutineLocalSurvivesMissingValue": "fail"
+      },
+      "before_counts": {
+        "fail": 6,
+        "pass": 3
+      },
+      "before_vm_sha256": "98957fcd2850094277cc123c8cf5709bed32254e7a691edfb3eb53d51dd236b8"
+    }
+  },
+  "debug_api_review_sha256": "09552e23b7a19d9c2647ea8029007492599c5df5018a09c896d275f16f8765ed",
+  "debug_local_review_sha256": "ce21c93884ed03daead11337a3f690348ca0763e4241184f2db4ba3d56bda7e9",
+  "debug_regressions": {
+    "java": {
+      "after_counts": {
+        "pass": 6
+      },
+      "after_vm_sha256": "863f41f339373116275c4b1367b4f86cb65fe54cbffece002bf6b5772929ef84",
+      "before_cases": {
+        "org.luaj.vm2.DebugJavaFrameRegressionTest#testJavaFrameReusedAfterLuaFrame": "fail",
+        "org.luaj.vm2.DebugJavaFrameRegressionTest#testPcallJavaFrameAndLuaCaller": "fail",
+        "org.luaj.vm2.DebugJavaFrameRegressionTest#testRegisteredJavaFrameGetLocal": "fail",
+        "org.luaj.vm2.DebugJavaFrameRegressionTest#testRegisteredJavaFrameSetLocal": "fail",
+        "org.luaj.vm2.DebugJavaFrameRegressionTest#testSuspendedPcallJavaFrame": "fail",
+        "org.luaj.vm2.DebugJavaFrameRegressionTest#testXpcallJavaFrameAndErrorHandler": "fail"
+      },
+      "before_counts": {
+        "fail": 6
+      },
+      "before_vm_sha256": "c5e42c8958d02b8d325e269128ad99cce967b35bc38a8f9025051f126c13a5fa"
+    },
+    "locals": {
+      "after_counts": {
+        "pass": 8
+      },
+      "after_vm_sha256": "c5e42c8958d02b8d325e269128ad99cce967b35bc38a8f9025051f126c13a5fa",
+      "before_cases": {
+        "org.luaj.vm2.DebugLocalRegressionTest#testExpiredLocalDoesNotNameReusedRegister": "fail",
+        "org.luaj.vm2.DebugLocalRegressionTest#testInvalidIndexBoundaries": "pass",
+        "org.luaj.vm2.DebugLocalRegressionTest#testNamedNilAndWritableLocals": "pass",
+        "org.luaj.vm2.DebugLocalRegressionTest#testStrippedChunkHasNoNamedLocals": "fail",
+        "org.luaj.vm2.DebugLocalRegressionTest#testSuspendedCoroutineLocals": "pass",
+        "org.luaj.vm2.DebugLocalRegressionTest#testSuspendedCoroutineUnnamedRegisters": "fail",
+        "org.luaj.vm2.DebugLocalRegressionTest#testUnnamedRegistersCannotBeWritten": "fail",
+        "org.luaj.vm2.DebugLocalRegressionTest#testUnnamedRegistersDoNotEscape": "fail"
+      },
+      "before_counts": {
+        "fail": 5,
+        "pass": 3
+      },
+      "before_vm_sha256": "bcb6dcafcf5f077d94d85a36238d295bd8aa1cac7dcae5b9f1e388e4a8bb8786"
+    }
+  },
+  "debug_vararg_level_regressions": {
+    "levels": {
+      "after_counts": {
+        "pass": 10
+      },
+      "after_vm_sha256": "2a3cb60f918f7bc8a4198364db27330c36ee61d15d07f3e6153affafed3e8ab4",
+      "before_cases": {
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testDeadCoroutineHasNoCallerFrame": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testExplicitThreadErrorsUseSecondArgument": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testFunctionFormDoesNotRequireStackLevel": "pass",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testGetLocalRejectsAbsentAndNegativeLevels": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testInvalidLocalOnValidFrameStillReturnsNil": "pass",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testLastCallerFrameAndNextLevel": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testProtectedErrorsRestoreFramesAndHandlers": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testSetLocalRejectsAbsentAndNegativeLevels": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testSuspendedCoroutineRangeAndValidVarargs": "fail",
+        "org.luaj.vm2.DebugStackLevelRegressionTest#testZeroLevelIsTheDebugJavaFunction": "fail"
+      },
+      "before_counts": {
+        "fail": 8,
+        "pass": 2
+      },
+      "before_vm_sha256": "9d426cf252f0960e90de0cfa4dcb8d905d54b65301ca1edc26d39dcda3f15bc6"
+    },
+    "varargs": {
+      "after_counts": {
+        "pass": 14
+      },
+      "after_vm_sha256": "9d426cf252f0960e90de0cfa4dcb8d905d54b65301ca1edc26d39dcda3f15bc6",
+      "before_cases": {
+        "org.luaj.vm2.DebugVarargsRegressionTest#testCallHookCanChangeInitialVarargs": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testCallerOwnedArrayAndPreviouslyReadValueAreNotMutated": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testExceptionAndFrameReuseClearVarargs": "pass",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testFixedCountVarargReadUsesChangedValue": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testJavaFixedArityCallEntrypoints": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testNamesValuesAndNilArity": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testNoVarargsOrNonVarargFunction": "pass",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testOutOfRangeAndIntegerMinimumDoNotWrite": "pass",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testPendingCallArgumentsRemainSnapshot": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testRecursiveFramesHaveSeparateVarargs": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testRetainedResultsSurviveLaterCallAndDebugWrite": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testStrippedChunkStillHasVarargValues": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testSuspendedCoroutineAfterTemporaryMultivalues": "fail",
+        "org.luaj.vm2.DebugVarargsRegressionTest#testWritesAreVisibleToLaterVarargInstructions": "fail"
+      },
+      "before_counts": {
+        "fail": 11,
+        "pass": 3
+      },
+      "before_vm_sha256": "991fbcc0f4a0218e765345abba242212e5d232abbe29201bb1bf420134d19b95"
+    }
+  },
+  "inventory_sha256": "748f89642922ab624d6828eacb3cb5a1f2198e704930b871ea45f27d75dc9a9b",
+  "numeric_regressions": {
+    "after_counts": {
+      "pass": 17
+    },
+    "after_vm_sha256": "8666d696f9af4d1a9f348f9c71d1738ec200909e2f5741b8f17947422bbcf71b",
+    "before_cases": {
+      "org.luaj.vm2.LuaDoubleFormattingTest#testActualInfinityAndNaNTokensAreUnchanged": "pass",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testFibonacciValueIsFiniteInText": "fail",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testFloatOverflowBoundary": "fail",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testLargeFiniteNumbersDoNotBecomeInfinity": "fail",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testLongRangeBoundariesDoNotSaturate": "fail",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testLuaConcatenationUsesFiniteString": "fail",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testLuaTostringAndTonumberPreserveExtremeValues": "fail",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testOrdinaryFormattingCompatibility": "pass",
+      "org.luaj.vm2.LuaDoubleFormattingTest#testSmallNonzeroNumbersDoNotBecomeZero": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testFractionalAndExponentialStrings": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testIntegerAndDoubleBoundaries": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testInvalidArgumentsAtEveryPosition": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testInvalidTypesDoNotInvokeComparisonMetamethod": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testLuaTypesAndRetainedResult": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testMixedArgumentsAndNumericOrder": "fail",
+      "org.luaj.vm2.MinMaxRegressionTest#testNaNAndInfinityOrder": "pass",
+      "org.luaj.vm2.MinMaxRegressionTest#testSingleNumericStringReturnsNumber": "fail"
+    },
+    "before_counts": {
+      "fail": 14,
+      "pass": 3
+    },
+    "before_vm_sha256": "4e67f4317c96026293a421e41b0373c4f0c9319e89fa7e95df03a0701347cce8"
+  },
+  "numeric_review_sha256": "e071bb28958c818084ddcc402cbaed44a099c575487ddce0fcbfe91cb8a6f556",
+  "prior_review_sha256": "7d21719ffdbba56d3363c69d3aeb05dbd29151df18bc51f1b21bb4f345001c2f",
+  "protected_regressions": {
+    "after_counts": {
+      "pass": 22
+    },
+    "after_vm_sha256": "bcb6dcafcf5f077d94d85a36238d295bd8aa1cac7dcae5b9f1e388e4a8bb8786",
+    "before_cases": {
+      "org.luaj.vm2.LoadReaderRegressionTest#testBinaryChunksAndTruncatedBinaryEOF": "fail",
+      "org.luaj.vm2.LoadReaderRegressionTest#testEmptyFirstChunkIsPermanentEOF": "fail",
+      "org.luaj.vm2.LoadReaderRegressionTest#testEmptyMiddleChunkDoesNotJoinLaterText": "fail",
+      "org.luaj.vm2.LoadReaderRegressionTest#testIncompleteTextStopsAtEmptyChunk": "fail",
+      "org.luaj.vm2.LoadReaderRegressionTest#testJavaReaderExceptionReturnsNilAndMessage": "pass",
+      "org.luaj.vm2.LoadReaderRegressionTest#testJavaReaderExceptionWithoutMessageStillReturnsError": "pass",
+      "org.luaj.vm2.LoadReaderRegressionTest#testLuaReaderExceptionReturnsNilAndMessage": "pass",
+      "org.luaj.vm2.LoadReaderRegressionTest#testNilAndNoValuesArePermanentEOF": "pass",
+      "org.luaj.vm2.LoadReaderRegressionTest#testReaderErrorAfterYieldDoesNotLeakState": "pass",
+      "org.luaj.vm2.LoadReaderRegressionTest#testReaderYieldResumesBeforePermanentEOF": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testAbandonedSuspendedPcallThreadCanBeCollected": "pass",
+      "org.luaj.vm2.PcallScopeRegressionTest#testCallHookExceptionRestoresHandlerAndFrame": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testCaughtInnerErrorDoesNotCallOuterHandler": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testFailingHandlerDoesNotInvokeEnclosingHandler": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testJavaHandlerFieldRestoredAfterSuccessAndFailure": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testJavaReentryAndJavaExceptionRemainProtected": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testNestedPcallPreservesErrorObjectAndResults": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testNestedXpcallUsesOnlyNearestHandler": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testOuterHandlerRestoredForLaterError": "fail",
+      "org.luaj.vm2.PcallScopeRegressionTest#testReturnHookExceptionStillRestoresHandler": "pass",
+      "org.luaj.vm2.PcallScopeRegressionTest#testYieldFromErrorHandlerAndNestedPcall": "pass",
+      "org.luaj.vm2.PcallScopeRegressionTest#testYieldResumePreservesHandlerScopesAcrossThreads": "fail"
+    },
+    "before_counts": {
+      "fail": 14,
+      "pass": 8
+    },
+    "before_vm_sha256": "8666d696f9af4d1a9f348f9c71d1738ec200909e2f5741b8f17947422bbcf71b"
+  },
+  "protected_review_sha256": "b640535865420a5398c5c67c6efcfc41d37564da03eda0ebdcc25acdf4b45e01",
+  "stages": [
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInOrderIntegerKeyInsertion": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "f4cd21095682d3a744be17a821480eaa5b0399e404a9b8d467464deb329c79dd",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInOrderLuaLength": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInsertBeginningOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInsertEndOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInsertMiddleOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testOutOfOrderIntegerKeyInsertion": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "75f936c102ae16fbbcfc34df701942a25dcb3b7dbb4c7addb2fa14c786a9e142",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testOutOfOrderLuaLength": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "ff8d7987a8903c39d87d8ffcbd7b6195a042d9824425c09fa277b737e749a1ad",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testRemoveBeginningOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "22e862094963426e9b2c32a40ea72e38e03a73879eecec01fa4d95af0edb4516",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testRemoveEndOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "22e862094963426e9b2c32a40ea72e38e03a73879eecec01fa4d95af0edb4516",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testRemoveMiddleOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "22e862094963426e9b2c32a40ea72e38e03a73879eecec01fa4d95af0edb4516",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInOrderIntegerKeyInsertion": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "f4cd21095682d3a744be17a821480eaa5b0399e404a9b8d467464deb329c79dd",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInOrderLuaLength": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInsertBeginningOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInsertEndOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInsertMiddleOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "d35876e60bff260f1bfd252283316febd6f388b76c1b627fe0238db19a6e4a1e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testOutOfOrderIntegerKeyInsertion": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "75f936c102ae16fbbcfc34df701942a25dcb3b7dbb4c7addb2fa14c786a9e142",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testOutOfOrderLuaLength": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "ff8d7987a8903c39d87d8ffcbd7b6195a042d9824425c09fa277b737e749a1ad",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testRemoveBeginningOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "22e862094963426e9b2c32a40ea72e38e03a73879eecec01fa4d95af0edb4516",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testRemoveEndOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "22e862094963426e9b2c32a40ea72e38e03a73879eecec01fa4d95af0edb4516",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testRemoveMiddleOfList": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "22e862094963426e9b2c32a40ea72e38e03a73879eecec01fa4d95af0edb4516",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testWeakValuesTable": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.AssertionFailedError",
+            "message_sha256": "fd2160ea686823234c1c611508fa9c1498ea5a7a22c396604bc7fc1ee94f8681",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 12,
+      "failure_count": 30,
+      "improved_cases": [
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInOrderIntegerKeyInsertion",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInOrderLuaLength",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInsertBeginningOfList",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInsertEndOfList",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testInsertMiddleOfList",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testOutOfOrderIntegerKeyInsertion",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testOutOfOrderLuaLength",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testRemoveBeginningOfList",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testRemoveEndOfList",
+        "org.luaj.vm2.WeakTableTest$WeakKeyValueTableTest#testRemoveMiddleOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInOrderIntegerKeyInsertion",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInOrderLuaLength",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInsertBeginningOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInsertEndOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testInsertMiddleOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testOutOfOrderIntegerKeyInsertion",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testOutOfOrderLuaLength",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testRemoveBeginningOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testRemoveEndOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testRemoveMiddleOfList",
+        "org.luaj.vm2.WeakTableTest$WeakValueTableTest#testWeakValuesTable"
+      ],
+      "name": "01-weak",
+      "new_failures": [],
+      "patch": "documentation/changes/01-weak-integer-keys.patch",
+      "patch_sha256": "ebfead5873075c604b199f5119d430e7cee5595ab4cfe57c352b963ebccb4925",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/WeakIntegerKeyTest.java": "70dfe13de7f286105c7661d946b5eb1847181e64247cb3998d67300035e2bd22"
+      },
+      "reviewed_transcript_diffs": {},
+      "vm_sha256": "503e155c0c944704c4775f3d9e6685813b23e1f1475f7e0d30e66ba1c2f2c48f"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "113b28ebe8908bc3e3deb2180a662e1df2b56e0de0d8d2505dc708c5e50d3a02",
+            "output_sha256": "5e8cfb58ce745208ae39c6cc394d01dcd17d34560aa3b0ccbd37f6f46adad3b3",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "9e99bf6def4a09be51000039297d61b9efc34348494e5327ce39f8054ab6f6c0",
+            "output_sha256": "024e5f75bb86d1753fe37bfe6e0c5bd1a8f9a8b092df9da81ff53c697a923305",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "313165be45acf5a2f0310acb77a04dcb52dd9e95a50b75011b1e89ac62b2aa4c",
+            "output_sha256": "1b0c9de623a5031cfe272766a4e6c94ae8e54de3cb634d0ba624e350e7d4f544",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "403fc6e16e5226e33477bd6a366292378a73ac0f8ccbc4962bfe73f7e05f5969",
+            "output_sha256": "681162895fdb9dee36fa99f24a7b4089dbc95912ed297f479fc68abc1fd80b50",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "313165be45acf5a2f0310acb77a04dcb52dd9e95a50b75011b1e89ac62b2aa4c",
+            "output_sha256": "1b0c9de623a5031cfe272766a4e6c94ae8e54de3cb634d0ba624e350e7d4f544",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "403fc6e16e5226e33477bd6a366292378a73ac0f8ccbc4962bfe73f7e05f5969",
+            "output_sha256": "681162895fdb9dee36fa99f24a7b4089dbc95912ed297f479fc68abc1fd80b50",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.MathLibTest#testFmod": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "java.lang.ArithmeticException",
+            "message_sha256": "fe5b17f5ac8edbb28a59696f68b215f4f3a3ba1af6de85542c468332043c0f33",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 17,
+      "failure_count": 29,
+      "improved_cases": [
+        "org.luaj.vm2.MathLibTest#testFmod"
+      ],
+      "name": "02-fmod",
+      "new_failures": [],
+      "patch": "documentation/changes/02-fmod.patch",
+      "patch_sha256": "0ec43535d5547f62c558c66446abef8c56a3aeb7af38a7b02b072a127fc0b9e9",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/FmodRegressionTest.java": "6707ca75cbecb65a21e73cd1e3588e0bc0700177753280c57b703f6f37a37f88"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -527,3 +527,3 @@\n",
+          " ---------- math.fmod ----------",
+          "-math.fmod(2,0)\tfalse\t/ by zero",
+          "+math.fmod(2,0)\ttrue\t<nan>",
+          " math.fmod(-2.5,0)\ttrue\t<nan>",
+          "@@ -541,5 +541,5 @@\n",
+          " math.fmod(2.25,2)\ttrue\t0.25",
+          "-math.fmod(-2,0)\tfalse\t/ by zero",
+          "+math.fmod(-2,0)\ttrue\t<nan>",
+          " math.fmod(3,3)\ttrue\t<zero>",
+          "-math.fmod('2','0')\tfalse\t/ by zero",
+          "+math.fmod('2','0')\ttrue\t<nan>",
+          " math.fmod('2.5','3')\ttrue\t2.5"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -604,3 +604,3 @@\n",
+          " ---------- math.fmod ----------",
+          "-math.fmod(2,0)\tfalse\t/ by zero",
+          "+math.fmod(2,0)\ttrue\t<nan>",
+          " math.fmod(-2.5,0)\ttrue\t<nan>",
+          "@@ -618,5 +618,5 @@\n",
+          " math.fmod(2.25,2)\ttrue\t0.25",
+          "-math.fmod(-2,0)\tfalse\t/ by zero",
+          "+math.fmod(-2,0)\ttrue\t<nan>",
+          " math.fmod(3,3)\ttrue\t<zero>",
+          "-math.fmod('2','0')\tfalse\t/ by zero",
+          "+math.fmod('2','0')\ttrue\t<nan>",
+          " math.fmod('2.5','3')\ttrue\t2.5"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -604,3 +604,3 @@\n",
+          " ---------- math.fmod ----------",
+          "-math.fmod(2,0)\tfalse\t/ by zero",
+          "+math.fmod(2,0)\ttrue\t<nan>",
+          " math.fmod(-2.5,0)\ttrue\t<nan>",
+          "@@ -618,5 +618,5 @@\n",
+          " math.fmod(2.25,2)\ttrue\t0.25",
+          "-math.fmod(-2,0)\tfalse\t/ by zero",
+          "+math.fmod(-2,0)\ttrue\t<nan>",
+          " math.fmod(3,3)\ttrue\t<zero>",
+          "-math.fmod('2','0')\tfalse\t/ by zero",
+          "+math.fmod('2','0')\ttrue\t<nan>",
+          " math.fmod('2.5','3')\ttrue\t2.5"
+        ]
+      },
+      "vm_sha256": "d02c72f5a1b46a16e9842ab21df6acbc27f6f710baa5d7b79eb0f39eb9004e47"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "f30c78d34d967b1e2b5d8a709900f2898188df26ab33e0cc2ad20660ec31c2fc",
+            "output_sha256": "a4db5e5030323d727e33184f6b8d4ef2b47413753e78997396737affdb546384",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "113b28ebe8908bc3e3deb2180a662e1df2b56e0de0d8d2505dc708c5e50d3a02",
+            "output_sha256": "5e8cfb58ce745208ae39c6cc394d01dcd17d34560aa3b0ccbd37f6f46adad3b3",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "251436ef337046327787bb2359cb639ae003c6fc42e3e6f2d38d84e014519653",
+            "output_sha256": "1e59875fb5cc85feeba5ad519603ce415d2b3a38ed9700992beee62bf94b74ea",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "313165be45acf5a2f0310acb77a04dcb52dd9e95a50b75011b1e89ac62b2aa4c",
+            "output_sha256": "1b0c9de623a5031cfe272766a4e6c94ae8e54de3cb634d0ba624e350e7d4f544",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "251436ef337046327787bb2359cb639ae003c6fc42e3e6f2d38d84e014519653",
+            "output_sha256": "1e59875fb5cc85feeba5ad519603ce415d2b3a38ed9700992beee62bf94b74ea",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "313165be45acf5a2f0310acb77a04dcb52dd9e95a50b75011b1e89ac62b2aa4c",
+            "output_sha256": "1b0c9de623a5031cfe272766a4e6c94ae8e54de3cb634d0ba624e350e7d4f544",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 23,
+      "failure_count": 29,
+      "improved_cases": [],
+      "name": "03-modf",
+      "new_failures": [],
+      "patch": "documentation/changes/03-modf.patch",
+      "patch_sha256": "c94d998736f24714c4245f5c1c8531f72578818df61e4678dfe25e28087fa5eb",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/ModfRegressionTest.java": "d4c4b7c4d677844fe61457d5446e5c60d218cf01f6a27eb57340a7c81845d2b6"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -479,3 +479,3 @@\n",
+          " math.modf('-2')\ttrue\t-2\t<zero>",
+          "-math.modf('0')\ttrue\t0\t<zero>",
+          "+math.modf('0')\ttrue\t<zero>\t<zero>",
+          " math.modf('2')\ttrue\t2\t<zero>"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -479,3 +479,3 @@\n",
+          " math.modf('-2')\ttrue\t-2\t<zero>",
+          "-math.modf('0')\ttrue\t0\t<zero>",
+          "+math.modf('0')\ttrue\t<zero>\t<zero>",
+          " math.modf('2')\ttrue\t2\t<zero>"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -479,3 +479,3 @@\n",
+          " math.modf('-2')\ttrue\t-2\t<zero>",
+          "-math.modf('0')\ttrue\t0\t<zero>",
+          "+math.modf('0')\ttrue\t<zero>\t<zero>",
+          " math.modf('2')\ttrue\t2\t<zero>"
+        ]
+      },
+      "vm_sha256": "4e67f4317c96026293a421e41b0373c4f0c9319e89fa7e95df03a0701347cce8"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "2f544e943d258c38be2481acee0e10e8a733bb1ae76f9bdd12333bbefa5e4e5c",
+            "output_sha256": "268caff45415e6fa11908ba9e37df9d86ad82c91fba0d8ec99e65833eccff838",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "f30c78d34d967b1e2b5d8a709900f2898188df26ab33e0cc2ad20660ec31c2fc",
+            "output_sha256": "a4db5e5030323d727e33184f6b8d4ef2b47413753e78997396737affdb546384",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "output_sha256": "a78152414516b4d5d7081491820ff3c026bc79df631bb098bf3085738709c72c",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "251436ef337046327787bb2359cb639ae003c6fc42e3e6f2d38d84e014519653",
+            "output_sha256": "1e59875fb5cc85feeba5ad519603ce415d2b3a38ed9700992beee62bf94b74ea",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "output_sha256": "a78152414516b4d5d7081491820ff3c026bc79df631bb098bf3085738709c72c",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "251436ef337046327787bb2359cb639ae003c6fc42e3e6f2d38d84e014519653",
+            "output_sha256": "1e59875fb5cc85feeba5ad519603ce415d2b3a38ed9700992beee62bf94b74ea",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.ErrorsTest#testMathLibArgs": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "e3e6686a3d1b87528825e6cfc716a5f4e11817ea88aa54c1c13982f8d40326cf",
+            "output_sha256": "fbbf09a7f8a92b4062f2db71df454e45acd63855bcb88bef91d97c714653b8f3",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "bdb9a03a04f0d434bb40d0efe1f596f85d2c6771ee503709621f88d223d10fed",
+            "output_sha256": "b9da56388a5ffd01641f3a0eaec0e3e480983f6a20402aa7c972affbcc712202",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 31,
+      "failure_count": 27,
+      "improved_cases": [
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib",
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib"
+      ],
+      "name": "04-minmax",
+      "new_failures": [],
+      "patch": "documentation/changes/04-minmax.patch",
+      "patch_sha256": "3b8749be444aa33f836a98996afff16cb6ccb992dac40bfeddfd9ef0b9b19808",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/MinMaxRegressionTest.java": "d86c7405efae66592aa7711cdba3472eda674805bd8a603f291b481296b060ec"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -639,6 +639,6 @@\n",
+          " math.max('-5')\ttrue\t-5",
+          "-math.max(4,'8')\tfalse\tattempt to compare __lt on number and string",
+          "-math.max(-4.5,'-8')\tfalse\tattempt to compare __lt on number and string",
+          "-math.max('5.5',2.2)\tfalse\tattempt to compare number with string expected, got number",
+          "-math.max('-5',-2.2)\tfalse\tattempt to compare number with string expected, got number",
+          "+math.max(4,'8')\ttrue\t8",
+          "+math.max(-4.5,'-8')\ttrue\t-4.5",
+          "+math.max('5.5',2.2)\ttrue\t5.5",
+          "+math.max('-5',-2.2)\ttrue\t-2.2",
+          " math.max(111,222,333)\ttrue\t333",
+          "@@ -651,6 +651,6 @@\n",
+          " math.min('-5')\ttrue\t-5",
+          "-math.min(4,'8')\tfalse\tattempt to compare number with string expected, got number",
+          "-math.min(-4.5,'-8')\tfalse\tattempt to compare number with string expected, got number",
+          "-math.min('5.5',2.2)\tfalse\tattempt to compare __lt on number and string",
+          "-math.min('-5',-2.2)\tfalse\tattempt to compare __lt on number and string",
+          "+math.min(4,'8')\ttrue\t4",
+          "+math.min(-4.5,'-8')\ttrue\t-8",
+          "+math.min('5.5',2.2)\ttrue\t2.2",
+          "+math.min('-5',-2.2)\ttrue\t-5",
+          " math.min(111,222,333)\ttrue\t111"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -752,6 +752,6 @@\n",
+          " math.max('-5')\ttrue\t-5",
+          "-math.max(4,'8')\tfalse\tattempt to compare __lt on number and string",
+          "-math.max(-4.5,'-8')\tfalse\tattempt to compare __lt on number and string",
+          "-math.max('5.5',2.2)\tfalse\tattempt to compare number with string expected, got number",
+          "-math.max('-5',-2.2)\tfalse\tattempt to compare number with string expected, got number",
+          "+math.max(4,'8')\ttrue\t8",
+          "+math.max(-4.5,'-8')\ttrue\t-4.5",
+          "+math.max('5.5',2.2)\ttrue\t5.5",
+          "+math.max('-5',-2.2)\ttrue\t-2.2",
+          " math.max(111,222,333)\ttrue\t333",
+          "@@ -764,6 +764,6 @@\n",
+          " math.min('-5')\ttrue\t-5",
+          "-math.min(4,'8')\tfalse\tattempt to compare number with string expected, got number",
+          "-math.min(-4.5,'-8')\tfalse\tattempt to compare number with string expected, got number",
+          "-math.min('5.5',2.2)\tfalse\tattempt to compare __lt on number and string",
+          "-math.min('-5',-2.2)\tfalse\tattempt to compare __lt on number and string",
+          "+math.min(4,'8')\ttrue\t4",
+          "+math.min(-4.5,'-8')\ttrue\t-8",
+          "+math.min('5.5',2.2)\ttrue\t2.2",
+          "+math.min('-5',-2.2)\ttrue\t-5",
+          " math.min(111,222,333)\ttrue\t111"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testMathLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -752,6 +752,6 @@\n",
+          " math.max('-5')\ttrue\t-5",
+          "-math.max(4,'8')\tfalse\tattempt to compare __lt on number and string",
+          "-math.max(-4.5,'-8')\tfalse\tattempt to compare __lt on number and string",
+          "-math.max('5.5',2.2)\tfalse\tattempt to compare number with string expected, got number",
+          "-math.max('-5',-2.2)\tfalse\tattempt to compare number with string expected, got number",
+          "+math.max(4,'8')\ttrue\t8",
+          "+math.max(-4.5,'-8')\ttrue\t-4.5",
+          "+math.max('5.5',2.2)\ttrue\t5.5",
+          "+math.max('-5',-2.2)\ttrue\t-2.2",
+          " math.max(111,222,333)\ttrue\t333",
+          "@@ -764,6 +764,6 @@\n",
+          " math.min('-5')\ttrue\t-5",
+          "-math.min(4,'8')\tfalse\tattempt to compare number with string expected, got number",
+          "-math.min(-4.5,'-8')\tfalse\tattempt to compare number with string expected, got number",
+          "-math.min('5.5',2.2)\tfalse\tattempt to compare __lt on number and string",
+          "-math.min('-5',-2.2)\tfalse\tattempt to compare __lt on number and string",
+          "+math.min(4,'8')\ttrue\t4",
+          "+math.min(-4.5,'-8')\ttrue\t-8",
+          "+math.min('5.5',2.2)\ttrue\t2.2",
+          "+math.min('-5',-2.2)\ttrue\t-5",
+          " math.min(111,222,333)\ttrue\t111"
+        ],
+        "org.luaj.vm2.ErrorsTest#testMathLibArgs": [
+          "--- \n",
+          "+++ \n",
+          "@@ -497,4 +497,4 @@\n",
+          " -\t\tmath.max(0.75)\t0.75",
+          "--\t\tmath.max('-1')\t'-1'",
+          "--\t\tmath.max('-0.25')\t'-0.25'",
+          "+-\t\tmath.max('-1')\t-1",
+          "+-\t\tmath.max('-0.25')\t-0.25...",
+          " --- checkallpass",
+          "@@ -502,16 +502,16 @@\n",
+          " -\t\tmath.max(0.75,1)\t1",
+          "-fail \tmath.max('-1',1)\t'attempt to compare number with string expected, got number'",
+          "-fail \tmath.max('-0.25',1)\t'attempt to compare number with string expected, got number'",
+          "+-\t\tmath.max('-1',1)\t1",
+          "+-\t\tmath.max('-0.25',1)\t1",
+          " -\t\tmath.max(1,0.75)\t1",
+          " -\t\tmath.max(0.75,0.75)\t0.75",
+          "-fail \tmath.max('-1',0.75)\t'attempt to compare number with string expected, got number'",
+          "-fail \tmath.max('-0.25',0.75)\t'attempt to compare number with string expected, got number'",
+          "-fail \tmath.max(1,'-1')\t'attempt to compare __lt on number and string'",
+          "-fail \tmath.max(0.75,'-1')\t'attempt to compare __lt on number and string'",
+          "--\t\tmath.max('-1','-1')\t'-1'",
+          "--\t\tmath.max('-0.25','-1')\t'-1'",
+          "-fail \tmath.max(1,'-0.25')\t'attempt to compare __lt on number and string'",
+          "-fail \tmath.max(0.75,'-0.25')\t'attempt to compare __lt on number and string'",
+          "--\t\tmath.max('-1','-0.25')\t'-1'",
+          "--\t\tmath.max('-0.25','-0.25')\t'-0.25'",
+          "+-\t\tmath.max('-1',0.75)\t0.75",
+          "+-\t\tmath.max('-0.25',0.75)\t0.75",
+          "+-\t\tmath.max(1,'-1')\t1",
+          "+-\t\tmath.max(0.75,'-1')\t0.75",
+          "+-\t\tmath.max('-1','-1')\t-1",
+          "+-\t\tmath.max('-0.25','-1')\t-0.25...",
+          "+-\t\tmath.max(1,'-0.25')\t1",
+          "+-\t\tmath.max(0.75,'-0.25')\t0.75",
+          "+-\t\tmath.max('-1','-0.25')\t-0.25...",
+          "+-\t\tmath.max('-0.25','-0.25')\t-0.25...",
+          " --- checkallerrors",
+          "@@ -519,23 +519,23 @@\n",
+          " --- checkallerrors",
+          "-needcheck \tmath.max('abc')\tabc",
+          "-needcheck \tmath.max(true)\ttrue",
+          "-needcheck \tmath.max(<function>)\tfunction: @args.lua:16-16",
+          "-needcheck \tmath.max(<table>)\ttable: <identity>",
+          "---- checkallerrors",
+          "-badmsg \tmath.max(1,'abc')\ttemplate='bad argument' actual='attempt to compare __lt on number and string'",
+          "-badmsg \tmath.max(0.75,'abc')\ttemplate='bad argument' actual='attempt to compare __lt on number and string'",
+          "-needcheck \tmath.max('-1','abc')\tabc",
+          "-needcheck \tmath.max('-0.25','abc')\tabc",
+          "-badmsg \tmath.max(1,true)\ttemplate='bad argument' actual='attempt to compare __lt on number and boolean'",
+          "-badmsg \tmath.max(0.75,true)\ttemplate='bad argument' actual='attempt to compare __lt on number and boolean'",
+          "-badmsg \tmath.max('-1',true)\ttemplate='bad argument' actual='attempt to compare __lt on string and boolean'",
+          "-badmsg \tmath.max('-0.25',true)\ttemplate='bad argument' actual='attempt to compare __lt on string and boolean'",
+          "-badmsg \tmath.max(1,<function>)\ttemplate='bad argument' actual='attempt to compare __lt on number and function'",
+          "-badmsg \tmath.max(0.75,<function>)\ttemplate='bad argument' actual='attempt to compare __lt on number and function'",
+          "-badmsg \tmath.max('-1',<function>)\ttemplate='bad argument' actual='attempt to compare __lt on string and function'",
+          "-badmsg \tmath.max('-0.25',<function>)\ttemplate='bad argument' actual='attempt to compare __lt on string and function'",
+          "-badmsg \tmath.max(1,<table>)\ttemplate='bad argument' actual='attempt to compare __lt on number and table'",
+          "-badmsg \tmath.max(0.75,<table>)\ttemplate='bad argument' actual='attempt to compare __lt on number and table'",
+          "-badmsg \tmath.max('-1',<table>)\ttemplate='bad argument' actual='attempt to compare __lt on string and table'",
+          "-badmsg \tmath.max('-0.25',<table>)\ttemplate='bad argument' actual='attempt to compare __lt on string and table'",
+          "+-\t\tmath.max('abc')\t...bad argument...",
+          "+-\t\tmath.max(true)\t...bad argument...",
+          "+-\t\tmath.max(<function>)\t...bad argument...",
+          "+-\t\tmath.max(<table>)\t...bad argument...",
+          "+--- checkallerrors",
+          "+-\t\tmath.max(1,'abc')\t...bad argument...",
+          "+-\t\tmath.max(0.75,'abc')\t...bad argument...",
+          "+-\t\tmath.max('-1','abc')\t...bad argument...",
+          "+-\t\tmath.max('-0.25','abc')\t...bad argument...",
+          "+-\t\tmath.max(1,true)\t...bad argument...",
+          "+-\t\tmath.max(0.75,true)\t...bad argument...",
+          "+-\t\tmath.max('-1',true)\t...bad argument...",
+          "+-\t\tmath.max('-0.25',true)\t...bad argument...",
+          "+-\t\tmath.max(1,<function>)\t...bad argument...",
+          "+-\t\tmath.max(0.75,<function>)\t...bad argument...",
+          "+-\t\tmath.max('-1',<function>)\t...bad argument...",
+          "+-\t\tmath.max('-0.25',<function>)\t...bad argument...",
+          "+-\t\tmath.max(1,<table>)\t...bad argument...",
+          "+-\t\tmath.max(0.75,<table>)\t...bad argument...",
+          "+-\t\tmath.max('-1',<table>)\t...bad argument...",
+          "+-\t\tmath.max('-0.25',<table>)\t...bad argument...",
+          " ====== math.min ======",
+          "@@ -544,4 +544,4 @@\n",
+          " -\t\tmath.min(0.75)\t0.75",
+          "--\t\tmath.min('-1')\t'-1'",
+          "--\t\tmath.min('-0.25')\t'-0.25'",
+          "+-\t\tmath.min('-1')\t-1",
+          "+-\t\tmath.min('-0.25')\t-0.25...",
+          " --- checkallpass",
+          "@@ -549,16 +549,16 @@\n",
+          " -\t\tmath.min(0.75,1)\t0.75",
+          "-fail \tmath.min('-1',1)\t'attempt to compare __lt on number and string'",
+          "-fail \tmath.min('-0.25',1)\t'attempt to compare __lt on number and string'",
+          "+-\t\tmath.min('-1',1)\t-1",
+          "+-\t\tmath.min('-0.25',1)\t-0.25...",
+          " -\t\tmath.min(1,0.75)\t0.75",
+          " -\t\tmath.min(0.75,0.75)\t0.75",
+          "-fail \tmath.min('-1',0.75)\t'attempt to compare __lt on number and string'",
+          "-fail \tmath.min('-0.25',0.75)\t'attempt to compare __lt on number and string'",
+          "-fail \tmath.min(1,'-1')\t'attempt to compare number with string expected, got number'",
+          "-fail \tmath.min(0.75,'-1')\t'attempt to compare number with string expected, got number'",
+          "--\t\tmath.min('-1','-1')\t'-1'",
+          "--\t\tmath.min('-0.25','-1')\t'-0.25'",
+          "-fail \tmath.min(1,'-0.25')\t'attempt to compare number with string expected, got number'",
+          "-fail \tmath.min(0.75,'-0.25')\t'attempt to compare number with string expected, got number'",
+          "--\t\tmath.min('-1','-0.25')\t'-0.25'",
+          "--\t\tmath.min('-0.25','-0.25')\t'-0.25'",
+          "+-\t\tmath.min('-1',0.75)\t-1",
+          "+-\t\tmath.min('-0.25',0.75)\t-0.25...",
+          "+-\t\tmath.min(1,'-1')\t-1",
+          "+-\t\tmath.min(0.75,'-1')\t-1",
+          "+-\t\tmath.min('-1','-1')\t-1",
+          "+-\t\tmath.min('-0.25','-1')\t-1",
+          "+-\t\tmath.min(1,'-0.25')\t-0.25...",
+          "+-\t\tmath.min(0.75,'-0.25')\t-0.25...",
+          "+-\t\tmath.min('-1','-0.25')\t-1",
+          "+-\t\tmath.min('-0.25','-0.25')\t-0.25...",
+          " --- checkallerrors",
+          "@@ -566,23 +566,23 @@\n",
+          " --- checkallerrors",
+          "-needcheck \tmath.min('abc')\tabc",
+          "-needcheck \tmath.min(true)\ttrue",
+          "-needcheck \tmath.min(<function>)\tfunction: @args.lua:16-16",
+          "-needcheck \tmath.min(<table>)\ttable: <identity>",
+          "---- checkallerrors",
+          "-badmsg \tmath.min(1,'abc')\ttemplate='bad argument' actual='attempt to compare number with string expected, got number'",
+          "-badmsg \tmath.min(0.75,'abc')\ttemplate='bad argument' actual='attempt to compare number with string expected, got number'",
+          "-needcheck \tmath.min('-1','abc')\t-1",
+          "-needcheck \tmath.min('-0.25','abc')\t-0.25",
+          "-badmsg \tmath.min(1,true)\ttemplate='bad argument' actual='attempt to compare __lt on boolean and number'",
+          "-badmsg \tmath.min(0.75,true)\ttemplate='bad argument' actual='attempt to compare __lt on boolean and number'",
+          "-badmsg \tmath.min('-1',true)\ttemplate='bad argument' actual='attempt to compare __lt on boolean and string'",
+          "-badmsg \tmath.min('-0.25',true)\ttemplate='bad argument' actual='attempt to compare __lt on boolean and string'",
+          "-badmsg \tmath.min(1,<function>)\ttemplate='bad argument' actual='attempt to compare __lt on function and number'",
+          "-badmsg \tmath.min(0.75,<function>)\ttemplate='bad argument' actual='attempt to compare __lt on function and number'",
+          "-badmsg \tmath.min('-1',<function>)\ttemplate='bad argument' actual='attempt to compare __lt on function and string'",
+          "-badmsg \tmath.min('-0.25',<function>)\ttemplate='bad argument' actual='attempt to compare __lt on function and string'",
+          "-badmsg \tmath.min(1,<table>)\ttemplate='bad argument' actual='attempt to compare __lt on table and number'",
+          "-badmsg \tmath.min(0.75,<table>)\ttemplate='bad argument' actual='attempt to compare __lt on table and number'",
+          "-badmsg \tmath.min('-1',<table>)\ttemplate='bad argument' actual='attempt to compare __lt on table and string'",
+          "-badmsg \tmath.min('-0.25',<table>)\ttemplate='bad argument' actual='attempt to compare __lt on table and string'",
+          "+-\t\tmath.min('abc')\t...bad argument...",
+          "+-\t\tmath.min(true)\t...bad argument...",
+          "+-\t\tmath.min(<function>)\t...bad argument...",
+          "+-\t\tmath.min(<table>)\t...bad argument...",
+          "+--- checkallerrors",
+          "+-\t\tmath.min(1,'abc')\t...bad argument...",
+          "+-\t\tmath.min(0.75,'abc')\t...bad argument...",
+          "+-\t\tmath.min('-1','abc')\t...bad argument...",
+          "+-\t\tmath.min('-0.25','abc')\t...bad argument...",
+          "+-\t\tmath.min(1,true)\t...bad argument...",
+          "+-\t\tmath.min(0.75,true)\t...bad argument...",
+          "+-\t\tmath.min('-1',true)\t...bad argument...",
+          "+-\t\tmath.min('-0.25',true)\t...bad argument...",
+          "+-\t\tmath.min(1,<function>)\t...bad argument...",
+          "+-\t\tmath.min(0.75,<function>)\t...bad argument...",
+          "+-\t\tmath.min('-1',<function>)\t...bad argument...",
+          "+-\t\tmath.min('-0.25',<function>)\t...bad argument...",
+          "+-\t\tmath.min(1,<table>)\t...bad argument...",
+          "+-\t\tmath.min(0.75,<table>)\t...bad argument...",
+          "+-\t\tmath.min('-1',<table>)\t...bad argument...",
+          "+-\t\tmath.min('-0.25',<table>)\t...bad argument...",
+          " ====== math.random ======"
+        ]
+      },
+      "vm_sha256": "4cb6f71ca116b9e3edb45c8f5dac35ab2f0802f911803608a9c92860ef3f6a58"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testManyUpvals": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "ec8fbc532aff014a79078cbd20ff307a2114e994fec34b35257659fd72b40b49",
+            "output_sha256": "cfb294f35d66643deb893e8d2f81ecaf7017448ef11c5be13e1b810aa5d43982",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "b23dea1e3c744c737856c7acafe3f27b8a5d1600792f33697f60d79525c35d39",
+            "output_sha256": "c7ef89617ba359d75c3d836a9a70ce85f06fee9d79b0e3a06419abf9a5d6495b",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testManyUpvals": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "ec8fbc532aff014a79078cbd20ff307a2114e994fec34b35257659fd72b40b49",
+            "output_sha256": "cfb294f35d66643deb893e8d2f81ecaf7017448ef11c5be13e1b810aa5d43982",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "b23dea1e3c744c737856c7acafe3f27b8a5d1600792f33697f60d79525c35d39",
+            "output_sha256": "c7ef89617ba359d75c3d836a9a70ce85f06fee9d79b0e3a06419abf9a5d6495b",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testManyUpvals": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "ec8fbc532aff014a79078cbd20ff307a2114e994fec34b35257659fd72b40b49",
+            "output_sha256": "cfb294f35d66643deb893e8d2f81ecaf7017448ef11c5be13e1b810aa5d43982",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "b23dea1e3c744c737856c7acafe3f27b8a5d1600792f33697f60d79525c35d39",
+            "output_sha256": "c7ef89617ba359d75c3d836a9a70ce85f06fee9d79b0e3a06419abf9a5d6495b",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 40,
+      "failure_count": 27,
+      "improved_cases": [],
+      "name": "05-double-format",
+      "new_failures": [],
+      "patch": "documentation/changes/05-double-format.patch",
+      "patch_sha256": "af6ebd061ea244d409a58b6622fecb4ecc41c9f5070d05f7236969ea0c4d87e8",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/LuaDoubleFormattingTest.java": "501905335284f5b60614ce7f29f0f89ac9a702e62d81f0ebaaf6576564b59bdd"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testManyUpvals": [
+          "--- \n",
+          "+++ \n",
+          "@@ -1980,2 +1980,2 @@\n",
+          " 10th fibonacci number is\t55",
+          "-199th fibonacci number is\tInfinity",
+          "+199th fibonacci number is\t1.7340252117279783E41"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testManyUpvals": [
+          "--- \n",
+          "+++ \n",
+          "@@ -1980,2 +1980,2 @@\n",
+          " 10th fibonacci number is\t55",
+          "-199th fibonacci number is\tInfinity",
+          "+199th fibonacci number is\t1.7340252117279783E41"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testManyUpvals": [
+          "--- \n",
+          "+++ \n",
+          "@@ -1980,2 +1980,2 @@\n",
+          " 10th fibonacci number is\t55",
+          "-199th fibonacci number is\tInfinity",
+          "+199th fibonacci number is\t1.7340252117279783E41"
+        ]
+      },
+      "vm_sha256": "8666d696f9af4d1a9f348f9c71d1738ec200909e2f5741b8f17947422bbcf71b"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testBaseLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "a81f67fc0c9dec7c0f992185ee37dc63f466292631e99fe9d25681f781715409",
+            "output_sha256": "46cdebaa78b48ba0a9fac37f37e37a479fadb2a9984048700aaca06a416bd8f0",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "05b3961209fc08e7fc6b8624811f4206210a5767860fa9d885f25e64b76883a6",
+            "output_sha256": "cfb466faef1616a73d435bebf9ec8ca4d624c8afef830a240ff8de2d741cd97e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testBaseLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "a81f67fc0c9dec7c0f992185ee37dc63f466292631e99fe9d25681f781715409",
+            "output_sha256": "46cdebaa78b48ba0a9fac37f37e37a479fadb2a9984048700aaca06a416bd8f0",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "05b3961209fc08e7fc6b8624811f4206210a5767860fa9d885f25e64b76883a6",
+            "output_sha256": "cfb466faef1616a73d435bebf9ec8ca4d624c8afef830a240ff8de2d741cd97e",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testBaseLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "517522a542b1acb3e69118b6f0539686166306bc8d5cb2c84270024812ed18e9",
+            "output_sha256": "53480628267e8f08d1a5737dd0834480d359a2068c2ae1dd66d5da4eb3bcd45b",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "a08c053a11067bf619836971c8cb706696bc8a693999a83baf8a998f26117e83",
+            "output_sha256": "f6fd01ce90e6837ea137aad02cff2c04e591ae8d9eda2ae332071195991156fd",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 50,
+      "failure_count": 27,
+      "improved_cases": [],
+      "name": "06-reader",
+      "new_failures": [],
+      "patch": "documentation/changes/06-reader-eof.patch",
+      "patch_sha256": "6b733723f86f31de743a55255c74854cd50371a6dcb3136f9b6d973476ee0880",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/LoadReaderRegressionTest.java": "24a696d041d4f22b45ffdc1efa1ff5a5a0d524b57fa6de1586c2aeb0d0ef5d8c"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testBaseLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -26,3 +26,2 @@\n",
+          " table loaded",
+          "-after empty string",
+          " load: \tnil"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testBaseLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -26,3 +26,2 @@\n",
+          " table loaded",
+          "-after empty string",
+          " load: \tnil"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$LuaJCCompatibilityTest#testBaseLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -26,3 +26,2 @@\n",
+          " table loaded",
+          "-after empty string",
+          " load: \tnil"
+        ]
+      },
+      "vm_sha256": "00faa0c4ec4bfbcbb58f7a2b86b9e8b285a089db249be6e6f2378b279e6d882b"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testBaseLib": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "output_sha256": "e604f4227433a5bc1aa1a16b719a8e46b0d6d5558774e9fe4fb3f0fa1687e446",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "a81f67fc0c9dec7c0f992185ee37dc63f466292631e99fe9d25681f781715409",
+            "output_sha256": "46cdebaa78b48ba0a9fac37f37e37a479fadb2a9984048700aaca06a416bd8f0",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testBaseLib": {
+          "after": {
+            "error_type": "",
+            "message_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "output_sha256": "e604f4227433a5bc1aa1a16b719a8e46b0d6d5558774e9fe4fb3f0fa1687e446",
+            "status": "pass"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "a81f67fc0c9dec7c0f992185ee37dc63f466292631e99fe9d25681f781715409",
+            "output_sha256": "46cdebaa78b48ba0a9fac37f37e37a479fadb2a9984048700aaca06a416bd8f0",
+            "status": "fail"
+          }
+        }
+      },
+      "cumulative_new_regression_tests": 62,
+      "failure_count": 25,
+      "improved_cases": [
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testBaseLib",
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testBaseLib"
+      ],
+      "name": "07-protected-call",
+      "new_failures": [],
+      "patch": "documentation/changes/07-protected-call-scope.patch",
+      "patch_sha256": "c3f397ec5e0ade593b411dd03c26bf9c166697c96b31c8ae0de0eba8eaac1fb1",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/PcallScopeRegressionTest.java": "ce555c6cf3ffb00b55dfa7d756ebf9dec3ece1fa336ab5bb29238c240e6a722e"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testBaseLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -239,3 +239,2 @@\n",
+          " pcall(xpcall(wrappedbad))\tfalse\tstring",
+          "-  in errfunc\tstring",
+          " xpcall(wrappedbad,errfunc)\ttrue"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testBaseLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -239,3 +239,2 @@\n",
+          " pcall(xpcall(wrappedbad))\tfalse\tstring",
+          "-  in errfunc\tstring",
+          " xpcall(wrappedbad,errfunc)\ttrue"
+        ]
+      },
+      "vm_sha256": "bcb6dcafcf5f077d94d85a36238d295bd8aa1cac7dcae5b9f1e388e4a8bb8786"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testDebugLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "30c336a4066e90cc556f4b2c5302c32140f67939114d48fb5c39266cdcd93c60",
+            "output_sha256": "b10aae30526a0b92147aa70023a619663cb2987ec7c03072ab0a60364b71393f",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "8c899b024f25447014d8814ec57b7c0783bfa58ff850d1dc0ee18e1c200c6593",
+            "output_sha256": "8809334c052a053953dd1394589f0ed5339228e11873e237b618387a83e81cca",
+            "status": "fail"
+          }
+        },
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testDebugLib": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "30c336a4066e90cc556f4b2c5302c32140f67939114d48fb5c39266cdcd93c60",
+            "output_sha256": "b10aae30526a0b92147aa70023a619663cb2987ec7c03072ab0a60364b71393f",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "8c899b024f25447014d8814ec57b7c0783bfa58ff850d1dc0ee18e1c200c6593",
+            "output_sha256": "8809334c052a053953dd1394589f0ed5339228e11873e237b618387a83e81cca",
+            "status": "fail"
+          }
+        }
+      },
+      "failure_count": 25,
+      "focused_regression_tests": 84,
+      "improved_cases": [],
+      "name": "08-debug-locals",
+      "new_failures": [],
+      "partially_improved_cases": [
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testDebugLib",
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testDebugLib"
+      ],
+      "patch": "documentation/changes/08-debug-locals.patch",
+      "patch_sha256": "12c921c1b318873ece426242e5a8394db4676a2fd9345ac2a6ea5de8cd389e37",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/DebugLocalRegressionTest.java": "d5dcf415bc8f85e255ede340dc13e0cc1afa363b62d875497d74048bf43a2a8c"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.CompatibiltyTest$JmeCompatibilityTest#testDebugLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -9,3 +9,3 @@\n",
+          " true\th-3-6 -> 3-6 get=f,6 set=f,nil get=f,# \tg locals=7,8,9 tbl={3,6,#}\tf locals=,3,6,#,4,5,#",
+          "-true\th-3-7 -> 3-7 get=nil,function: @debuglib.lua:19-24 set=nil,nil get=nil,# \tg locals=7,8,9 tbl={3,7,#}\tf locals=,3,7,#,4,5,6",
+          "+true\th-3-7 -> 3-7 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={3,7,#}\tf locals=,3,7,#,4,5,6",
+          " true\th-2-0 -> 2-0 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,0,#}\tf locals=,2,0,#,4,5,6",
+          "@@ -14,11 +14,11 @@\n",
+          " true\th-2-3 -> 2-3 get=r,9 set=r,nil get=r,# \tg locals=7,8,# tbl={2,3,#}\tf locals=,2,3,#,4,5,6",
+          "-true\th-2-4 -> 2-4 get=nil,function: @debuglib.lua:9-18 set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,4,#}\tf locals=,2,4,#,4,5,6",
+          "-true\th-2-5 -> 2-5 get=nil,nil set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,5,#}\tf locals=,2,5,#,4,5,6",
+          "-true\th-2-6 -> 2-6 get=nil,nil set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,6,#}\tf locals=,2,6,#,4,5,6",
+          "-true\th-2-7 -> 2-7 get=nil,nil set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,7,#}\tf locals=,2,7,#,4,5,6",
+          "+true\th-2-4 -> 2-4 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,4,#}\tf locals=,2,4,#,4,5,6",
+          "+true\th-2-5 -> 2-5 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,5,#}\tf locals=,2,5,#,4,5,6",
+          "+true\th-2-6 -> 2-6 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,6,#}\tf locals=,2,6,#,4,5,6",
+          "+true\th-2-7 -> 2-7 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,7,#}\tf locals=,2,7,#,4,5,6",
+          " true\th-1-3 -> 1-3 get=n,# set=n,nil get=n,# \tg locals=7,8,9 tbl={1,3,#}\tf locals=,1,3,#,4,5,6",
+          "-true\th-1-4 -> 1-4 get=#,function: getlocal set=x1,nil get=x1,# \tg locals=7,8,9 tbl={1,4,#}\tf locals=,1,4,#,4,5,6",
+          "+true\th-1-4 -> 1-4 get=#,nil set=x1,nil get=x1,# \tg locals=7,8,9 tbl={1,4,#}\tf locals=,1,4,#,4,5,6",
+          " true\th-1-5 -> 1-5 get=nil,# set=y1,nil get=y1,# \tg locals=7,8,9 tbl={1,5,#}\tf locals=,1,5,#,4,5,6",
+          "-true\th-1-6 -> 1-6 get=nil,6 set=nil,nil get=x2,nil \tg locals=7,8,9 tbl={1,6,#}\tf locals=,1,6,#,4,5,6",
+          "-true\th-1-7 -> 1-7 get=nil,7 set=nil,nil get=y2,nil \tg locals=7,8,9 tbl={1,7,#}\tf locals=,1,7,#,4,5,6",
+          "+true\th-1-6 -> 1-6 get=nil,nil set=nil,nil get=x2,nil \tg locals=7,8,9 tbl={1,6,#}\tf locals=,1,6,#,4,5,6",
+          "+true\th-1-7 -> 1-7 get=nil,nil set=nil,nil get=y2,nil \tg locals=7,8,9 tbl={1,7,#}\tf locals=,1,7,#,4,5,6",
+          " ----- debug.getupvalue, debug.setupvalue"
+        ],
+        "org.luaj.vm2.CompatibiltyTest$JseCompatibilityTest#testDebugLib": [
+          "--- \n",
+          "+++ \n",
+          "@@ -9,3 +9,3 @@\n",
+          " true\th-3-6 -> 3-6 get=f,6 set=f,nil get=f,# \tg locals=7,8,9 tbl={3,6,#}\tf locals=,3,6,#,4,5,#",
+          "-true\th-3-7 -> 3-7 get=nil,function: @debuglib.lua:19-24 set=nil,nil get=nil,# \tg locals=7,8,9 tbl={3,7,#}\tf locals=,3,7,#,4,5,6",
+          "+true\th-3-7 -> 3-7 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={3,7,#}\tf locals=,3,7,#,4,5,6",
+          " true\th-2-0 -> 2-0 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,0,#}\tf locals=,2,0,#,4,5,6",
+          "@@ -14,11 +14,11 @@\n",
+          " true\th-2-3 -> 2-3 get=r,9 set=r,nil get=r,# \tg locals=7,8,# tbl={2,3,#}\tf locals=,2,3,#,4,5,6",
+          "-true\th-2-4 -> 2-4 get=nil,function: @debuglib.lua:9-18 set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,4,#}\tf locals=,2,4,#,4,5,6",
+          "-true\th-2-5 -> 2-5 get=nil,nil set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,5,#}\tf locals=,2,5,#,4,5,6",
+          "-true\th-2-6 -> 2-6 get=nil,nil set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,6,#}\tf locals=,2,6,#,4,5,6",
+          "-true\th-2-7 -> 2-7 get=nil,nil set=nil,nil get=nil,# \tg locals=7,8,9 tbl={2,7,#}\tf locals=,2,7,#,4,5,6",
+          "+true\th-2-4 -> 2-4 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,4,#}\tf locals=,2,4,#,4,5,6",
+          "+true\th-2-5 -> 2-5 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,5,#}\tf locals=,2,5,#,4,5,6",
+          "+true\th-2-6 -> 2-6 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,6,#}\tf locals=,2,6,#,4,5,6",
+          "+true\th-2-7 -> 2-7 get=nil,nil set=nil,nil get=nil,nil \tg locals=7,8,9 tbl={2,7,#}\tf locals=,2,7,#,4,5,6",
+          " true\th-1-3 -> 1-3 get=n,# set=n,nil get=n,# \tg locals=7,8,9 tbl={1,3,#}\tf locals=,1,3,#,4,5,6",
+          "-true\th-1-4 -> 1-4 get=#,function: getlocal set=x1,nil get=x1,# \tg locals=7,8,9 tbl={1,4,#}\tf locals=,1,4,#,4,5,6",
+          "+true\th-1-4 -> 1-4 get=#,nil set=x1,nil get=x1,# \tg locals=7,8,9 tbl={1,4,#}\tf locals=,1,4,#,4,5,6",
+          " true\th-1-5 -> 1-5 get=nil,# set=y1,nil get=y1,# \tg locals=7,8,9 tbl={1,5,#}\tf locals=,1,5,#,4,5,6",
+          "-true\th-1-6 -> 1-6 get=nil,6 set=nil,nil get=x2,nil \tg locals=7,8,9 tbl={1,6,#}\tf locals=,1,6,#,4,5,6",
+          "-true\th-1-7 -> 1-7 get=nil,7 set=nil,nil get=y2,nil \tg locals=7,8,9 tbl={1,7,#}\tf locals=,1,7,#,4,5,6",
+          "+true\th-1-6 -> 1-6 get=nil,nil set=nil,nil get=x2,nil \tg locals=7,8,9 tbl={1,6,#}\tf locals=,1,6,#,4,5,6",
+          "+true\th-1-7 -> 1-7 get=nil,nil set=nil,nil get=y2,nil \tg locals=7,8,9 tbl={1,7,#}\tf locals=,1,7,#,4,5,6",
+          " ----- debug.getupvalue, debug.setupvalue"
+        ]
+      },
+      "vm_sha256": "c5e42c8958d02b8d325e269128ad99cce967b35bc38a8f9025051f126c13a5fa"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "dcc36a315f0bf3c2db081e81b3bd5f463e0aa4b9e6fbca615087faa56fcc13ab",
+            "output_sha256": "2024cdab18c4bca984040ee39e007aacaf13416d5f79386ff4f082ac37dff2d2",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "684840ae6c2957a4a031fd59ebb1fb513769bb2d0104721dc20cb151903ccdbd",
+            "output_sha256": "567a0d0b40692f1abd2d1687a6fdb79e41497a6e984ee8a4ea3fb6611fa9ad1e",
+            "status": "fail"
+          }
+        }
+      },
+      "failure_count": 25,
+      "focused_regression_tests": 90,
+      "improved_cases": [],
+      "name": "09-debug-java-frame",
+      "new_failures": [],
+      "partially_improved_cases": [
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs"
+      ],
+      "patch": "documentation/changes/09-debug-java-frame.patch",
+      "patch_sha256": "c7aad747e695fdfe6d8b6f1f59f292fbe98bc58ffd5dad2a64f2638a6e8ac4d7",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/DebugJavaFrameRegressionTest.java": "45ef706bbdcf2376bd18c493118edaba0007a5581f76bb8720c38ed753130752"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": [
+          "--- \n",
+          "+++ \n",
+          "@@ -53,5 +53,5 @@\n",
+          " fail \tdebug.getlocal(<function>,1)\t'bad argument: int expected, got function'",
+          "-fail \tdebug.getlocal(1,1)\t'Cannot read the array length because \"this.stack\" is null'",
+          "+-\t\tdebug.getlocal(1,1)\t",
+          " fail \tdebug.getlocal(<function>,'2')\t'bad argument: int expected, got function'",
+          "-fail \tdebug.getlocal(1,'2')\t'Cannot read the array length because \"this.stack\" is null'",
+          "+-\t\tdebug.getlocal(1,'2')\t",
+          " --- checkallpass",
+          "@@ -194,8 +194,8 @@\n",
+          " --- checkallpass",
+          "-fail \tdebug.setlocal(1,1,nil)\t'Cannot read the array length because \"this.stack\" is null'",
+          "-fail \tdebug.setlocal(1,1,'foo')\t'Cannot read the array length because \"this.stack\" is null'",
+          "+-\t\tdebug.setlocal(1,1,nil)\t",
+          "+-\t\tdebug.setlocal(1,1,'foo')\t",
+          " f: x,y,a,b,p,q\t1\t2\t1\t2\tp\tq",
+          " --- checkallpass",
+          "-fail \tdebug.setlocal(<thread>,1,2,nil)\t'Cannot read the array length because \"this.stack\" is null'",
+          "-fail \tdebug.setlocal(<thread>,1,2,'bar')\t'Cannot read the array length because \"this.stack\" is null'",
+          "+-\t\tdebug.setlocal(<thread>,1,2,nil)\t",
+          "+-\t\tdebug.setlocal(<thread>,1,2,'bar')\t",
+          " f: x,y,a,b,p,q\t1\t2\t1\t2\tp\tq",
+          "@@ -206,5 +206,5 @@\n",
+          " --- checkallerrors",
+          "-badmsg \tdebug.setlocal(1,1)\ttemplate='value expected' actual='Cannot read the array length because \"this.stack\" is null'",
+          "---- checkallerrors",
+          "-badmsg \tdebug.setlocal(<thread>,1,2)\ttemplate='value expected' actual='Cannot read the array length because \"this.stack\" is null'",
+          "+needcheck \tdebug.setlocal(1,1)\tnil",
+          "+--- checkallerrors",
+          "+needcheck \tdebug.setlocal(<thread>,1,2)\tnil",
+          " --- checkallerrors"
+        ]
+      },
+      "vm_sha256": "863f41f339373116275c4b1367b4f86cb65fe54cbffece002bf6b5772929ef84"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "2ebd6befe90ee6388b462328cae48689b660cdf5b5ce65d996b01d9a7ab774c8",
+            "output_sha256": "31a8f8bf077f565c9877724b3c0514dcf45845c2f29ab3482e08e4319390744c",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "dcc36a315f0bf3c2db081e81b3bd5f463e0aa4b9e6fbca615087faa56fcc13ab",
+            "output_sha256": "2024cdab18c4bca984040ee39e007aacaf13416d5f79386ff4f082ac37dff2d2",
+            "status": "fail"
+          }
+        }
+      },
+      "failure_count": 25,
+      "focused_regression_tests": 100,
+      "improved_cases": [],
+      "name": "10-debug-function",
+      "new_failures": [],
+      "partially_improved_cases": [
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs"
+      ],
+      "patch": "documentation/changes/10-debug-function.patch",
+      "patch_sha256": "15e4f5f17277cecd08d33c74a80eae7dc5907b0abe0d0672d607211ae0497701",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/DebugFunctionLocalRegressionTest.java": "d7f2590bf4578b9e8555bbc5dc01ff3a41a0d1c8323d09c5780d913a67e7f6e5"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": [
+          "--- \n",
+          "+++ \n",
+          "@@ -52,8 +52,8 @@\n",
+          " --- checkallpass",
+          "-fail \tdebug.getlocal(<function>,1)\t'bad argument: int expected, got function'",
+          "+-\t\tdebug.getlocal(<function>,1)\t'x'",
+          " -\t\tdebug.getlocal(1,1)\t",
+          "-fail \tdebug.getlocal(<function>,'2')\t'bad argument: int expected, got function'",
+          "+-\t\tdebug.getlocal(<function>,'2')\t'y'",
+          " -\t\tdebug.getlocal(1,'2')\t",
+          " --- checkallpass",
+          "-fail \tdebug.getlocal(<thread>,<function>,1)\t'bad argument: int expected, got function'",
+          "+-\t\tdebug.getlocal(<thread>,<function>,1)\t'x'",
+          " --- checkallerrors",
+          "@@ -61,12 +61,12 @@\n",
+          " --- checkallerrors",
+          "-badmsg \tdebug.getlocal(<function>,nil)\ttemplate='number expected' actual='bad argument: int expected, got function'",
+          "+badmsg \tdebug.getlocal(<function>,nil)\ttemplate='number expected' actual='bad argument: int expected, got nil'",
+          " badmsg \tdebug.getlocal(25,nil)\ttemplate='number expected' actual='bad argument: int expected, got nil'",
+          " badmsg \tdebug.getlocal('25',nil)\ttemplate='number expected' actual='bad argument: int expected, got nil'",
+          "-badmsg \tdebug.getlocal(<function>,'abc')\ttemplate='number expected' actual='bad argument: int expected, got function'",
+          "+-\t\tdebug.getlocal(<function>,'abc')\t...number expected...",
+          " -\t\tdebug.getlocal(25,'abc')\t...number expected...",
+          " -\t\tdebug.getlocal('25','abc')\t...number expected...",
+          "-badmsg \tdebug.getlocal(<function>,true)\ttemplate='number expected' actual='bad argument: int expected, got function'",
+          "+badmsg \tdebug.getlocal(<function>,true)\ttemplate='number expected' actual='bad argument: int expected, got boolean'",
+          " badmsg \tdebug.getlocal(25,true)\ttemplate='number expected' actual='bad argument: int expected, got boolean'",
+          " badmsg \tdebug.getlocal('25',true)\ttemplate='number expected' actual='bad argument: int expected, got boolean'",
+          "-badmsg \tdebug.getlocal(<function>,<table>)\ttemplate='number expected' actual='bad argument: int expected, got function'",
+          "+badmsg \tdebug.getlocal(<function>,<table>)\ttemplate='number expected' actual='bad argument: int expected, got table'",
+          " badmsg \tdebug.getlocal(25,<table>)\ttemplate='number expected' actual='bad argument: int expected, got table'",
+          "@@ -76,3 +76,3 @@\n",
+          " badmsg \tdebug.getlocal('25',<function>)\ttemplate='number expected' actual='bad argument: int expected, got function'",
+          "-badmsg \tdebug.getlocal(<function>,<thread>)\ttemplate='number expected' actual='bad argument: int expected, got function'",
+          "+badmsg \tdebug.getlocal(<function>,<thread>)\ttemplate='number expected' actual='bad argument: int expected, got thread'",
+          " badmsg \tdebug.getlocal(25,<thread>)\ttemplate='number expected' actual='bad argument: int expected, got thread'",
+          "@@ -89,3 +89,3 @@\n",
+          " --- checkallerrors",
+          "-badmsg \tdebug.getlocal(<thread>,<function>)\ttemplate='got no value' actual='bad argument: int expected, got function'",
+          "+badmsg \tdebug.getlocal(<thread>,<function>)\ttemplate='got no value' actual='bad argument: int expected, got nil'",
+          " badmsg \tdebug.getlocal(<thread>,25)\ttemplate='got no value' actual='bad argument: int expected, got nil'"
+        ]
+      },
+      "vm_sha256": "98957fcd2850094277cc123c8cf5709bed32254e7a691edfb3eb53d51dd236b8"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "0c6a4fccccc2893252a58006cdd8ddce8036bf7b4fcd7e2114167fd5396d04e4",
+            "output_sha256": "1969c318911db18763b404b28a9b17e21a12f71c521bc23a1365df50f560f7f3",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "2ebd6befe90ee6388b462328cae48689b660cdf5b5ce65d996b01d9a7ab774c8",
+            "output_sha256": "31a8f8bf077f565c9877724b3c0514dcf45845c2f29ab3482e08e4319390744c",
+            "status": "fail"
+          }
+        }
+      },
+      "failure_count": 25,
+      "focused_regression_tests": 109,
+      "improved_cases": [],
+      "name": "11-debug-setlocal-value",
+      "new_failures": [],
+      "partially_improved_cases": [
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs"
+      ],
+      "patch": "documentation/changes/11-debug-setlocal-value.patch",
+      "patch_sha256": "2031b8adb4bab2a6122b47d87eed1c1903329a5f595d22777b7a09768345e037",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/DebugSetLocalValueRegressionTest.java": "083f7c45da724a410235232ef9e0a27dcdd0ad0cba0db67d43d965ccea72c8aa"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": [
+          "--- \n",
+          "+++ \n",
+          "@@ -206,5 +206,5 @@\n",
+          " --- checkallerrors",
+          "-needcheck \tdebug.setlocal(1,1)\tnil",
+          "---- checkallerrors",
+          "-needcheck \tdebug.setlocal(<thread>,1,2)\tnil",
+          "+-\t\tdebug.setlocal(1,1)\t...value expected...",
+          "+--- checkallerrors",
+          "+-\t\tdebug.setlocal(<thread>,1,2)\t...value expected...",
+          " --- checkallerrors"
+        ]
+      },
+      "vm_sha256": "991fbcc0f4a0218e765345abba242212e5d232abbe29201bb1bf420134d19b95"
+    },
+    {
+      "case_count": 649,
+      "changes": {},
+      "failure_count": 25,
+      "focused_regression_tests": 123,
+      "improved_cases": [],
+      "name": "12-debug-varargs",
+      "new_failures": [],
+      "partially_improved_cases": [],
+      "patch": "documentation/changes/12-debug-varargs.patch",
+      "patch_sha256": "f92d549de7eefbe07ebc589aa5fe74f414dc415bea8a7bcbdf5ebf7e8018bef2",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/DebugVarargsRegressionTest.java": "0e910d0855014170266bd31c2284f75b5a0929da979bbd9a90819a6ec6dc7c51"
+      },
+      "reviewed_transcript_diffs": {},
+      "vm_sha256": "9d426cf252f0960e90de0cfa4dcb8d905d54b65301ca1edc26d39dcda3f15bc6"
+    },
+    {
+      "case_count": 649,
+      "changes": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": {
+          "after": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "dbc4734eaa2145d4bd37dc7775bca395af2f4a584cddae0514629edfbee72809",
+            "output_sha256": "d5a6be7b554dfae6d50b3bcd4323ac9ebcd781d9af15b6c241fa43c93e2c35e0",
+            "status": "fail"
+          },
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "0c6a4fccccc2893252a58006cdd8ddce8036bf7b4fcd7e2114167fd5396d04e4",
+            "output_sha256": "1969c318911db18763b404b28a9b17e21a12f71c521bc23a1365df50f560f7f3",
+            "status": "fail"
+          }
+        }
+      },
+      "failure_count": 25,
+      "focused_regression_tests": 133,
+      "improved_cases": [],
+      "name": "13-debug-stack-level",
+      "new_failures": [],
+      "partially_improved_cases": [
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs"
+      ],
+      "patch": "documentation/changes/13-debug-stack-level.patch",
+      "patch_sha256": "6b329fbaeb0c7dff3ecab25b87720f04c6ad7f30ad97211f5faba8680d8a2ed7",
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/DebugStackLevelRegressionTest.java": "40c478f5c509cb964aaf9e47b830b67b5e62c94242a4d03acac3bc728b868541"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": [
+          "--- \n",
+          "+++ \n",
+          "@@ -104,3 +104,3 @@\n",
+          " --- checkallerrors",
+          "-needcheck \tdebug.getlocal(<thread>,100,1)\tnil",
+          "+-\t\tdebug.getlocal(<thread>,100,1)\t...level out of range...",
+          " ====== debug.getmetatable ======",
+          "@@ -224,3 +224,3 @@\n",
+          " --- checkallerrors",
+          "-needcheck \tdebug.setlocal(10,1,'foo')\tnil",
+          "+-\t\tdebug.setlocal(10,1,'foo')\t...level out of range...",
+          " ====== debug.setmetatable ======"
+        ]
+      },
+      "vm_sha256": "2a3cb60f918f7bc8a4198364db27330c36ee61d15d07f3e6153affafed3e8ab4"
+    },
+    {
+      "name": "14-table-number-values",
+      "patch": "documentation/changes/23-table-number-values.patch",
+      "patch_sha256": "67f0c6707dce40fe5d87eaebe2e41de2ad2a4f16882a6a9a386a988b420533bd",
+      "vm_sha256": "a7cc921a4313e407b5843a822730d31ff68244589ed04f665984081044498ee8",
+      "case_count": 649,
+      "failure_count": 25,
+      "focused_regression_tests": 162,
+      "improved_cases": [],
+      "partially_improved_cases": [],
+      "new_failures": [],
+      "changes": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": {
+          "before": {
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "dbc4734eaa2145d4bd37dc7775bca395af2f4a584cddae0514629edfbee72809",
+            "output_sha256": "d5a6be7b554dfae6d50b3bcd4323ac9ebcd781d9af15b6c241fa43c93e2c35e0",
+            "status": "fail"
+          },
+          "after": {
+            "status": "fail",
+            "error_type": "junit.framework.ComparisonFailure",
+            "message_sha256": "5a989b4026347ced2727250117b087e5d5eaaa2f6d8f167ad842e80ae7505f87",
+            "output_sha256": "e6d17193e08606d517d888cb6536ad632b602573b108bfae7d59e09825accdba"
+          }
+        }
+      },
+      "regression_sources": {
+        "test/junit/org/luaj/vm2/TableNumberValueRegressionTest.java": "ea5cea9048185fb34cf05103b111786a1276dae8a060f120a308dda3675ceaea"
+      },
+      "reviewed_transcript_diffs": {
+        "org.luaj.vm2.ErrorsTest#testDebugLibArgs": "Identity hash values only: table/thread addresses in debug.setmetatable lines and debug.upvalueid numbers (8 vs 9 digits changes the truncation). Deterministic per jar, unrelated to table number values; the same test was already a known failure with identical status and error type."
+      }
+    }
+  ]
+}

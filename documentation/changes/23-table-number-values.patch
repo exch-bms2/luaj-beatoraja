@@ -1,0 +1,166 @@
+diff --git a/src/core/org/luaj/vm2/LuaTable.java b/src/core/org/luaj/vm2/LuaTable.java
+index 364bd1e..f4cdf65 100644
+--- a/src/core/org/luaj/vm2/LuaTable.java
++++ b/src/core/org/luaj/vm2/LuaTable.java
+@@ -772,9 +772,9 @@ public class LuaTable extends LuaValue implements Metatable {
+ 	protected static Entry defaultEntry(LuaValue key, LuaValue value) {
+ 		if ( key.isinttype() ) {
+ 			return new IntKeyEntry( key.toint(), value );
+-		} else if (value.type() == TNUMBER) {
+-			return new NumberValueEntry( key, value.todouble() );
+ 		} else {
++			// Number values keep their LuaValue: storing a primitive double re-boxed a new
++			// LuaInteger/LuaDouble on every read, the main allocation source in skins.
+ 			return new NormalEntry( key, value );
+ 		}
+ 	}
+@@ -1218,46 +1218,6 @@ public class LuaTable extends LuaValue implements Metatable {
+ 		}
+ 	}
+ 
+-	/**
+-	 * Entry class used with numeric values, but only when the key is not an integer.
+-	 */
+-	private static class NumberValueEntry extends Entry {
+-		private double value;
+-		private final LuaValue key;
+-
+-		NumberValueEntry(LuaValue key, double value) {
+-			this.key = key;
+-			this.value = value;
+-		}
+-
+-		public LuaValue key() {
+-			return key;
+-		}
+-
+-		public LuaValue value() {
+-			return valueOf(value);
+-		}
+-
+-		public Entry set(LuaValue value) {
+-			if (value.type() == TNUMBER) {
+-				LuaValue n = value.tonumber();
+-				if (!n.isnil()) {
+-					this.value = n.todouble();
+-					return this;
+-				}
+-			}
+-			return new NormalEntry( this.key, value );
+-		}
+-
+-		public int keyindex( int mask ) {
+-			return hashSlot( key, mask );
+-		}
+-
+-		public boolean keyeq(LuaValue key) {
+-			return key.raweq(this.key);
+-		}
+-	}
+-
+ 	/**
+ 	 * A Slot whose value has been set to nil. The key is kept in a weak reference so that
+ 	 * it can be found by next().
+diff --git a/test/junit/org/luaj/vm2/TableNumberValueRegressionTest.java b/test/junit/org/luaj/vm2/TableNumberValueRegressionTest.java
+new file mode 100644
+index 0000000..6f99e7c
+--- /dev/null
++++ b/test/junit/org/luaj/vm2/TableNumberValueRegressionTest.java
+@@ -0,0 +1,97 @@
++package org.luaj.vm2;
++
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertSame;
++import static org.junit.Assert.assertTrue;
++
++import org.junit.Test;
++import org.luaj.vm2.lib.jse.JsePlatform;
++
++/**
++ * Number values in the hash part keep their LuaValue instead of a primitive double,
++ * so reads no longer allocate. Values, types and Lua semantics must not change.
++ */
++public class TableNumberValueRegressionTest {
++
++	@Test
++	public void readsReturnTheStoredNumberWithoutReboxing() {
++		LuaTable t = new LuaTable();
++		LuaValue big = LuaValue.valueOf(5000);       // outside the LuaInteger cache
++		LuaValue frac = LuaValue.valueOf(0.888);
++		t.set("score", big);
++		t.set("rate", frac);
++		assertSame(big, t.get("score"));
++		assertSame(big, t.get("score"));
++		assertSame(frac, t.get("rate"));
++		assertTrue(t.get("score") instanceof LuaInteger);
++		assertTrue(t.get("rate") instanceof LuaDouble);
++		// next() reports the same value.
++		Varargs n = t.next(LuaValue.NIL);
++		assertTrue(n.arg(2) == big || n.arg(2) == frac);
++	}
++
++	@Test
++	public void integralDoublesAreIntegersBeforeAndAfterStoring() {
++		// LuaDouble.valueOf returns LuaInteger for integral values, so no LuaDouble 5.0 exists.
++		LuaTable t = new LuaTable();
++		t.set("x", LuaValue.valueOf(5.0));
++		assertTrue(t.get("x") instanceof LuaInteger);
++		Globals g = JsePlatform.standardGlobals();
++		Varargs v = g.load(
++				"local t = {}\n" +
++				"t.half = 10 / 4\n" +
++				"t.whole = 10 / 2\n" +
++				"t.big = 2^40\n" +
++				"t.neg = -0.0\n" +
++				"return tostring(t.half), tostring(t.whole), tostring(t.big), 1 / t.neg").invoke();
++		assertEquals("2.5", v.arg(1).tojstring());
++		assertEquals("5", v.arg(2).tojstring());
++		assertEquals(LuaValue.valueOf(Math.pow(2, 40)).tojstring(), v.arg(3).tojstring());
++		assertEquals(LuaValue.valueOf(1 / 0.0).tojstring(), v.arg(4).tojstring());
++	}
++
++	@Test
++	public void updatesAndTypeChangesInPlace() {
++		Globals g = JsePlatform.standardGlobals();
++		Varargs v = g.load(
++				"local t = { count = 0, name = 'a' }\n" +
++				"for i = 1, 1000 do t.count = t.count + 1 end\n" +
++				"t.count2 = t.count\n" +
++				"t.name = 42\n" +          // string -> number
++				"t.count = 'done'\n" +     // number -> string
++				"t.gone = 1 t.gone = nil\n" +
++				"local n = 0 for k, v in pairs(t) do n = n + 1 end\n" +
++				"return t.count, t.count2, t.name, t.gone, n").invoke();
++		assertEquals("done", v.arg(1).tojstring());
++		assertEquals(1000, v.arg(2).toint());
++		assertEquals(42, v.arg(3).toint());
++		assertTrue(v.arg(4).isnil());
++		assertEquals(3, v.arg(5).toint());
++	}
++
++	@Test
++	public void specialValuesAndRehash() {
++		Globals g = JsePlatform.standardGlobals();
++		Varargs v = g.load(
++				"local t = { nan = 0/0, inf = math.huge, ninf = -math.huge }\n" +
++				"for i = 1, 500 do t['k' .. i] = i + 0.5 end\n" +   // forces several rehashes
++				"local s = 0 for i = 1, 500 do s = s + t['k' .. i] end\n" +
++				"return t.nan ~= t.nan, t.inf == math.huge, t.ninf == -math.huge, s").invoke();
++		assertTrue(v.arg(1).toboolean());
++		assertTrue(v.arg(2).toboolean());
++		assertTrue(v.arg(3).toboolean());
++		assertEquals(125500.0, v.arg(4).todouble(), 0.0);
++	}
++
++	@Test
++	public void weakTablesKeepNumberValues() {
++		Globals g = JsePlatform.standardGlobals();
++		Varargs v = g.load(
++				"local t = setmetatable({}, { __mode = 'kv' })\n" +
++				"t.a = 1.5 t.b = 7000\n" +
++				"collectgarbage()\n" +
++				"return t.a, t.b").invoke();
++		assertEquals(1.5, v.arg(1).todouble(), 0.0);
++		assertEquals(7000, v.arg(2).toint());
++	}
++}
