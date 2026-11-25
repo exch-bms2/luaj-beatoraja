@@ -1,0 +1,258 @@
+diff --git a/build.gradle.kts b/build.gradle.kts
+index c06174ee..a6e76443 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -52,7 +52,11 @@ val localLibraries = bundledJars.map { file("lib/$it") } + (luaJarOverride ?: fi
+ // A deliberate build-time trust decision, never inferred from arbitrary lib/ or ir/ contents.
+ val includeTrustedIr = providers.gradleProperty("includeTrustedIr").map { it.toBooleanStrict() }.getOrElse(false)
+ val trustedIrJars = fileTree("trusted_ir") { include("*.jar", "*.JAR") }.files.sortedBy { it.name }
++// -PbcelJar=<path> adds BCEL at runtime only, for the opt-in LuaJC skin compiler (-Pluajc=true).
++val bcelJar = providers.gradleProperty("bcelJar").orNull?.let { file(it) }
+ dependencies {
++    if (bcelJar != null) runtimeOnly(files(bcelJar))
++    if (bcelJar != null) testRuntimeOnly(files(bcelJar))
+     implementation(files(localLibraries))
+     implementation("com.badlogicgames.gdx:gdx:1.14.2")
+     implementation("com.badlogicgames.gdx:gdx-freetype:1.14.2")
+@@ -180,6 +184,7 @@ tasks.named<JavaExec>("run") {
+         systemProperty("beatoraja.inputDiagnostics.intervalMillis", it)
+     }
+     providers.gradleProperty("luaDiagnostics").orNull?.let { systemProperty("beatoraja.luaDiagnostics", it) }
++    providers.gradleProperty("luajc").orNull?.let { systemProperty("beatoraja.luajc", it) }
+     providers.gradleProperty("luaDiagnosticsWarmupMillis").orNull?.let {
+         systemProperty("beatoraja.luaDiagnostics.warmupMillis", it)
+     }
+@@ -373,7 +378,8 @@ val regressionClasses = listOf(
+     "bms.player.beatoraja.song.archive.ZipSongArchiveTest",
+     "bms.player.beatoraja.song.archive.SongArchiveDepthTest",
+     "bms.player.beatoraja.song.archive.RarSongArchiveTest",
+-    "bms.player.beatoraja.skin.lua.LuaCallDiagnosticsTest"
++    "bms.player.beatoraja.skin.lua.LuaCallDiagnosticsTest",
++    "bms.player.beatoraja.skin.lua.SkinLuaCompilerTest"
+ )
+ val regressionTasks = regressionClasses.map { className ->
+     tasks.register<JavaExec>("regression${className.substringAfterLast('.')}") {
+diff --git a/docs/lua-call-diagnostics.md b/docs/lua-call-diagnostics.md
+index 57dc9a91..3c196557 100644
+--- a/docs/lua-call-diagnostics.md
++++ b/docs/lua-call-diagnostics.md
+@@ -91,3 +91,25 @@ JFR測定のときは `-PluaDiagnostics` を外します。計測コード自体
+   その場合はbeatoraja側の呼び出し経路（定数引数の事前解決など）を優先します。
+ - 上位の呼び出し箇所が `main_state.*` の名前引きや、文字列返却に集中している場合も、beatoraja側の改善が先です。
+ - `org.luaj.vm2.LuaClosure.execute` 自体やテーブル探索が上位なら、VM側（インタプリタ・LuaJC）を検討します。
++
++## LuaJC（オプトイン）
++
++`-Pluajc=true`（`-Dbeatoraja.luajc=true`）を付けると、スキンのLuaをLuaJCでJVMのバイトコードに変換して実行します。既定では無効です。
++BCELが必要なので、`-PbcelJar=<path>` で実行時のクラスパスに追加します（BCEL 5.2、Apache License 2.0）。
++
++- BCELが見つからない場合は、警告をログに出してインタプリタで動きます。
++- チャンクごとにLuaJCでの変換に失敗した場合も、そのチャンクだけインタプリタで実行し、警告を1回だけログに出します。
++- LuaJCでは、エラーメッセージにファイル名と行番号が付きません。また、コンパイル済みの関数には `string.dump` を使えません。
++
++```sh
++./gradlew run -Dorg.gradle.java.installations.paths=$JAVA_HOME -PluaDiagnostics=time \
++  -PluajJar=../luaj-beatoraja/target/luaj-beatoraja-0.1.0-SNAPSHOT.jar \
++  -Pluajc=true -PbcelJar=$HOME/.m2/repository/org/apache/bcel/bcel/5.2/bcel-5.2.jar
++```
++
++レポートの `luajc` 行の内容：
++- 前回のレポート以降にコンパイルしたチャンクの数と、変換とクラスロードにかかった時間（新しい画面の場合、大半はスキンの読み込み分）
++- 変換に失敗してインタプリタに切り替えた回数
++- メタスペースの使用量と、ロード済み・アンロード済みのクラス数
++
++画面を何度も行き来しても、メタスペースとロード済みのクラス数が増え続けなければ、古いスキンのクラスは解放されています。
+diff --git a/src/bms/player/beatoraja/skin/lua/LuaCallDiagnostics.java b/src/bms/player/beatoraja/skin/lua/LuaCallDiagnostics.java
+index 55a7993d..4349978d 100644
+--- a/src/bms/player/beatoraja/skin/lua/LuaCallDiagnostics.java
++++ b/src/bms/player/beatoraja/skin/lua/LuaCallDiagnostics.java
+@@ -71,6 +71,7 @@ public final class LuaCallDiagnostics {
+ 	// Current visit
+ 	private String state;
+ 	private long visit, visitStart, recordStart, lastFrameEnd, gcCountStart, gcTimeStart;
++	private long[] lastCompilerStats = new long[3];
+ 	private long frameCalls, frameNanos, frameBytes, frameThreadBytesStart;
+ 	private long frames, totalCalls, totalNanos, totalBytes, totalThreadBytes, maxFrameCalls;
+ 	private long[] luaNanosPerFrame = new long[4096], intervalPerFrame = new long[4096];
+@@ -277,6 +278,15 @@ public final class LuaCallDiagnostics {
+ 		Arrays.sort(lua); Arrays.sort(interval);
+ 		r.append(String.format(Locale.ROOT, "=== Lua call diagnostics: state=%s visit=%d mode=%s ===%nvm %s, java %s, gc %s%n",
+ 				state, visit, mode, VM, System.getProperty("java.runtime.version"), gcNames()));
++		// Compiler work since the previous report: for a new state, mostly its skin load.
++		long[] compiler = SkinLuaCompiler.statistics();
++		r.append(String.format(Locale.ROOT, "luajc %s: %d chunks compiled in %.1f ms since last report (%d fallbacks); "
++				+ "metaspace %.1f MB, classes loaded %d / unloaded %d%n",
++				SkinLuaCompiler.isEnabled() ? "on" : "off", compiler[0] - lastCompilerStats[0],
++				(compiler[1] - lastCompilerStats[1]) / 1e6, compiler[2] - lastCompilerStats[2],
++				metaspaceBytes() / 1e6, ManagementFactory.getClassLoadingMXBean().getLoadedClassCount(),
++				ManagementFactory.getClassLoadingMXBean().getUnloadedClassCount()));
++		lastCompilerStats = compiler;
+ 		r.append(String.format(Locale.ROOT, "recorded %.1f s, %d frames (%.1f fps), GC %d collections / %d ms%n",
+ 				elapsed / 1e9, frames, frames / Math.max(1e-9, elapsed / 1e9), gcCount, gcMs));
+ 		r.append(String.format(Locale.ROOT, "frame interval ms: p50 %.3f  p95 %.3f  p99 %.3f  max %.3f%n",
+@@ -319,6 +329,12 @@ public final class LuaCallDiagnostics {
+ 		return sorted[p >= 1 ? n - 1 : Math.max(0, (int) Math.ceil(p * n) - 1)];
+ 	}
+ 
++	private static long metaspaceBytes() {
++		for (var pool : ManagementFactory.getMemoryPoolMXBeans())
++			if ("Metaspace".equals(pool.getName())) return pool.getUsage().getUsed();
++		return -1;
++	}
++
+ 	private static String gcNames() {
+ 		StringBuilder b = new StringBuilder();
+ 		for (GarbageCollectorMXBean c : ManagementFactory.getGarbageCollectorMXBeans())
+diff --git a/src/bms/player/beatoraja/skin/lua/SkinLuaAccessor.java b/src/bms/player/beatoraja/skin/lua/SkinLuaAccessor.java
+index a4c53e35..2ea41a0d 100644
+--- a/src/bms/player/beatoraja/skin/lua/SkinLuaAccessor.java
++++ b/src/bms/player/beatoraja/skin/lua/SkinLuaAccessor.java
+@@ -79,6 +79,7 @@ public class SkinLuaAccessor implements com.badlogic.gdx.utils.Disposable {
+ 		globals.load(new SafeOsLib());
+ 		LoadState.install(globals);
+ 		LuaC.install(globals);
++		SkinLuaCompiler.install(globals);
+ 		return globals;
+ 	}
+ 
+@@ -114,6 +115,7 @@ public class SkinLuaAccessor implements com.badlogic.gdx.utils.Disposable {
+ 		sandbox.load(new SandboxIoLib(sandboxRoot));
+ 		LoadState.install(sandbox);
+ 		LuaC.install(sandbox);
++		SkinLuaCompiler.install(sandbox);
+ 		return sandbox;
+ 	}
+ 
+diff --git a/src/bms/player/beatoraja/skin/lua/SkinLuaCompiler.java b/src/bms/player/beatoraja/skin/lua/SkinLuaCompiler.java
+new file mode 100644
+index 00000000..4fd3fe24
+--- /dev/null
++++ b/src/bms/player/beatoraja/skin/lua/SkinLuaCompiler.java
+@@ -0,0 +1,75 @@
++package bms.player.beatoraja.skin.lua;
++
++import java.io.IOException;
++import java.util.concurrent.atomic.AtomicBoolean;
++import java.util.concurrent.atomic.AtomicLong;
++import java.util.logging.Logger;
++
++import org.luaj.vm2.Globals;
++import org.luaj.vm2.LuaClosure;
++import org.luaj.vm2.LuaFunction;
++import org.luaj.vm2.LuaValue;
++import org.luaj.vm2.Prototype;
++
++/**
++ * Opt-in LuaJC (Lua to JVM bytecode) for skin scripts: {@code -Dbeatoraja.luajc=true}.
++ * <p>
++ * Disabled by default. Needs BCEL on the classpath; without it the interpreter is used.
++ * A chunk that LuaJC cannot compile falls back to the interpreter, so a skin never fails
++ * to load because of the compiler. Known LuaJC differences: error messages carry no
++ * file:line, and string.dump does not work on compiled functions.
++ */
++public final class SkinLuaCompiler implements Globals.Loader {
++	private static final boolean REQUESTED = Boolean.getBoolean("beatoraja.luajc");
++	private static final boolean AVAILABLE = REQUESTED && bcelPresent();
++	private static final SkinLuaCompiler INSTANCE = AVAILABLE ? new SkinLuaCompiler() : null;
++
++	private static final AtomicLong compiled = new AtomicLong(), compileNanos = new AtomicLong(), fallbacks = new AtomicLong();
++	private static final AtomicBoolean warned = new AtomicBoolean();
++
++	SkinLuaCompiler() {}
++
++	private static boolean bcelPresent() {
++		try {
++			Class.forName("org.apache.bcel.generic.ClassGen", false, SkinLuaCompiler.class.getClassLoader());
++			Class.forName("org.luaj.vm2.luajc.LuaJC", false, SkinLuaCompiler.class.getClassLoader());
++			Logger.getGlobal().info("LuaJC enabled for skin scripts");
++			return true;
++		} catch (ClassNotFoundException | LinkageError e) {
++			Logger.getGlobal().warning("beatoraja.luajc=true but LuaJC/BCEL is not on the classpath; using the interpreter");
++			return false;
++		}
++	}
++
++	/** Installs LuaJC as the loader of {@code globals} when requested and available. */
++	static void install(Globals globals) {
++		if (INSTANCE != null) globals.loader = INSTANCE;
++	}
++
++	public static boolean isEnabled() { return INSTANCE != null; }
++
++	@Override
++	public LuaFunction load(Prototype prototype, String chunkname, LuaValue env) throws IOException {
++		long started = System.nanoTime();
++		try {
++			// loadVerified links every generated class and checks upvalue fields up front, so LuaJC
++			// bugs that would only fail on first call (VerifyError, NoSuchFieldError) fall back here.
++			LuaFunction f = org.luaj.vm2.luajc.LuaJC.instance.loadVerified(prototype, chunkname, env);
++			compiled.incrementAndGet();
++			return f;
++		} catch (RuntimeException | LinkageError | IOException e) {
++			fallbacks.incrementAndGet();
++			if (warned.compareAndSet(false, true))
++				Logger.getGlobal().warning("LuaJC could not compile a skin chunk, using the interpreter for it: "
++						+ e.getClass().getSimpleName() + ": " + e.getMessage());
++			return new LuaClosure(prototype, env);
++		} finally {
++			compileNanos.addAndGet(System.nanoTime() - started);
++		}
++	}
++
++	/** Chunks compiled, nanoseconds spent in code generation and class loading, and fallbacks. */
++	static long[] statistics() {
++		return new long[] {compiled.get(), compileNanos.get(), fallbacks.get()};
++	}
++}
+diff --git a/test/bms/player/beatoraja/skin/lua/SkinLuaCompilerTest.java b/test/bms/player/beatoraja/skin/lua/SkinLuaCompilerTest.java
+new file mode 100644
+index 00000000..fd0899f5
+--- /dev/null
++++ b/test/bms/player/beatoraja/skin/lua/SkinLuaCompilerTest.java
+@@ -0,0 +1,46 @@
++package bms.player.beatoraja.skin.lua;
++
++import org.luaj.vm2.Globals;
++import org.luaj.vm2.LuaClosure;
++import org.luaj.vm2.LuaFunction;
++import org.luaj.vm2.LuaValue;
++import org.luaj.vm2.lib.jse.JsePlatform;
++
++/** Opt-in LuaJC loader: off by default, compiles with BCEL, falls back to the interpreter without it. */
++public final class SkinLuaCompilerTest {
++    public static void main(String[] args) throws Exception {
++        check(System.getProperty("beatoraja.luajc") == null, "test must run without the property");
++        check(!SkinLuaCompiler.isEnabled(), "disabled by default");
++        Globals g = JsePlatform.standardGlobals();
++        Globals.Loader before = g.loader;
++        SkinLuaCompiler.install(g);
++        check(g.loader == before, "install is a no-op when disabled");
++
++        boolean bcel = present("org.apache.bcel.generic.ClassGen");
++        g.loader = new SkinLuaCompiler();
++        long[] s0 = SkinLuaCompiler.statistics();
++        LuaValue chunk = g.load(
++                "local t = { a = 1.5, b = 7000 }\n" +
++                "local function f(n) if n == 0 then return t.a end return f(n - 1) end\n" +
++                "return function(x) return f(x) + t.b + select('#', 1, 2, 3) end", "skin-chunk");
++        LuaFunction fn = chunk.call().checkfunction();
++        check(fn.call(LuaValue.valueOf(5)).todouble() == 7004.5, "result: " + fn.call(LuaValue.valueOf(5)));
++        long[] s1 = SkinLuaCompiler.statistics();
++        if (bcel) {
++            check(!(fn instanceof LuaClosure), "compiled with LuaJC: " + fn.getClass());
++            check(s1[0] > s0[0] && s1[2] == s0[2], "counted as compiled");
++        } else {
++            check(fn instanceof LuaClosure, "interpreter fallback without BCEL: " + fn.getClass());
++            check(s1[2] > s0[2], "counted as fallback");
++        }
++        System.out.println("SkinLuaCompilerTest passed (" + (bcel ? "LuaJC" : "fallback") + ")");
++    }
++
++    private static boolean present(String name) {
++        try { Class.forName(name); return true; } catch (ClassNotFoundException e) { return false; }
++    }
++
++    private static void check(boolean ok, String message) {
++        if (!ok) throw new AssertionError(message);
++    }
++}

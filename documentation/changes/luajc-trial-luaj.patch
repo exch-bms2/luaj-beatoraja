@@ -1,0 +1,220 @@
+diff --git a/src/jse/org/luaj/vm2/luajc/LuaJC.java b/src/jse/org/luaj/vm2/luajc/LuaJC.java
+index 4b74ef4..ad9e65e 100644
+--- a/src/jse/org/luaj/vm2/luajc/LuaJC.java
++++ b/src/jse/org/luaj/vm2/luajc/LuaJC.java
+@@ -108,6 +108,78 @@ public class LuaJC implements Globals.Loader {
+ 		JavaLoader loader = new JavaLoader();
+ 		return loader.load(p, classname, luaname, globals);
+ 	}
++
++	/**
++	 * Like {@link #load(Prototype, String, LuaValue)}, but rejects generated code that would
++	 * only fail when first executed. Every generated class is linked and verified now, and
++	 * every field reference between generated classes must match a declared field and type.
++	 * Callers can catch the exception and fall back to the interpreter for this chunk.
++	 * @throws IllegalStateException or LinkageError when the generated code is unusable
++	 */
++	public LuaFunction loadVerified(Prototype p, String name, LuaValue globals) throws IOException {
++		String luaname = toStandardLuaFileName( name );
++		String classname = toStandardJavaClassName( luaname );
++		JavaGen gen = new JavaGen( p, classname, luaname, false );
++		java.util.List<JavaGen> all = new java.util.ArrayList<JavaGen>();
++		flatten( gen, all );
++		checkFieldReferences( all );
++		JavaLoader loader = new JavaLoader();
++		loader.include( gen );
++		try {
++			for ( JavaGen g : all )
++				Class.forName( g.classname, true, loader );
++		} catch ( ClassNotFoundException e ) {
++			throw new IllegalStateException( "bad class gen: " + e );
++		}
++		return loader.load( gen.classname, globals );
++	}
++
++	private static void flatten(JavaGen gen, java.util.List<JavaGen> out) {
++		out.add( gen );
++		for ( int i=0, n=gen.inners!=null? gen.inners.length: 0; i<n; i++ )
++			flatten( gen.inners[i], out );
++	}
++
++	private static void checkFieldReferences(java.util.List<JavaGen> all) throws IOException {
++		java.util.Map<String,String> declared = new java.util.HashMap<String,String>();
++		java.util.List<org.apache.bcel.classfile.JavaClass> classes = new java.util.ArrayList<org.apache.bcel.classfile.JavaClass>();
++		for ( JavaGen g : all ) {
++			org.apache.bcel.classfile.JavaClass jc = new org.apache.bcel.classfile.ClassParser(
++					new java.io.ByteArrayInputStream( g.bytecode ), g.classname ).parse();
++			classes.add( jc );
++			org.apache.bcel.classfile.Field[] fields = jc.getFields();
++			for ( int i=0; i<fields.length; i++ )
++				declared.put( g.classname + "." + fields[i].getName(), fields[i].getSignature() );
++		}
++		for ( org.apache.bcel.classfile.JavaClass jc : classes ) {
++			org.apache.bcel.generic.ConstantPoolGen cp = new org.apache.bcel.generic.ConstantPoolGen( jc.getConstantPool() );
++			org.apache.bcel.classfile.Method[] methods = jc.getMethods();
++			for ( int i=0; i<methods.length; i++ ) {
++				if ( methods[i].getCode() == null )
++					continue;
++				org.apache.bcel.generic.InstructionHandle[] ih =
++					new org.apache.bcel.generic.InstructionList( methods[i].getCode().getCode() ).getInstructionHandles();
++				for ( int j=0; j<ih.length; j++ ) {
++					if ( !(ih[j].getInstruction() instanceof org.apache.bcel.generic.FieldInstruction) )
++						continue;
++					org.apache.bcel.generic.FieldInstruction fi = (org.apache.bcel.generic.FieldInstruction) ih[j].getInstruction();
++					String owner = fi.getReferenceType( cp ).toString();
++					String key = owner + "." + fi.getFieldName( cp );
++					if ( isGenerated( owner, all ) ) {
++						if ( !fi.getSignature( cp ).equals( declared.get( key ) ) )
++							throw new IllegalStateException( "bad class gen: inconsistent field " + key );
++					}
++				}
++			}
++		}
++	}
++
++	private static boolean isGenerated(String classname, java.util.List<JavaGen> all) {
++		for ( JavaGen g : all )
++			if ( g.classname.equals( classname ) )
++				return true;
++		return false;
++	}
+ 	
+ 	private static String toStandardJavaClassName( String luachunkname ) {
+ 		String stub = toStub( luachunkname );
+diff --git a/src/jse/org/luaj/vm2/luajc/ProtoInfo.java b/src/jse/org/luaj/vm2/luajc/ProtoInfo.java
+index 0d33f00..3ca8702 100644
+--- a/src/jse/org/luaj/vm2/luajc/ProtoInfo.java
++++ b/src/jse/org/luaj/vm2/luajc/ProtoInfo.java
+@@ -84,7 +84,7 @@ public class ProtoInfo {
+ 				sb.append( "     " );
+ 				for ( int j=0; j<prototype.maxstacksize; j++ ) {
+ 					VarInfo v = vars[j][pc];
+-					String u = (v==null? "": v.upvalue!=null? !v.upvalue.rw? "[C] ": (v.allocupvalue&&v.pc==pc? "[*] ": "[]  "): "    ");
++					String u = (v==null? "": v.upvalue!=null? !v.upvalue.isRw()? "[C] ": (v.allocupvalue&&v.pc==pc? "[*] ": "[]  "): "    ");
+ 					String s = v==null? "null   ": String.valueOf(v);
+ 					sb.append( s+u);
+ 				}
+@@ -398,8 +398,9 @@ public class ProtoInfo {
+ 	}					
+ 	
+ 	private void substituteVariable(int slot, VarInfo vold, VarInfo vnew) {
+-		for ( int i=0, n=prototype.code.length; i<n; i++ )
+-			replaceAll( vars[slot], vars[slot].length, vold, vnew );
++		// One pass replaces every occurrence. The former loop repeated it once per
++		// instruction, making large skin chunks take minutes to compile.
++		replaceAll( vars[slot], vars[slot].length, vold, vnew );
+ 	}
+ 
+ 	private void replaceAll(VarInfo[] v, int n, VarInfo vold, VarInfo vnew) {
+@@ -431,7 +432,7 @@ public class ProtoInfo {
+ 		// mark all upvalues that are written locally as read/write
+ 		for ( int pc=0; pc<n; pc++ ) {
+ 			if ( Lua.GET_OPCODE(code[pc]) == Lua.OP_SETUPVAL )
+-				upvals[Lua.GETARG_B(code[pc])].rw = true;
++				upvals[Lua.GETARG_B(code[pc])].markRw();
+ 		}
+ 	}
+ 	private UpvalInfo findOpenUp(int pc, int slot) {
+@@ -448,12 +449,12 @@ public class ProtoInfo {
+ 
+ 	public boolean isUpvalueAssign(int pc, int slot) {
+ 		VarInfo v = pc<0? params[slot]: vars[slot][pc];
+-		return v != null && v.upvalue != null && v.upvalue.rw;
++		return v != null && v.upvalue != null && v.upvalue.isRw();
+ 	}
+ 
+ 	public boolean isUpvalueCreate(int pc, int slot) {
+ 		VarInfo v = pc<0? params[slot]: vars[slot][pc];
+-		return v != null && v.upvalue != null && v.upvalue.rw && v.allocupvalue && pc == v.pc;
++		return v != null && v.upvalue != null && v.upvalue.isRw() && v.allocupvalue && pc == v.pc;
+ 	}
+ 
+ 	public boolean isUpvalueRefer(int pc, int slot) {
+@@ -461,7 +462,7 @@ public class ProtoInfo {
+ 		if ( pc > 0 && vars[slot][pc] != null && vars[slot][pc].pc == pc && vars[slot][pc-1] != null  )
+ 			pc -= 1;
+ 		VarInfo v = pc<0? params[slot]: vars[slot][pc];
+-		return v != null && v.upvalue != null && v.upvalue.rw;
++		return v != null && v.upvalue != null && v.upvalue.isRw();
+ 	}
+ 
+ 	public boolean isInitialValueUsed(int slot) {
+@@ -470,7 +471,7 @@ public class ProtoInfo {
+ 	}
+ 
+ 	public boolean isReadWriteUpvalue(UpvalInfo u) {
+-		return u.rw;
++		return u.isRw();
+ 	}
+ 	
+ 	private String[] findInnerprotoNames() {
+diff --git a/src/jse/org/luaj/vm2/luajc/UpvalInfo.java b/src/jse/org/luaj/vm2/luajc/UpvalInfo.java
+index 10e2368..eb036e0 100644
+--- a/src/jse/org/luaj/vm2/luajc/UpvalInfo.java
++++ b/src/jse/org/luaj/vm2/luajc/UpvalInfo.java
+@@ -10,7 +10,11 @@ public class UpvalInfo {
+ 	int slot;       // where defined
+ 	int nvars;		// number of vars involved
+ 	VarInfo var[];	// list of vars
+-	boolean rw;     // read-write
++	boolean rw;     // read-write; meaningful on the root only, see isRw()
++	// UpvalInfos that captured a common variable form one group with one rw flag.
++	// Otherwise a later capture re-owns variables of an earlier one, and the outer
++	// function and earlier closures disagree on LuaValue vs LuaValue[] upvalue fields.
++	private UpvalInfo parent;
+ 
+ 	// Upval info representing the implied context containing only the environment.
+ 	public UpvalInfo(ProtoInfo pi) {
+@@ -29,7 +33,33 @@ public class UpvalInfo {
+ 		includeVarAndPosteriorVars( pi.vars[slot][pc] );
+ 		for ( int i=0; i<nvars; i++ )
+ 			var[i].allocupvalue = testIsAllocUpvalue( var[i] );
+-		this.rw = nvars > 1;		
++		if ( nvars > 1 )
++			markRw();
++	}
++
++	private UpvalInfo root() {
++		UpvalInfo u = this;
++		while ( u.parent != null )
++			u = u.parent;
++		return u;
++	}
++
++	private static void union(UpvalInfo a, UpvalInfo b) {
++		a = a.root();
++		b = b.root();
++		if ( a != b ) {
++			b.parent = a;
++			a.rw |= b.rw;
++		}
++	}
++
++	/** Read-write if any upvalue sharing a variable with this one is written. */
++	boolean isRw() {
++		return root().rw;
++	}
++
++	void markRw() {
++		root().rw = true;
+ 	}
+ 
+ 	private boolean includeVarAndPosteriorVars( VarInfo var ) {
+@@ -37,6 +67,8 @@ public class UpvalInfo {
+ 			return false;
+ 		if ( var.upvalue == this )
+ 			return true;
++		if ( var.upvalue != null )
++			union( var.upvalue, this );
+ 		var.upvalue = this;
+ 		appendVar( var );
+ 		if ( isLoopVariable( var ) )
+@@ -125,7 +157,7 @@ public class UpvalInfo {
+ 			sb.append( i>0? ",": " " );
+ 			sb.append( String.valueOf(var[i]));
+ 		}
+-		if ( rw )
++		if ( isRw() )
+ 			sb.append( "(rw)" );
+ 		return sb.toString();
+ 	}
