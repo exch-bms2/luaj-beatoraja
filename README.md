@@ -33,6 +33,7 @@ getlocalの関数形式とsetlocalの値引数検証は [debug APIの修正](doc
 
 インタプリタ本体（`LuaClosure.execute`）の縮小は [execute の縮小](documentation/EXECUTE-SIZE.md) を参照してください。
 不採用にした試行（[Javaの関数への末尾呼び出し](documentation/TAILCALL-JAVA-FUNCTIONS.md)、[テーブルの数値をboxしたまま保持](documentation/TABLE-NUMBER-VALUES.md)）も記録しています。
+LuaJCの評価（保留）は [LuaJCの評価](documentation/LUAJC-EVALUATION.md)、JDKとJITフラグの比較は [実行環境の比較](documentation/RUNTIME-OPTIONS.md) を参照してください。
 
 以下は上流の説明・変更履歴です。
 
